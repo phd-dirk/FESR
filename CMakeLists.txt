@@ -2,7 +2,11 @@ cmake_minimum_required (VERSION 3.10)
 project (FESR)
 set (CMAKE_CXX_STANDARD 14)
 
-add_executable(FESR main.cpp)
+set(DIR src)
+include_directories(${DIR})
+set(SOURCES main.cpp ${DIR}/data.hpp)
+
+add_executable(FESR ${SOURCES})
 target_link_libraries(FESR)
 
 #################################
