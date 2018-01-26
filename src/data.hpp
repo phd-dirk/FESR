@@ -5,7 +5,8 @@
 #include <boost/numeric/ublas/matrix.hpp>
 
 using json = nlohmann::json;
-using namespace boost::numeric::ublas;
+using boost::numeric::ublas::matrix;
+using std::vector;
 
 const int n = 80;
 
@@ -17,10 +18,10 @@ const int n = 80;
 struct Data {
 public:
   Data(int size) : sbin(80) {}
-  std::vector<double> sbin;
-  std::vector<double> dsbin;
-  std::vector<double> sfm2;
-  std::vector<double> derr;
+  vector<double> sbin;
+  vector<double> dsbin;
+  vector<double> sfm2;
+  vector<double> derr;
   matrix<double> corerr;
 };
 
@@ -44,7 +45,7 @@ matrix<double> getCorErr(const json& json) {
     } else {
       corerrRowName += std::to_string(i+1);
     }
-    std::vector<double> corerrRow = json["data"][corerrRowName];
+    vector<double> corerrRow = json["data"][corerrRowName];
     for(int j = 0; j < n; j++) {
       m(i, j) = corerrRow[j];
     }
@@ -72,12 +73,12 @@ Data readData(const int size, const std::string filename) {
   json json;
   file >> json;
   Data data(size);
-  data.sbin = json["data"]["sbin"].get<std::vector<double>>();
+  data.sbin = json["data"]["sbin"].get<vector<double>>();
   // getCorErr(json);
   // return getSfm2(json);
-  data.dsbin = json["data"]["dsbin"].get<std::vector<double>>();
-  data.sfm2 = json["data"]["sfm2"].get<std::vector<double>>();
-  data.derr = json["data"]["derr"].get<std::vector<double>>();
+  data.dsbin = json["data"]["dsbin"].get<vector<double>>();
+  data.sfm2 = json["data"]["sfm2"].get<vector<double>>();
+  data.derr = json["data"]["derr"].get<vector<double>>();
   data.corerr= getCorErr(json);
   return data;
 }
