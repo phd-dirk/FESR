@@ -1,6 +1,15 @@
 # FESR 
 QCD analysis of e+e- annihilation into Hadrons.
 
+## Usage
+```
+mkdir ./build
+cd ./build
+cmake ..
+make
+./FESR
+```
+
 ## Developer
 ### C++ autocomplete 
 Generate **.clang_complete** file in the build folder.
