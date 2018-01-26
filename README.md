@@ -10,6 +10,15 @@ make
 ./FESR
 ```
 
+## Testing
+`cmake Dtest=ON` tells cmake to include testing sourcefiles and generate `runUnitTests` executable. 
+```
+cd ./build
+cmake Dtest=ON ..
+make
+./runUnitTests
+```
+
 ## Developer
 ### C++ autocomplete 
 Generate **.clang_complete** file in the build folder.
