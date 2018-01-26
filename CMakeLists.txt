@@ -20,10 +20,13 @@ if(test)
   find_package(GTest REQUIRED)
   include_directories(${GTEST_INCLUDE_DIRS})
 
+  set (TEST_DIR test)
+  set (TEST_SOURCES ${TEST_DIR}/data_test.cpp)
+
   #################
   # Unit Tests
   #################
-  add_executable(runUnitTests test.cpp)
+  add_executable(runUnitTests ${TEST_SOURCES})
 
   # Standard linking to gtest stuff.
   target_link_libraries(runUnitTests GTest::GTest GTest::Main)
