@@ -1,9 +1,11 @@
 cmake_minimum_required (VERSION 3.10)
 project (FESR)
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
+
+find_package(Boost 1.66.0)
 
 set(DIR src)
-include_directories(${DIR})
+include_directories(${DIR} ${BOOST_INCLUDE_DIRS})
 set(SOURCES main.cpp ${DIR}/data.hpp)
 
 add_executable(FESR ${SOURCES})
