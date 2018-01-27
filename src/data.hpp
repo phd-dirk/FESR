@@ -11,6 +11,33 @@ using std::string;
 
 const int n = 80;
 
+// Returns the corerr matrix from the json object
+//
+// This is necassary, because the Aleph data (given in Fortran) cannot be
+// exported as a clean json file.
+// e.g.
+// {
+//   "data": {
+//     "corerr01": [...],
+//     "corerr02": [...]
+//   }
+// }
+matrix<double> getCorErr(const json& json) {
+  matrix<double> m(80, 80);
+  for(int i = 0; i < n; i++) {
+    std::string corerrRowName = "corerr";
+    if (i < 9) {
+      corerrRowName += "0" + std::to_string(i+1);
+    } else {
+      corerrRowName += std::to_string(i+1);
+    }
+    vector<double> corerrRow = json["data"][corerrRowName];
+    for(int j = 0; j < n; j++) {
+      m(i, j) = corerrRow[j];
+    }
+  }
+  return m;
+}
 
 // Is the central data storage
 // Example:
