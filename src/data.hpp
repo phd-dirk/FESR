@@ -11,6 +11,15 @@ using std::string;
 
 const int n = 80;
 
+vector<double> renormalize(double renormalizationFactor, vector<double> vec) {
+  vector<double> renormalizedVector;
+  std::cout << "max_size: " << renormalizedVector.max_size() << std::endl;
+  for(auto const& value: vec) {
+    renormalizedVector.push_back(value*renormalizationFactor);
+  }
+  return renormalizedVector;
+}
+
 // Returns the corerr matrix from the json object
 //
 // This is necassary, because the Aleph data (given in Fortran) cannot be

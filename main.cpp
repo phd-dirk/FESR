@@ -14,7 +14,8 @@ std::string projectRoot = "/Users/knowledge/Developer/PhD/FESR";
 int main ()
 {
   State state(s0Set, 80, projectRoot+"/aleph.json");
-  cout << state.s0s[3] << endl;
+  cout << state.data.sfm2[0] << endl;
+  renormalizeState(state, 0.99363);
   cout << state.data.sfm2[0] << endl;
 
   std::vector<double> vec(80);
