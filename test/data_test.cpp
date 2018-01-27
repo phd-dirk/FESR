@@ -3,7 +3,7 @@
 #include "../src/data.hpp"
 
 std::string projectRoot = "/Users/knowledge/Developer/PhD/FESR";
-const Data data = readData(80, projectRoot+"/aleph.json");
+const Data data(80, projectRoot+"/aleph.json");
 
 
 // ! Caveat: Fortran array start at 1 (non at 0 like arr[0])
