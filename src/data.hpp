@@ -11,8 +11,14 @@ using std::vector;
 using std::string;
 using std::abs;
 
+
+// number of data points
 const int n = 80;
 
+
+
+// Selects the closest bin number from s0
+// If s0 is exactly between two bins we select the smaller one
 int closestBinToS0(double s0, vector<double> sbins, vector<double> dsbins) {
   int i = dsbins.size()-1;
   // -1.e-6: if exactly between two bins choose smaller one as closest
