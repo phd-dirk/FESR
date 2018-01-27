@@ -1,21 +1,24 @@
+#include "./constants.hpp"
 #include "json.hpp"
+#include <boost/numeric/ublas/matrix.hpp>
 #include <vector>
 #include <string>
 #include <fstream>
 #include <cmath>
-#include <boost/numeric/ublas/matrix.hpp>
+#include <complex>
+#include <functional>
 
 using json = nlohmann::json;
 using boost::numeric::ublas::matrix;
 using std::vector;
 using std::string;
 using std::abs;
+using std::complex;
+using std::function;
 
 
 // number of data points
 const int n = 80;
-
-
 
 // Selects the closest bin number from s0
 // If s0 is exactly between two bins we select the smaller one
@@ -29,6 +32,24 @@ int closestBinToS0(double s0, vector<double> sbins, vector<double> dsbins) {
   return i;
 }
 
+//
+complex<double> expSpectralMoment(
+                                  double s0, vector<double> sfm2s,
+                                  vector<double> sbins, vector<double> dsbins,
+                                  function<complex<double>(complex<double>)> weight,
+                                  function<complex<double>(complex<double>)> wTau,
+                                  double sTau, double be
+                                  ) {
+  complex<double> mom(0., 0.);
+  for(int i = 0; i <= closestBinToS0(s0, sbins, dsbins); i++) {
+    double s0UpperLimit = sbins[i]+dsbins[i]/2.;
+    double s0LowerLimit = sbins[i]-dsbins[i]/2.;
+    complex<double> wRatio = s0/sTau*(weight(s0LowerLimit/s0) - weight(s0UpperLimit/s0)/
+                              wTau(s0LowerLimit/sTau) - wTau(s0UpperLimit/sTau));
+    mom += sTau/s0/be*sfm2s[i]*wRatio;
+  }
+  return mom;
+}
 
 // Return an vector with every entry multiplied by a factor
 //
