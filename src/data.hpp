@@ -2,15 +2,31 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <cmath>
 #include <boost/numeric/ublas/matrix.hpp>
 
 using json = nlohmann::json;
 using boost::numeric::ublas::matrix;
 using std::vector;
 using std::string;
+using std::abs;
 
 const int n = 80;
 
+int closestBinToS0(double s0, vector<double> sbins, vector<double> dsbins) {
+  int i = dsbins.size()-1;
+  // -1.e-6: if exactly between two bins choose smaller one as closest
+  // e.g. s0 = 2.1; sbins[71] = 2.05; sbins[72] = 2.15 => closest bin: 71
+  while(abs(s0-sbins[i]-1.e-6) > dsbins[i]/2.) {
+    i--;
+  }
+  return i;
+}
+
+
+// Return an vector with every entry multiplied by a factor
+//
+// Is used in state.hpp to mutate the state
 vector<double> renormalize(double renormalizationFactor, vector<double> vec) {
   vector<double> renormalizedVector;
   std::cout << "max_size: " << renormalizedVector.max_size() << std::endl;
@@ -74,15 +90,15 @@ public:
     std::ifstream file(filename);
     json json;
     file >> json;
-    this->sbin = json["data"]["sbin"].get<vector<double>>();
-    this->dsbin = json["data"]["dsbin"].get<vector<double>>();
-    this->sfm2 = json["data"]["sfm2"].get<vector<double>>();
-    this->derr = json["data"]["derr"].get<vector<double>>();
-    this->corerr= getCorErr(json);
+    this->sbins = json["data"]["sbin"].get<vector<double>>();
+    this->dsbins = json["data"]["dsbin"].get<vector<double>>();
+    this->sfm2s = json["data"]["sfm2"].get<vector<double>>();
+    this->derrs = json["data"]["derr"].get<vector<double>>();
+    this->corerrs = getCorErr(json);
   }
-  vector<double> sbin;
-  vector<double> dsbin;
-  vector<double> sfm2;
-  vector<double> derr;
-  matrix<double> corerr;
+  vector<double> sbins;
+  vector<double> dsbins;
+  vector<double> sfm2s;
+  vector<double> derrs;
+  matrix<double> corerrs;
 };
