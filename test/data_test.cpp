@@ -1,6 +1,8 @@
 #include <string>
 #include <gtest/gtest.h>
 #include "../src/data.hpp"
+#include "../src/constants.hpp"
+#include "../src/weights.hpp"
 
 std::string projectRoot = "/Users/knowledge/Developer/PhD/FESR";
 const Data data(80, projectRoot+"/aleph.json");
@@ -55,4 +57,8 @@ TEST (data_test, closestBinToS0) {
   EXPECT_EQ(closestBinToS0(3., data.sbins, data.dsbins), 77); // Matthias 78
   EXPECT_EQ(closestBinToS0(2.1, data.sbins, data.dsbins), 71); // Matthias 72
   std::cout << "s0: " << 2.1 << " sbin[71]: " << data.sbins[71] << " sbins[72] " << data.sbins[72] << std::endl;
+}
+
+TEST (data_test, expSpectralMoment) {
+  EXPECT_EQ(expSpectralMoment(3., data.sfm2s, data.sbins, data.dsbins, wD00, wD00, sTau, be), 2.8255554004717451);
 }

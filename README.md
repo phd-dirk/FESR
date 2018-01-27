@@ -14,7 +14,7 @@ make
 `cmake Dtest=ON` tells cmake to include testing sourcefiles and generate `runUnitTests` executable. 
 ```
 cd ./build
-cmake Dtest=ON ..
+cmake -Dtest=ON ..
 make
 ./runUnitTests
 ```
@@ -24,7 +24,7 @@ make
 Generate **.clang_complete** file in the build folder.
 ```
 cd ./build
-CXX="cc_args.py clang++" cmake ../
+CXX="cc_args.py clang++" cmake ..
 make
 cp .clang_complete ../.clang_complete
 ```

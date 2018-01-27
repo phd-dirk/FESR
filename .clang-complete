@@ -1,4 +1,5 @@
 -I/Users/knowledge/Developer/PhD/FESR/src
+-I/Users/knowledge/Developer/PhD/FESR/test
 -std=gnu++14
 -Wl,-search_paths_first
 -Wl,-headerpad_max_install_names
