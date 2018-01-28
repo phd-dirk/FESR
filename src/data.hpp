@@ -44,8 +44,10 @@ complex<double> expSpectralMoment(
   for(int i = 0; i <= closestBinToS0(s0, sbins, dsbins); i++) {
     double s0UpperLimit = sbins[i]+dsbins[i]/2.;
     double s0LowerLimit = sbins[i]-dsbins[i]/2.;
-    complex<double> wRatio = s0/sTau*(weight(s0LowerLimit/s0) - weight(s0UpperLimit/s0)/
-                              wTau(s0LowerLimit/sTau) - wTau(s0UpperLimit/sTau));
+    complex<double> wRatio = s0/sTau*(
+                                      (weight(s0LowerLimit/s0) - weight(s0UpperLimit/s0))/
+                                      (wTau(s0LowerLimit/sTau) - wTau(s0UpperLimit/sTau))
+                                     );
     mom += sTau/s0/be*sfm2s[i]*wRatio;
   }
   return mom;

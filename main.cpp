@@ -14,7 +14,9 @@ using std::complex;
 
 std::string projectRoot = "/Users/knowledge/Developer/PhD/FESR";
 
+
 int main () {
+  cout.precision(17);
   State state(s0Set, 80, projectRoot+"/aleph.json", wR00);
   renormalizeState(state, 0.99363);
 

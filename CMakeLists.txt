@@ -21,7 +21,7 @@ if(test)
   include_directories(${GTEST_INCLUDE_DIRS})
 
   set (TEST_DIR test)
-  set (TEST_SOURCES ${TEST_DIR}/data_test.cpp)
+  set (TEST_SOURCES ${TEST_DIR}/constants_test.cpp ${TEST_DIR}/weights_test.cpp ${TEST_DIR}/data_test.cpp)
 
   #################
   # Unit Tests
