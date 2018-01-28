@@ -64,5 +64,5 @@ TEST (data_test, closestBinToS0) {
 
 TEST (data_test, expSpectralMoment) {
   vector<double> sfm2sRenormalized = renormalize(0.99363, data.sfm2s);
-  EXPECT_NEAR(expSpectralMoment(3., sfm2sRenormalized, data.sbins, data.dsbins, wD00, wD00, sTau, be).real(), 2.8255554004717451, 1.e-14);
+  EXPECT_NEAR(expSpectralMoment(3., sfm2sRenormalized, data.sbins, data.dsbins, wD00, wD00, kSTauMass, kBe).real(), 2.8255554004717451, 1.e-14);
 }
