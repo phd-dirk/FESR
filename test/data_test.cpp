@@ -3,13 +3,13 @@
 #include "../src/data.hpp"
 #include "../src/constants.hpp"
 #include "../src/weights.hpp"
+#include "../src/pion_pole.hpp"
 #include <iostream>
 
 
 using std::cout;
 using std::endl;
-std::string projectRoot = "/Users/knowledge/Developer/PhD/FESR";
-const Data data(80, projectRoot+"/aleph.json");
+const Data data(80, "/Users/knowledge/Developer/PhD/FESR/aleph.json");
 
 
 // ! Caveat: Fortran array start at 1 (non at 0 like arr[0])
@@ -65,4 +65,13 @@ TEST (data_test, closestBinToS0) {
 TEST (data_test, expSpectralMoment) {
   vector<double> sfm2sRenormalized = renormalize(0.99363, data.sfm2s);
   EXPECT_NEAR(expSpectralMoment(3., sfm2sRenormalized, data.sbins, data.dsbins, wD00, wD00, kSTauMass, kBe).real(), 2.8255554004717451, 1.e-14);
+}
+
+TEST (data_test, expSpectralMomentPlusPionPole) {
+  vector<double> sfm2sRenormalized = renormalize(0.99363, data.sfm2s);
+  double s0 = 3.;
+  double mom = expSpectralMoment(s0, sfm2sRenormalized, data.sbins, data.dsbins,
+                                 wD00, wD00, kSTauMass, kBe).real() +
+    pionPoleSpectralMoment(s0, kPionMinusMass, kSTauMass, wR00, data.sbins, data.dsbins);
+  EXPECT_NEAR(mom, 3.4673859072186186, 1.e-14);
 }

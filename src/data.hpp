@@ -1,3 +1,6 @@
+#ifndef SRC_DATA_H
+#define SRC_DATA_H
+
 #include "./constants.hpp"
 #include "json.hpp"
 #include <boost/numeric/ublas/matrix.hpp>
@@ -22,7 +25,7 @@ const int n = 80;
 
 // Selects the closest bin number from s0
 // If s0 is exactly between two bins we select the smaller one
-int closestBinToS0(double s0, vector<double> sbins, vector<double> dsbins) {
+inline int closestBinToS0(double s0, vector<double> sbins, vector<double> dsbins) {
   int i = dsbins.size()-1;
   // -1.e-6: if exactly between two bins choose smaller one as closest
   // e.g. s0 = 2.1; sbins[71] = 2.05; sbins[72] = 2.15 => closest bin: 71
@@ -33,7 +36,7 @@ int closestBinToS0(double s0, vector<double> sbins, vector<double> dsbins) {
 }
 
 //
-complex<double> expSpectralMoment(
+inline complex<double> expSpectralMoment(
                                   double s0, vector<double> sfm2s,
                                   vector<double> sbins, vector<double> dsbins,
                                   function<complex<double>(complex<double>)> weight,
@@ -56,7 +59,7 @@ complex<double> expSpectralMoment(
 // Return an vector with every entry multiplied by a factor
 //
 // Is used in state.hpp to mutate the state
-vector<double> renormalize(double renormalizationFactor, vector<double> vec) {
+inline vector<double> renormalize(double renormalizationFactor, vector<double> vec) {
   vector<double> renormalizedVector;
   std::cout << "max_size: " << renormalizedVector.max_size() << std::endl;
   for(auto const& value: vec) {
@@ -76,7 +79,7 @@ vector<double> renormalize(double renormalizationFactor, vector<double> vec) {
 //     "corerr02": [...]
 //   }
 // }
-matrix<double> getCorErr(const json& json) {
+inline matrix<double> getCorErr(const json& json) {
   matrix<double> m(80, 80);
   for(int i = 0; i < n; i++) {
     std::string corerrRowName = "corerr";
@@ -131,3 +134,5 @@ public:
   vector<double> derrs;
   matrix<double> corerrs;
 };
+
+#endif

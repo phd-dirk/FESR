@@ -6,7 +6,7 @@ find_package(Boost 1.66.0)
 
 set(DIR src)
 include_directories(${DIR} ${BOOST_INCLUDE_DIRS})
-set(SOURCES main.cpp ${DIR}/data.hpp)
+set(SOURCES main.cpp)
 
 add_executable(FESR ${SOURCES})
 target_link_libraries(FESR)
@@ -21,7 +21,7 @@ if(test)
   include_directories(${GTEST_INCLUDE_DIRS})
 
   set (TEST_DIR test)
-  set (TEST_SOURCES ${TEST_DIR}/constants_test.cpp ${TEST_DIR}/weights_test.cpp ${TEST_DIR}/data_test.cpp)
+  set (TEST_SOURCES ${TEST_DIR}/constants_test.cpp ${TEST_DIR}/weights_test.cpp ${TEST_DIR}/data_test.cpp ${TEST_DIR}/pion_pole_test.cpp)
 
   #################
   # Unit Tests
