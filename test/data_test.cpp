@@ -1,6 +1,7 @@
 #include <string>
 #include <gtest/gtest.h>
 #include "../src/data.hpp"
+#include "../src/s0_sets.hpp"
 #include "../src/constants.hpp"
 #include "../src/weights.hpp"
 #include "../src/pion_pole.hpp"
@@ -11,9 +12,7 @@ using std::cout;
 using std::endl;
 const Data data("/Users/knowledge/Developer/PhD/FESR/aleph.json");
 
-
 // ! Caveat: Fortran array start at 1 (non at 0 like arr[0])
-
 
 // compare aleph data (sbin) from Matthias
 // from fesr_aleph_2015/VAmomAleph2014.f90
@@ -52,6 +51,19 @@ TEST (data_test, corerr) {
 }
 
 
+class ExperimentalMomentsTest : public ::testing::Test {
+ protected:
+  ExperimentalMoments * expMom;
+  virtual void SetUp() {
+    expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", s0Set, wD00, wD00);
+  }
+
+  virtual void TearDown() {
+    delete expMom;
+  }
+};
+
+
 // compare closest bin to s0 with Matthias
 // from fesr_aleph_2015/VAmomAleph2014.f90
 // TEST (data_test, closestBinToS0) {
@@ -62,7 +74,7 @@ TEST (data_test, corerr) {
 //   EXPECT_EQ(closestBinToS0(2.1, data.sbins, data.dsbins), 71); // Matthias 72
 // }
 
-// TEST (data_test, expSpectralMoment) {
+// TEST (ExperimentalMomentsTest, ExperimentalMoments) {
 //   vector<double> sfm2sRenormalized = renormalize(0.99363, data.sfm2s);
 //   EXPECT_NEAR(expSpectralMoment(3., sfm2sRenormalized, data.sbins, data.dsbins, wD00, wD00, kSTauMass, kBe).real(), 2.8255554004717451, 1.e-14);
 // }

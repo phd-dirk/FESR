@@ -10,6 +10,7 @@
 #include <cmath>
 #include <complex>
 #include <functional>
+#include <algorithm>
 
 using json = nlohmann::json;
 using boost::numeric::ublas::matrix;
@@ -20,6 +21,7 @@ using std::string;
 using std::abs;
 using std::complex;
 using std::function;
+using std::transform;
 
 // Returns the corerr matrix from the json object
 //
@@ -102,27 +104,37 @@ class ExperimentalMoments : public Constants {
                       function<complex<double>(complex<double>)> wTau) :
       data(Data(filename)), s0s(s0s), weight(weight), wTau(wTau) {
 
+
+    // renormalize
+    renormalizeSfm2s(0.99363);
+
     // init weightRatios
-    this->weightRatios = getWeightRatios();
+    setWeightRatios();
 
     // init exp. moments
-    this->experimentalMoments = getExperimentalMoments();
+    setExperimentalMoments();
 
-    // init error matrix
-    this->errorMatrix = getErrorMatrix();
+    // // init error matrix
+    // this->errorMatrix = getErrorMatrix();
 
-    // init jacobian matrix
-    this->jacobianMatrix = getJacobianMatrix();
+    // // init jacobian matrix
+    // this->jacobianMatrix = getJacobianMatrix();
 
-    // init covariance matrix
-    this->covarianceMatrix = getCovarianceMatrix();
+    // // init covariance matrix
+    // this->covarianceMatrix = getCovarianceMatrix();
+  }
+
+  vector<double> getExperimentalMoments() {
+    return this->experimentalMoments;
   }
 
  private:
   Data data;
-  vector<double> s0s, experimentalMoments;
+  vector<double> s0s;
   function<complex<double>(complex<double>)> weight, wTau;
-  matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix;
+  matrix<double> weightRatios, errorMatrix, jacobianMatrix;
+  vector<double> experimentalMoments;
+  matrix<double> covarianceMatrix;
 
   // Selects the closest bin number from s0
   // If s0 is exactly between two bins we select the smaller one
@@ -136,12 +148,16 @@ class ExperimentalMoments : public Constants {
     return i;
   }
 
-  // returns weightRatios
-  matrix<double> getWeightRatios() {
-    matrix<double> wRatios;
+  void renormalizeSfm2s(const double &factor) {
+    transform(data.sfm2s.begin(), data.sfm2s.end(), data.sfm2s.begin(), std::bind1st(std::multiplies<double>(), factor));
+  }
 
-    for (int i = 0; i <= s0s.size(); i++) {
-      for (int j = 0; j <= data.binCount; j++) {
+  // returns weightRatios
+  void setWeightRatios() {
+    matrix<double> wRatios(s0s.size(), data.binCount);
+
+    for (int i = 0; i < s0s.size(); i++) {
+      for (int j = 0; j < data.binCount; j++) {
         double s0UpperLimit = data.sbins[i]+data.dsbins[i]/2.;
         double s0LowerLimit = data.sbins[i]-data.dsbins[i]/2.;
         wRatios(i, j) = (s0s[i]/kSTauMass*(
@@ -150,19 +166,19 @@ class ExperimentalMoments : public Constants {
       }
     }
 
-    return wRatios;
+    this->weightRatios = wRatios;
   }
 
 
   // return the experimental spectral moment
-  vector<double> getExperimentalMoments() {
-    vector<double> moments;
+  void setExperimentalMoments() {
+    vector<double> moments(s0s.size());
     for (int i = 0; i <= s0s.size(); i++) {
       for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
         moments[i] += kSTauMass/s0s[i]/kBe*data.sfm2s[j]*weightRatios(i, j);
       }
     }
-    return moments;
+    this->experimentalMoments = moments;
   }
 
   // returns the error matrix
