@@ -13,16 +13,15 @@ using std::complex;
 using std::vector;
 
 const double kPiFac = 24.*pow(Constants::kPi*Constants::kVud*Constants::kFPi, 2)*Constants::kSEW;
-
 inline double pionPoleSpectralMoment(double s0, double pionMinusMass, double sTauMass,
-                              function<complex<double>(complex<double>)> weight,
-                              vector<double> sbins, vector<double> dsbins
-                              ) {
+                                     function<complex<double>(complex<double>)> weight,
+                                     vector<double> sbins, vector<double> dsbins
+                                     ) {
   double axialPionPionPoleSpectralMoment = 0;
   double pseudoscalarPionPionPoleSpectralMoment = 0;
   axialPionPionPoleSpectralMoment += kPiFac/s0*weight(pow(Constants::kPionMinusMass, 2)/s0).real();
   pseudoscalarPionPionPoleSpectralMoment += axialPionPionPoleSpectralMoment*
-    (-2.*pow(pionMinusMass, 2)/(sTauMass + 2.*pow(pionMinusMass, 2)));
+      (-2.*pow(pionMinusMass, 2)/(sTauMass + 2.*pow(pionMinusMass, 2)));
   return axialPionPionPoleSpectralMoment + pseudoscalarPionPionPoleSpectralMoment;
 }
 

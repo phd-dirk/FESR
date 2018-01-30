@@ -2,6 +2,7 @@
 #define SRC_DATA_H
 
 #include "./constants.hpp"
+#include "./weights.hpp"
 #include "json.hpp"
 #include <boost/numeric/ublas/matrix.hpp>
 #include <vector>
@@ -133,6 +134,15 @@ class ExperimentalMoments : public Constants {
     // this->covarianceMatrix = getCovarianceMatrix();
   }
 
+  vector<double> getExpPlusPionPoleMoments() {
+    vector<double> expPlusPionMoments(s0s.size());
+    for (int i = 0; i < s0s.size(); i++) {
+      expPlusPionMoments[i] = experimentalMoments[i]
+          + pionPoleMoment(s0s[i]);
+    }
+    return expPlusPionMoments;
+  }
+
   vector<double> getExperimentalMoments() {
     return this->experimentalMoments;
   }
@@ -155,11 +165,9 @@ class ExperimentalMoments : public Constants {
 
  private:
   Data data;
-  vector<double> s0s;
+  vector<double> s0s, experimentalMoments;
   function<complex<double>(complex<double>)> weight, wTau;
-  matrix<double> weightRatios, errorMatrix, jacobianMatrix;
-  vector<double> experimentalMoments;
-  matrix<double> covarianceMatrix;
+  matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix;
 
 
   // returns weightRatios
@@ -230,6 +238,19 @@ class ExperimentalMoments : public Constants {
     }
     return covMat;
   }
+
+  double kPiFac() {
+    return 24.*pow(Constants::kPi*Constants::kVud*Constants::kFPi, 2)*Constants::kSEW;
+  }
+
+  double pionPoleMoment(const double &s0) {
+    double axialMoment = 0;
+    double pseudoMoment = 0;
+    axialMoment += kPiFac()/s0*wR00(pow(Constants::kPionMinusMass, 2)/s0).real();
+    pseudoMoment += axialMoment*(-2.*pow(kPionMinusMass, 2)/(kSTauMass + 2.*pow(kPionMinusMass, 2)));
+    return axialMoment + pseudoMoment;
+  }
+
 }; // END ExperimentalMoments
 
 

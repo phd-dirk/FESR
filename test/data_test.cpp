@@ -89,11 +89,7 @@ TEST_F(ExperimentalMomentsTest, ExperimentalMoments) {
   EXPECT_NEAR(expMoments[7], 2.6253460058904214, 1.e-14);
 }
 
-// TEST (data_test, expSpectralMomentPlusPionPole) {
-//   vector<double> sfm2sRenormalized = renormalize(0.99363, data.sfm2s);
-//   double s0 = 3.;
-//   double mom = expSpectralMoment(s0, sfm2sRenormalized, data.sbins, data.dsbins,
-//                                  wD00, wD00, kSTauMass, kBe).real() +
-//     pionPoleSpectralMoment(s0, kPionMinusMass, kSTauMass, wR00, data.sbins, data.dsbins);
-//   EXPECT_NEAR(mom, 3.4673859072186186, 1.e-14);
-// }
+TEST_F(ExperimentalMomentsTest, experimentalMomentPlusPionPoleMoments) {
+  vector<double> expPlusPionPoleMoments = expMom->getExpPlusPionPoleMoments();
+  EXPECT_NEAR(expPlusPionPoleMoments[1], 3.4673859072186186, 1.e-14);
+}
