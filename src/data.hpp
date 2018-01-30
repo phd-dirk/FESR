@@ -13,60 +13,13 @@
 
 using json = nlohmann::json;
 using boost::numeric::ublas::matrix;
+using std::cout;
+using std::endl;
 using std::vector;
 using std::string;
 using std::abs;
 using std::complex;
 using std::function;
-
-
-// number of data points
-const int n = 80;
-
-// Selects the closest bin number from s0
-// If s0 is exactly between two bins we select the smaller one
-inline int closestBinToS0(double s0, vector<double> sbins, vector<double> dsbins) {
-  int i = dsbins.size()-1;
-  // -1.e-6: if exactly between two bins choose smaller one as closest
-  // e.g. s0 = 2.1; sbins[71] = 2.05; sbins[72] = 2.15 => closest bin: 71
-  while(abs(s0-sbins[i]-1.e-6) > dsbins[i]/2.) {
-    i--;
-  }
-  return i;
-}
-
-//
-inline complex<double> expSpectralMoment(
-                                  double s0, vector<double> sfm2s,
-                                  vector<double> sbins, vector<double> dsbins,
-                                  function<complex<double>(complex<double>)> weight,
-                                  function<complex<double>(complex<double>)> wTau,
-                                  double sTau, double be
-                                  ) {
-  complex<double> mom(0., 0.);
-  for(int i = 0; i <= closestBinToS0(s0, sbins, dsbins); i++) {
-    double s0UpperLimit = sbins[i]+dsbins[i]/2.;
-    double s0LowerLimit = sbins[i]-dsbins[i]/2.;
-    complex<double> wRatio = s0/sTau*(
-                                      (weight(s0LowerLimit/s0) - weight(s0UpperLimit/s0))/
-                                      (wTau(s0LowerLimit/sTau) - wTau(s0UpperLimit/sTau))
-                                     );
-    mom += sTau/s0/be*sfm2s[i]*wRatio;
-  }
-  return mom;
-}
-
-// Return an vector with every entry multiplied by a factor
-//
-// Is used in state.hpp to mutate the state
-inline vector<double> renormalize(double renormalizationFactor, vector<double> vec) {
-  vector<double> renormalizedVector;
-  std::cout << "max_size: " << renormalizedVector.max_size() << std::endl;
-  for(auto const& value: vec) {
-    renormalizedVector.push_back(value*renormalizationFactor);
-  }
-  return renormalizedVector;
-}
 
 // Returns the corerr matrix from the json object
 //
@@ -79,9 +32,9 @@ inline vector<double> renormalize(double renormalizationFactor, vector<double> v
 //     "corerr02": [...]
 //   }
 // }
-inline matrix<double> getCorErr(const json& json) {
+inline matrix<double> getCorErr(const json &json, const int &binCount) {
   matrix<double> m(80, 80);
-  for(int i = 0; i < n; i++) {
+  for(int i = 0; i < binCount; i++) {
     std::string corerrRowName = "corerr";
     if (i < 9) {
       corerrRowName += "0" + std::to_string(i+1);
@@ -89,7 +42,7 @@ inline matrix<double> getCorErr(const json& json) {
       corerrRowName += std::to_string(i+1);
     }
     vector<double> corerrRow = json["data"][corerrRowName];
-    for(int j = 0; j < n; j++) {
+    for(int j = 0; j < binCount; j++) {
       m(i, j) = corerrRow[j];
     }
   }
@@ -102,7 +55,7 @@ inline matrix<double> getCorErr(const json& json) {
 //    cout << data.sfm2[0] << endl;
 //    cout << data.corerr(0, 0) << endl;
 struct Data {
-public:
+ public:
   // Initalizes the Data struct
   // Takes the data.json file and reads it into memory.
   // The json file needs to be of the following form:
@@ -118,21 +71,155 @@ public:
   //     ...
   //   }
   // }
-  Data(const int size, const string filename) {
+  Data(const string filename) {
     std::ifstream file(filename);
     json json;
     file >> json;
     this->sbins = json["data"]["sbin"].get<vector<double>>();
+    this->binCount = sbins.size();
     this->dsbins = json["data"]["dsbin"].get<vector<double>>();
     this->sfm2s = json["data"]["sfm2"].get<vector<double>>();
     this->derrs = json["data"]["derr"].get<vector<double>>();
-    this->corerrs = getCorErr(json);
+    this->corerrs = getCorErr(json, binCount);
   }
+  int binCount;
   vector<double> sbins;
   vector<double> dsbins;
   vector<double> sfm2s;
   vector<double> derrs;
   matrix<double> corerrs;
 };
+
+class ExperimentalMoments : public Constants {
+ public:
+  // Init. data, vector of all wRatios, exp. Spectral Moments, error Matrix
+  // and Covariance matrix
+  //
+  // The Spectral Moments and Covariance matrix can then bet exported via the
+  // public getter functions
+  ExperimentalMoments(const string &filename, const vector<double> &s0s,
+                      function<complex<double>(complex<double>)> weight,
+                      function<complex<double>(complex<double>)> wTau) :
+      data(Data(filename)), s0s(s0s), weight(weight), wTau(wTau) {
+
+    // init weightRatios
+    this->weightRatios = getWeightRatios();
+
+    // init exp. moments
+    this->experimentalMoments = getExperimentalMoments();
+
+    // init error matrix
+    this->errorMatrix = getErrorMatrix();
+
+    // init jacobian matrix
+    this->jacobianMatrix = getJacobianMatrix();
+
+    // init covariance matrix
+    this->covarianceMatrix = getCovarianceMatrix();
+  }
+
+ private:
+  Data data;
+  vector<double> s0s, experimentalMoments;
+  function<complex<double>(complex<double>)> weight, wTau;
+  matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix;
+
+  // Selects the closest bin number from s0
+  // If s0 is exactly between two bins we select the smaller one
+  int closestBinToS0(const double &s0) {
+    int i = data.dsbins.size()-1;
+    // -1.e-6: if exactly between two bins choose smaller one as closest
+    // e.g. s0 = 2.1; sbins[71] = 2.05; sbins[72] = 2.15 => closest bin: 71
+    while(abs(s0-data.sbins[i]-1.e-6) > data.dsbins[i]/2.) {
+      i--;
+    }
+    return i;
+  }
+
+  // returns weightRatios
+  matrix<double> getWeightRatios() {
+    matrix<double> wRatios;
+
+    for (int i = 0; i <= s0s.size(); i++) {
+      for (int j = 0; j <= data.binCount; j++) {
+        double s0UpperLimit = data.sbins[i]+data.dsbins[i]/2.;
+        double s0LowerLimit = data.sbins[i]-data.dsbins[i]/2.;
+        wRatios(i, j) = (s0s[i]/kSTauMass*(
+            (weight(s0LowerLimit/s0s[i]) - weight(s0UpperLimit/s0s[i]))/
+            (wTau(s0LowerLimit/kSTauMass) - wTau(s0UpperLimit/kSTauMass)))).real();
+      }
+    }
+
+    return wRatios;
+  }
+
+
+  // return the experimental spectral moment
+  vector<double> getExperimentalMoments() {
+    vector<double> moments;
+    for (int i = 0; i <= s0s.size(); i++) {
+      for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
+        moments[i] += kSTauMass/s0s[i]/kBe*data.sfm2s[j]*weightRatios(i, j);
+      }
+    }
+    return moments;
+  }
+
+  // returns the error matrix
+  matrix<double> getErrorMatrix() {
+    matrix<double> errorMatrix(data.binCount+2, data.binCount+2);
+    for (int i = 0; i <= data.binCount; i++) {
+      for (int j = 0; j <= data.binCount; j++) {
+        errorMatrix(i, j) = data.corerrs(i, j)*data.derrs[i]*data.derrs[j]/1.e2;
+      }
+    }
+    errorMatrix(data.binCount+1, data.binCount+1) = pow(kDBe, 2);
+    errorMatrix(data.binCount+2, data.binCount+2) = pow(kDRTauVex, 2);
+    return errorMatrix;
+  }
+
+  // returns the Jacobian Matrix
+  matrix<double> getJacobianMatrix() {
+    matrix<double> jacobi(data.binCount+2, data.binCount+2);
+    for (int i = 0; i <= s0s.size(); i++) {
+      for (int j = 0; j <= data.binCount; j++) {
+        jacobi(j, i) = kSTauMass/s0s[i]/kBe*weightRatios(i, j);
+      }
+      jacobi(data.binCount+1, i) = -experimentalMoments[i];
+    }
+    return jacobi;
+  }
+
+  // returns the covariance matrix
+  matrix<double> getCovarianceMatrix() {
+    matrix<double> covMat(s0s.size(), s0s.size());
+    for (int i = 0; i <= s0s.size(); i++) {
+      for (int j = 0; j <= s0s.size(); j++) {
+        for (int k = 0; k <= data.binCount; k++) {
+          for (int l = 0; l <= data.binCount; l++) {
+            covMat(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
+          }
+        }
+      }
+    }
+    return covMat;
+  }
+}; // END ExperimentalMoments
+
+
+// Return an vector with every entry multiplied by a factor
+//
+// Is used in state.hpp to mutate the state
+inline vector<double> renormalize(double renormalizationFactor, vector<double> vec) {
+  vector<double> renormalizedVector;
+  std::cout << "max_size: " << renormalizedVector.max_size() << std::endl;
+  for(auto const& value: vec) {
+    renormalizedVector.push_back(value*renormalizationFactor);
+  }
+  return renormalizedVector;
+}
+
+
+
 
 #endif
