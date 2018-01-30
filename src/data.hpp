@@ -73,7 +73,7 @@ struct Data {
   //     ...
   //   }
   // }
-  Data(const string filename) {
+  Data(const string &filename, const double &normalizationFactor) {
     std::ifstream file(filename);
     json json;
     file >> json;
@@ -83,7 +83,18 @@ struct Data {
     this->sfm2s = json["data"]["sfm2"].get<vector<double>>();
     this->derrs = json["data"]["derr"].get<vector<double>>();
     this->corerrs = getCorErr(json, binCount);
+
+    normalizeData(normalizationFactor);
   }
+
+  // normalize sfm2s and derr (multiply data vector by 'factor' scalar)
+  void normalizeData(const double &factor) {
+    transform(sfm2s.begin(), sfm2s.end(), sfm2s.begin(),
+              std::bind1st(std::multiplies<double>(), factor));
+    transform(derrs.begin(), derrs.end(), derrs.begin(),
+              std::bind1st(std::multiplies<double>(), factor));
+  }
+
   int binCount;
   vector<double> sbins;
   vector<double> dsbins;
@@ -99,17 +110,15 @@ class ExperimentalMoments : public Constants {
   //
   // The Spectral Moments and Covariance matrix can then bet exported via the
   // public getter functions
-  ExperimentalMoments(const string &filename, const vector<double> &s0s,
+  ExperimentalMoments(const string &filename, const double &normalizationFactor,
+                      const vector<double> &s0s,
                       function<complex<double>(complex<double>)> weight,
                       function<complex<double>(complex<double>)> wTau) :
-      data(Data(filename)), s0s(s0s), weight(weight), wTau(wTau) {
-
-
-    // renormalize
-    renormalizeSfm2s(0.99363);
+      data(Data(filename, normalizationFactor)), s0s(s0s), weight(weight),
+      wTau(wTau) {
 
     // init weightRatios
-    setWeightRatios();
+    setWeightRatios(); // (s0s.size() x data.binCount) e.g. (9 x 80)
 
     // init exp. moments
     setExperimentalMoments();
@@ -128,13 +137,9 @@ class ExperimentalMoments : public Constants {
     return this->experimentalMoments;
   }
 
- private:
-  Data data;
-  vector<double> s0s;
-  function<complex<double>(complex<double>)> weight, wTau;
-  matrix<double> weightRatios, errorMatrix, jacobianMatrix;
-  vector<double> experimentalMoments;
-  matrix<double> covarianceMatrix;
+  matrix<double> getWeightRatios() {
+    return this->weightRatios;
+  }
 
   // Selects the closest bin number from s0
   // If s0 is exactly between two bins we select the smaller one
@@ -148,9 +153,14 @@ class ExperimentalMoments : public Constants {
     return i;
   }
 
-  void renormalizeSfm2s(const double &factor) {
-    transform(data.sfm2s.begin(), data.sfm2s.end(), data.sfm2s.begin(), std::bind1st(std::multiplies<double>(), factor));
-  }
+ private:
+  Data data;
+  vector<double> s0s;
+  function<complex<double>(complex<double>)> weight, wTau;
+  matrix<double> weightRatios, errorMatrix, jacobianMatrix;
+  vector<double> experimentalMoments;
+  matrix<double> covarianceMatrix;
+
 
   // returns weightRatios
   void setWeightRatios() {
@@ -158,8 +168,8 @@ class ExperimentalMoments : public Constants {
 
     for (int i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount; j++) {
-        double s0UpperLimit = data.sbins[i]+data.dsbins[i]/2.;
-        double s0LowerLimit = data.sbins[i]-data.dsbins[i]/2.;
+        double s0UpperLimit = data.sbins[j]+data.dsbins[j]/2.;
+        double s0LowerLimit = data.sbins[j]-data.dsbins[j]/2.;
         wRatios(i, j) = (s0s[i]/kSTauMass*(
             (weight(s0LowerLimit/s0s[i]) - weight(s0UpperLimit/s0s[i]))/
             (wTau(s0LowerLimit/kSTauMass) - wTau(s0UpperLimit/kSTauMass)))).real();

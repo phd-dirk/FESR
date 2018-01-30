@@ -10,7 +10,7 @@
 
 using std::cout;
 using std::endl;
-const Data data("/Users/knowledge/Developer/PhD/FESR/aleph.json");
+const Data data("/Users/knowledge/Developer/PhD/FESR/aleph.json", 1.);
 
 // ! Caveat: Fortran array start at 1 (non at 0 like arr[0])
 
@@ -55,7 +55,8 @@ class ExperimentalMomentsTest : public ::testing::Test {
  protected:
   ExperimentalMoments * expMom;
   virtual void SetUp() {
-    expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", s0Set, wD00, wD00);
+    expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
+                                     0.99363, s0Set, wD00, wD00);
   }
 
   virtual void TearDown() {
@@ -66,18 +67,27 @@ class ExperimentalMomentsTest : public ::testing::Test {
 
 // compare closest bin to s0 with Matthias
 // from fesr_aleph_2015/VAmomAleph2014.f90
-// TEST (data_test, closestBinToS0) {
-//   // ! Caveat: The bin number corresponds to the array index ( Fortran arrays start at 1, CPP at 0)
-//   // e.g. Matthias maxBin: 67 => CPP maxbin: 66
-//   EXPECT_EQ(closestBinToS0(pow(1.77682, 2), data.sbins, data.dsbins), 78); // Matthias 79
-//   EXPECT_EQ(closestBinToS0(3., data.sbins, data.dsbins), 77); // Matthias 78
-//   EXPECT_EQ(closestBinToS0(2.1, data.sbins, data.dsbins), 71); // Matthias 72
-// }
+TEST_F(ExperimentalMomentsTest, closestBinToS0) {
+  // ! Caveat: The bin number corresponds to the array index ( Fortran arrays start at 1, CPP at 0)
+  // e.g. Matthias maxBin: 67 => CPP maxbin: 66
+  EXPECT_EQ(expMom->closestBinToS0(pow(1.77682, 2)), 78); // Matthias 79
+  EXPECT_EQ(expMom->closestBinToS0(3.), 77); // Matthias 78
+  EXPECT_EQ(expMom->closestBinToS0(2.1), 71); // Matthias 72
+}
 
-// TEST (ExperimentalMomentsTest, ExperimentalMoments) {
-//   vector<double> sfm2sRenormalized = renormalize(0.99363, data.sfm2s);
-//   EXPECT_NEAR(expSpectralMoment(3., sfm2sRenormalized, data.sbins, data.dsbins, wD00, wD00, kSTauMass, kBe).real(), 2.8255554004717451, 1.e-14);
-// }
+TEST_F(ExperimentalMomentsTest, weightRatios) {
+  matrix<double> weightRatios = expMom->getWeightRatios();
+  EXPECT_NEAR(weightRatios(0, 0), 1., 1.e-15);
+  EXPECT_NEAR(weightRatios(1, 1), 0.99968000816184477, 1.e-14);
+  EXPECT_NEAR(weightRatios(2, 2), 0.99851573355014112, 1.e-14);
+  EXPECT_NEAR(weightRatios(1, 0), 0.99994042624850787, 1.e-14);
+}
+
+TEST_F(ExperimentalMomentsTest, ExperimentalMoments) {
+  vector<double> expMoments = expMom->getExperimentalMoments();
+  EXPECT_NEAR(expMoments[1], 2.8255554004717451, 1.e-14);
+  EXPECT_NEAR(expMoments[7], 2.6253460058904214, 1.e-14);
+}
 
 // TEST (data_test, expSpectralMomentPlusPionPole) {
 //   vector<double> sfm2sRenormalized = renormalize(0.99363, data.sfm2s);

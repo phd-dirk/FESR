@@ -16,7 +16,7 @@ public:
   function<complex<double>(complex<double>)> weight;
   State(vector<double> s0s, string dataFile,
         function<complex<double>(complex<double>)> weight) :
-    s0s(s0s), data(dataFile), weight(weight) {}
+      s0s(s0s), data(dataFile, 1.), weight(weight) {}
 };
 
 void renormalizeState(State &state, const double &factor) {

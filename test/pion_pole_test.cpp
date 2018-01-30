@@ -4,7 +4,7 @@
 #include "../src/weights.hpp"
 #include "../src/data.hpp"
 
-const Data data("/Users/knowledge/Developer/PhD/FESR/aleph.json");
+const Data data("/Users/knowledge/Developer/PhD/FESR/aleph.json", 1.);
 
 TEST (pion_pole_test, pifac) {
   EXPECT_DOUBLE_EQ(kPiFac, 1.9494983309486447);
