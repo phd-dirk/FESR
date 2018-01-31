@@ -23,6 +23,7 @@ using std::abs;
 using std::complex;
 using std::function;
 using std::transform;
+using std::sqrt;
 
 // Returns the corerr matrix from the json object
 //
@@ -124,14 +125,29 @@ class ExperimentalMoments : public Constants {
     // init exp. moments
     setExperimentalMoments();
 
-    // // init error matrix
-    this->errorMatrix = setErrorMatrix();
+    // init error matrix
 
-    // // init jacobian matrix
-    this->jacobianMatrix = setJacobianMatrix();
+    setErrorMatrix();
+    for (int i = 0; i < data.binCount+2; i++) {
+      for (int j = 0; j < data.binCount+2; j++) {
+        if (errorMatrix(i, j) > 1.e2) {
+          cout << errorMatrix(i, j) << "/t i " << i << "/t j " << endl;
+        }
+      }
+    }
 
-    // // init covariance matrix
-    this->covarianceMatrix = setCovarianceMatrix();
+    // init jacobian matrix
+    setJacobianMatrix();
+    for (int i = 0; i < s0s.size(); i++) {
+      for (int j = 0; j < data.binCount+2; j++) {
+        if (jacobianMatrix(i, j) > 1.e2) {
+          cout << jacobianMatrix(i, j) << " i " << i << " j " << endl;
+        }
+      }
+    }
+
+    // init covariance matrix
+    setCovarianceMatrix();
   }
 
   vector<double> getExpPlusPionPoleMoments() {
@@ -159,6 +175,9 @@ class ExperimentalMoments : public Constants {
   double getJacobianMatrix(int i, int j) {
     return this->jacobianMatrix(i, j);
   }
+  double getCovarianceMatrix(int i, int j) {
+    return this->covarianceMatrix(i, j);
+  }
 
   // Selects the closest bin number from s0
   // If s0 is exactly between two bins we select the smaller one
@@ -170,6 +189,13 @@ class ExperimentalMoments : public Constants {
       i--;
     }
     return i;
+  }
+
+  double kPiFac() {
+    return 24.*pow(Constants::kPi*Constants::kVud*Constants::kFPi, 2)*Constants::kSEW;
+  }
+  double kDPiFac() {
+    return kPiFac()*sqrt(4.*pow(kDVud/kVud, 2) + pow(kDSEW/kSEW, 2) + 4.*pow(kDFPi/kFPi, 2));
   }
 
  private:
@@ -200,7 +226,7 @@ class ExperimentalMoments : public Constants {
   // return the experimental spectral moment
   void setExperimentalMoments() {
     vector<double> moments(s0s.size());
-    for (int i = 0; i <= s0s.size(); i++) {
+    for (int i = 0; i < s0s.size(); i++) {
       for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
         moments[i] += kSTauMass/s0s[i]/kBe*data.sfm2s[j]*weightRatios(i, j);
       }
@@ -209,50 +235,61 @@ class ExperimentalMoments : public Constants {
   }
 
   // returns the error matrix
-  matrix<double> setErrorMatrix() {
-    matrix<double> errorMatrix(data.binCount+2, data.binCount+2);
-    for (int i = 0; i < data.binCount; i++) {
-      for (int j = 0; j < data.binCount; j++) {
-        errorMatrix(i, j) = data.corerrs(i, j)*data.derrs[i]*data.derrs[j]/1.e2;
+  void setErrorMatrix() {
+    matrix<double> errMat(data.binCount+2, data.binCount+2);
+    for (int i = 0; i < data.binCount+2; i++) {
+      for (int j = 0; j < data.binCount+2; j++) {
+        if (i < data.binCount && j < data.binCount) {
+          errMat(i, j) = data.corerrs(i, j)*data.derrs[i]*data.derrs[j]/1.e2;
+        } else {
+          errMat(i, j) = 0.;
+        }
       }
     }
-    errorMatrix(data.binCount, data.binCount) = pow(kDBe, 2);
-    errorMatrix(data.binCount+1, data.binCount+1) = pow(kDRTauVex, 2);
-    return errorMatrix;
+    errMat(data.binCount, data.binCount) = pow(kDBe, 2);
+    errMat(data.binCount+1, data.binCount+1) = pow(kDPiFac(), 2);
+    this->errorMatrix = errMat;
   }
 
   // returns the Jacobian Matrix
-  matrix<double> setJacobianMatrix() {
+  void setJacobianMatrix() {
     matrix<double> jacobi(data.binCount+2, data.binCount+2);
     for (int i = 0; i < s0s.size(); i++) {
-      for (int j = 0; j < data.binCount; j++) {
-        jacobi(j, i) = kSTauMass/s0s[i]/kBe*weightRatios(i, j);
+      for (int j = 0; j < data.binCount+2; j++) {
+        if (j <= closestBinToS0(s0s[i])) {
+          jacobi(j, i) = kSTauMass/s0s[i]/kBe*weightRatios(i, j);
+        } else {
+          jacobi(j, i) = 0.;
+        }
       }
       jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/kBe;
       jacobi(data.binCount+1, i) = pionPoleMoment(s0s[i])/kPiFac();
     }
-    cout << pionPoleMoment(s0s[0]) << endl;
-    return jacobi;
+    this->jacobianMatrix = jacobi;
   }
 
   // returns the covariance matrix
-  matrix<double> setCovarianceMatrix() {
+  void setCovarianceMatrix() {
     matrix<double> covMat(s0s.size(), s0s.size());
     for (int i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < s0s.size(); j++) {
-        for (int k = 0; k < data.binCount; k++) {
-          for (int l = 0; l < data.binCount; l++) {
-            covMat(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
+        covMat(i, j) = 0.;
+        for (int k = 0; k < data.binCount+2; k++) {
+          for (int l = 0; l < data.binCount+2; l++) {
+            covMat(i,j) = covMat(i, j) + jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
+            // if (i == 0 && j == 0 && k == 0) {
+            //   cout << "l=" << l << "\t" << covMat(i,j) << endl;
+            // }
           }
         }
       }
     }
-    return covMat;
+    // cout << std::setprecision(17);
+    // cout << jacobianMatrix(0, 0)*errorMatrix(0, 0)*jacobianMatrix(0, 0) << endl;
+    // cout << jacobianMatrix(0, 0)*errorMatrix(0, 1)*jacobianMatrix(1, 0) << endl;
+    this->covarianceMatrix = covMat;
   }
 
-  double kPiFac() {
-    return 24.*pow(Constants::kPi*Constants::kVud*Constants::kFPi, 2)*Constants::kSEW;
-  }
 
   double pionPoleMoment(const double &s0) {
     double axialMoment = 0;

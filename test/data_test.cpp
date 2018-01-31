@@ -93,14 +93,27 @@ TEST_F(ExperimentalMomentsTest, experimentalMomentPlusPionPoleMoments) {
   EXPECT_NEAR(expPlusPionPoleMoments[1], 3.4673859072186186, 1.e-14);
 }
 
+TEST_F(ExperimentalMomentsTest, kPiFac) {
+  EXPECT_NEAR(expMom->kDPiFac(), 6.0937786116003652e-3  ,1.e-14);
+}
+
 TEST_F(ExperimentalMomentsTest, errorMatrix) {
   EXPECT_NEAR(expMom->getErrorMatrix(0, 0), 2.1986158042263601e-7, 1.e-15);
   EXPECT_NEAR(expMom->getErrorMatrix(21, 48), -1.660774631171531e-5, 1.e-15);
+  EXPECT_NEAR(expMom->getErrorMatrix(0, 79), -8.8169050111305228e-11, 1.e-15);
+  EXPECT_NEAR(expMom->getErrorMatrix(80, 80), 1.6e-3, 1.e-15);
+  EXPECT_NEAR(expMom->getErrorMatrix(81, 81), 3.7134137767198075e-5, 1.e-15);
 }
 
 TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
   EXPECT_NEAR(expMom->getJacobianMatrix(0, 0), 5.6094687833062200e-2, 1.e-15);
   EXPECT_NEAR(expMom->getJacobianMatrix(21, 4), 6.8565471537930633e-2, 1.e-14);
+  EXPECT_NEAR(expMom->getJacobianMatrix(79, 0), 0., 1.e-14);
   EXPECT_NEAR(expMom->getJacobianMatrix(80, 0), -0.15981845405157338, 1.e-14);
   EXPECT_NEAR(expMom->getJacobianMatrix(81, 2), 0.35273831585987608, 1.e-14);
+}
+
+TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
+  EXPECT_NEAR(expMom->getCovarianceMatrix(0, 0), 1.3667648017148091e-4, 1.e-9);
+  EXPECT_NEAR(expMom->getCovarianceMatrix(1, 1), 1.1074282562391433e-4, 1.e-14);
 }
