@@ -4,7 +4,6 @@
 #include "../src/s0_sets.hpp"
 #include "../src/constants.hpp"
 #include "../src/weights.hpp"
-#include "../src/pion_pole.hpp"
 #include <iostream>
 
 
@@ -92,4 +91,14 @@ TEST_F(ExperimentalMomentsTest, ExperimentalMoments) {
 TEST_F(ExperimentalMomentsTest, experimentalMomentPlusPionPoleMoments) {
   vector<double> expPlusPionPoleMoments = expMom->getExpPlusPionPoleMoments();
   EXPECT_NEAR(expPlusPionPoleMoments[1], 3.4673859072186186, 1.e-14);
+}
+
+TEST_F(ExperimentalMomentsTest, errorMatrix) {
+  EXPECT_NEAR(expMom->getErrorMatrix(0, 0), 2.1986158042263601e-7, 1.e-15);
+  EXPECT_NEAR(expMom->getErrorMatrix(21, 48), -1.660774631171531e-5, 1.e-15);
+}
+
+TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
+  EXPECT_NEAR(expMom->getJacobianMatrix(0, 0), 5.6094687833062200e-2, 1.e-15);
+  EXPECT_NEAR(expMom->getJacobianMatrix(21, 4), 6.8565471537930633e-2, 1.e-14);
 }

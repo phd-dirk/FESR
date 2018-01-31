@@ -125,13 +125,13 @@ class ExperimentalMoments : public Constants {
     setExperimentalMoments();
 
     // // init error matrix
-    // this->errorMatrix = getErrorMatrix();
+    this->errorMatrix = setErrorMatrix();
 
     // // init jacobian matrix
-    // this->jacobianMatrix = getJacobianMatrix();
+    this->jacobianMatrix = setJacobianMatrix();
 
     // // init covariance matrix
-    // this->covarianceMatrix = getCovarianceMatrix();
+    this->covarianceMatrix = setCovarianceMatrix();
   }
 
   vector<double> getExpPlusPionPoleMoments() {
@@ -142,6 +142,9 @@ class ExperimentalMoments : public Constants {
     }
     return expPlusPionMoments;
   }
+  double getExpPlusPionMoment(int i) {
+    return experimentalMoments[i] + pionPoleMoment(s0s[i]);
+  }
 
   vector<double> getExperimentalMoments() {
     return this->experimentalMoments;
@@ -149,6 +152,12 @@ class ExperimentalMoments : public Constants {
 
   matrix<double> getWeightRatios() {
     return this->weightRatios;
+  }
+  double getErrorMatrix(int i, int j) {
+    return this->errorMatrix(i, j);
+  }
+  double getJacobianMatrix(int i, int j) {
+    return this->jacobianMatrix(i, j);
   }
 
   // Selects the closest bin number from s0
@@ -200,37 +209,36 @@ class ExperimentalMoments : public Constants {
   }
 
   // returns the error matrix
-  matrix<double> getErrorMatrix() {
+  matrix<double> setErrorMatrix() {
     matrix<double> errorMatrix(data.binCount+2, data.binCount+2);
-    for (int i = 0; i <= data.binCount; i++) {
-      for (int j = 0; j <= data.binCount; j++) {
+    for (int i = 0; i < data.binCount; i++) {
+      for (int j = 0; j < data.binCount; j++) {
         errorMatrix(i, j) = data.corerrs(i, j)*data.derrs[i]*data.derrs[j]/1.e2;
       }
     }
-    errorMatrix(data.binCount+1, data.binCount+1) = pow(kDBe, 2);
-    errorMatrix(data.binCount+2, data.binCount+2) = pow(kDRTauVex, 2);
+    errorMatrix(data.binCount, data.binCount) = pow(kDBe, 2);
+    errorMatrix(data.binCount+1, data.binCount+1) = pow(kDRTauVex, 2);
     return errorMatrix;
   }
 
   // returns the Jacobian Matrix
-  matrix<double> getJacobianMatrix() {
+  matrix<double> setJacobianMatrix() {
     matrix<double> jacobi(data.binCount+2, data.binCount+2);
-    for (int i = 0; i <= s0s.size(); i++) {
-      for (int j = 0; j <= data.binCount; j++) {
+    for (int i = 0; i < s0s.size(); i++) {
+      for (int j = 0; j < data.binCount; j++) {
         jacobi(j, i) = kSTauMass/s0s[i]/kBe*weightRatios(i, j);
       }
-      jacobi(data.binCount+1, i) = -experimentalMoments[i];
     }
     return jacobi;
   }
 
   // returns the covariance matrix
-  matrix<double> getCovarianceMatrix() {
+  matrix<double> setCovarianceMatrix() {
     matrix<double> covMat(s0s.size(), s0s.size());
-    for (int i = 0; i <= s0s.size(); i++) {
-      for (int j = 0; j <= s0s.size(); j++) {
-        for (int k = 0; k <= data.binCount; k++) {
-          for (int l = 0; l <= data.binCount; l++) {
+    for (int i = 0; i < s0s.size(); i++) {
+      for (int j = 0; j < s0s.size(); j++) {
+        for (int k = 0; k < data.binCount; k++) {
+          for (int l = 0; l < data.binCount; l++) {
             covMat(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
           }
         }
