@@ -228,7 +228,10 @@ class ExperimentalMoments : public Constants {
       for (int j = 0; j < data.binCount; j++) {
         jacobi(j, i) = kSTauMass/s0s[i]/kBe*weightRatios(i, j);
       }
+      jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/kBe;
+      jacobi(data.binCount+1, i) = pionPoleMoment(s0s[i])/kPiFac();
     }
+    cout << pionPoleMoment(s0s[0]) << endl;
     return jacobi;
   }
 

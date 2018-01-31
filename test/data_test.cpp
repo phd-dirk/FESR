@@ -101,4 +101,6 @@ TEST_F(ExperimentalMomentsTest, errorMatrix) {
 TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
   EXPECT_NEAR(expMom->getJacobianMatrix(0, 0), 5.6094687833062200e-2, 1.e-15);
   EXPECT_NEAR(expMom->getJacobianMatrix(21, 4), 6.8565471537930633e-2, 1.e-14);
+  EXPECT_NEAR(expMom->getJacobianMatrix(80, 0), -0.15981845405157338, 1.e-14);
+  EXPECT_NEAR(expMom->getJacobianMatrix(81, 2), 0.35273831585987608, 1.e-14);
 }
