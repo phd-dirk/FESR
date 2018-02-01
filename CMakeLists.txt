@@ -4,9 +4,9 @@ set (CMAKE_CXX_STANDARD 17)
 
 find_package(Boost 1.66.0)
 
-set(DIR src)
+set(DIR src lib/cRunDec)
 include_directories(${DIR} ${BOOST_INCLUDE_DIRS})
-set(SOURCES main.cpp)
+set(SOURCES main.cpp lib/cRunDec/CRunDec.cpp)
 
 add_executable(FESR ${SOURCES})
 target_link_libraries(FESR)

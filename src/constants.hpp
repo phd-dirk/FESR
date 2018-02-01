@@ -1,12 +1,22 @@
 #ifndef SRC_CONSTANTS_H
 #define SRC_CONSTANTS_H
 
+#include <vector>
 #include <cmath>
 
 using std::pow;
+using std::vector;
 
 class Constants {
  public:
+  Constants() : zeta_(8) {
+    zeta_[3] = 1.2020569031595942;  // coefficients.nb
+    zeta_[5] = 1.036927755143369926;  // coefficients.nb
+    zeta_[7] = 1.008349277381922827;
+  }
+
+  vector<double> zeta_;
+
   constexpr static double kBe = 17.827; // HFAG 2011
   constexpr static double kDBe = 0.04; // HFAG 2011
   constexpr static double kFPi = 92.21e-3; // PDG 2010

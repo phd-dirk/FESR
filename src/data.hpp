@@ -314,7 +314,4 @@ inline vector<double> renormalize(double renormalizationFactor, vector<double> v
   return renormalizedVector;
 }
 
-
-
-
 #endif
