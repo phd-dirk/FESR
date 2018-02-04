@@ -1,15 +1,17 @@
 cmake_minimum_required (VERSION 3.10)
 project (FESR)
-set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 find_package(Boost 1.66.0)
+find_package(GSL REQUIRED)
 
 set(DIR src lib/cRunDec)
-include_directories(${DIR} ${BOOST_INCLUDE_DIRS})
+include_directories(${DIR} ${BOOST_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS})
 set(SOURCES main.cpp lib/cRunDec/CRunDec.cpp)
 
 add_executable(FESR ${SOURCES})
-target_link_libraries(FESR)
+target_link_libraries(FESR GSL::gsl)
 
 #################################
 # Testing

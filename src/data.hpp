@@ -213,9 +213,9 @@ class ExperimentalMoments : public Constants {
       for (int j = 0; j < data.binCount; j++) {
         double s0UpperLimit = data.sbins[j]+data.dsbins[j]/2.;
         double s0LowerLimit = data.sbins[j]-data.dsbins[j]/2.;
-        wRatios(i, j) = (s0s[i]/kSTauMass*(
+        wRatios(i, j) = (s0s[i]/kSTau*(
             (weight(s0LowerLimit/s0s[i]) - weight(s0UpperLimit/s0s[i]))/
-            (wTau(s0LowerLimit/kSTauMass) - wTau(s0UpperLimit/kSTauMass)))).real();
+            (wTau(s0LowerLimit/kSTau) - wTau(s0UpperLimit/kSTau)))).real();
       }
     }
 
@@ -228,7 +228,7 @@ class ExperimentalMoments : public Constants {
     vector<double> moments(s0s.size());
     for (int i = 0; i < s0s.size(); i++) {
       for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
-        moments[i] += kSTauMass/s0s[i]/kBe*data.sfm2s[j]*weightRatios(i, j);
+        moments[i] += kSTau/s0s[i]/kBe*data.sfm2s[j]*weightRatios(i, j);
       }
     }
     this->experimentalMoments = moments;
@@ -257,7 +257,7 @@ class ExperimentalMoments : public Constants {
     for (int i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount+2; j++) {
         if (j <= closestBinToS0(s0s[i])) {
-          jacobi(j, i) = kSTauMass/s0s[i]/kBe*weightRatios(i, j);
+          jacobi(j, i) = kSTau/s0s[i]/kBe*weightRatios(i, j);
         } else {
           jacobi(j, i) = 0.;
         }
@@ -295,7 +295,7 @@ class ExperimentalMoments : public Constants {
     double axialMoment = 0;
     double pseudoMoment = 0;
     axialMoment += kPiFac()/s0*wR00(pow(Constants::kPionMinusMass, 2)/s0).real();
-    pseudoMoment += axialMoment*(-2.*pow(kPionMinusMass, 2)/(kSTauMass + 2.*pow(kPionMinusMass, 2)));
+    pseudoMoment += axialMoment*(-2.*pow(kPionMinusMass, 2)/(kSTau + 2.*pow(kPionMinusMass, 2)));
     return axialMoment + pseudoMoment;
   }
 
