@@ -20,11 +20,11 @@ if(test)
   # ctest
   enable_testing()
   find_package(GTest REQUIRED)
-  include_directories(${GTEST_INCLUDE_DIRS})
+  include_directories(${GTEST_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS})
 
   set (TEST_DIR test)
-  set (TEST_SOURCES ${TEST_DIR}/constants_test.cpp ${TEST_DIR}/weights_test.cpp
-    ${TEST_DIR}/data_test.cpp)
+  set (TEST_SOURCES lib/cRunDec/CRunDec.cpp ${TEST_DIR}/constants_test.cpp ${TEST_DIR}/weights_test.cpp
+    ${TEST_DIR}/data_test.cpp ${TEST_DIR}/theoretical_moments_test.cpp)
 
   #################
   # Unit Tests
@@ -32,7 +32,7 @@ if(test)
   add_executable(runUnitTests ${TEST_SOURCES})
 
   # Standard linking to gtest stuff.
-  target_link_libraries(runUnitTests GTest::GTest GTest::Main)
+  target_link_libraries(runUnitTests GTest::GTest GTest::Main GSL::gsl)
 
   # Extra linking for the project.
   # target_link_libraries(...)

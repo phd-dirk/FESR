@@ -26,6 +26,7 @@ class Constants {
   constexpr static double kSEW = 1.0198; // EW radiative corr.
   constexpr static double kDSEW = 0.0006;
   constexpr static double kSTau = 3.1570893124; // kTauMass^2
+  constexpr static double kAlphaTau = 0.31927; // kTauMass^2
   constexpr static double kPi = 3.141592653589793;
   constexpr static double kVud = 0.97425; // Towner, Hardy 2009
   constexpr static double kDVud = 0.00022;
