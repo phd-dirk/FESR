@@ -128,23 +128,9 @@ class ExperimentalMoments : public Constants {
     // init error matrix
 
     setErrorMatrix();
-    for (int i = 0; i < data.binCount+2; i++) {
-      for (int j = 0; j < data.binCount+2; j++) {
-        if (errorMatrix(i, j) > 1.e2) {
-          cout << errorMatrix(i, j) << "/t i " << i << "/t j " << endl;
-        }
-      }
-    }
 
     // init jacobian matrix
     setJacobianMatrix();
-    for (int i = 0; i < s0s.size(); i++) {
-      for (int j = 0; j < data.binCount+2; j++) {
-        if (jacobianMatrix(i, j) > 1.e2) {
-          cout << jacobianMatrix(i, j) << " i " << i << " j " << endl;
-        }
-      }
-    }
 
     // init covariance matrix
     setCovarianceMatrix();
