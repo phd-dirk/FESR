@@ -3,7 +3,9 @@
 
 #include "../lib/cRunDec/CRunDec.h"
 #include "./constants.hpp"
+#include "./numerics.hpp"
 #include <vector>
+#include <functional>
 #include <complex>
 #include <cmath>
 #include <stdexcept>
@@ -17,11 +19,13 @@ using std::invalid_argument;
 using std::complex;
 using std::cout;
 using std::endl;
+using std::bind;
+using std::placeholders::_1;
 
 
-class AdlerFunction : public Constants  {
+class AdlerFunction : public Numerics {
 public:
-  AdlerFunction(int nc, int nf, int order) : nc_(nc), nf_(nf), order_(order),
+  AdlerFunction(int nc, int nf, int order) : Numerics(1e-7, 1e-7), nc_(nc), nf_(nf), order_(order),
                                              beta_(5), c_(6, vector<double>(6)),
                                              cRunDec_(CRunDec(nf)) {
     if (order > 5) { throw invalid_argument("order cannot be higher than 5"); };
@@ -62,6 +66,7 @@ public:
   }
 
   complex<double> D0(complex<double> s, double mu) {
+    // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
     complex<double> L = log(-s/pow(mu, 2));
     complex<double> amu(alphaMu(pow(mu, 2))/kPi, 0.);
     complex<double> sum(0., 0.);
@@ -73,7 +78,22 @@ public:
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
 
+  complex<double> contourIntegral(double mu) {
+    auto D0Real = [mu, this](double t) {
+      return D0(complex<double>(t, t), mu).real();
+    };
+    auto D0Imag = [mu, this](double t) {
+      return D0(complex<double>(t, t), mu).imag();
+    };
+
+    double cintReal = integrate(D0Real);
+    double cintImag = integrate(D0Imag);
+
+    return complex<double>(cintReal, cintImag);
+  };
+
   double alphaMu(double mu) {
+
     return cRunDec_.AlphasExact(kAlphaTau, kSTau, mu, 4);
   };
 

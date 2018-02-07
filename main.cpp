@@ -31,14 +31,16 @@ inline double test(double x) {
 int main () {
   cout.precision(17);
 
-  ExperimentalMoments expMom(projectRoot+"/aleph.json", 0.99363, s0Set, wD00, wD00);
-  State state(s0Set, projectRoot+"/aleph.json", wR00);
-  renormalizeState(state, 0.99363);
-  cout << state.weight(complex<double>(1., 2.)) << endl;
+  // ExperimentalMoments expMom(projectRoot+"/aleph.json", 0.99363, s0Set, wD00, wD00);
+  // State state(s0Set, projectRoot+"/aleph.json", wR00);
+  // renormalizeState(state, 0.99363);
+  // cout << state.weight(complex<double>(1., 2.)) << endl;
 
   AdlerFunction adler(3, 3, 4);
 
+
   cout << adler.D0(-1., 2.) << endl;
+  cout << adler.contourIntegral(3.) << endl;
 
 
   // gsl_integration_workspace * w = gsl_integration_workspace_alloc(1000);
@@ -55,8 +57,9 @@ int main () {
 
   // printf("result = % .18f\n", result);
 
-  Numerics numerics(1e-7, 1e-7);
-  cout << numerics.integrate(Numerics::test) << endl;
+  // Numerics numerics(1e-7, 1e-7);
+  // cout << numerics.integrate(Numerics::test) << endl;
+
 
   return 0;
 }

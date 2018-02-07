@@ -1,12 +1,13 @@
 #ifndef SRC_NUMERICS_H
 #define SRC_NUMERICS_H
 
+#include "./constants.hpp"
 #include <gsl/gsl_integration.h>
 #include <functional>
 
 using std::function;
 
-class Numerics {
+class Numerics: public Constants {
  public:
   Numerics(double epsabs, double epsrel) : w_(gsl_integration_workspace_alloc(1000)), epsrel_(epsrel), epsabs_(epsabs) {}
 
@@ -24,9 +25,10 @@ class Numerics {
       },
       &func
     };
-    gsl_integration_qag(&F, 0, 1, epsabs_, epsrel_, 1000, 6, w_, &result, &error);
+    gsl_integration_qag(&F, 0, 2*kPi, epsabs_, epsrel_, 1000, 6, w_, &result, &error);
     return result;
   }
+
  private:
   gsl_integration_workspace * w_;
   double epsrel_; // relative error

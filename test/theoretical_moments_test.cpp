@@ -53,4 +53,5 @@ TEST_F(AdlerFunctionTest, D0) {
   complex<double> s(3., 3.);
   double mu = sqrt(3.1570893124000001);
   EXPECT_NEAR(adler->D0(s, mu).real(), 2.6895414253059940e-2, 1e-13);
+  EXPECT_NEAR(adler->D0(complex<double>(7., 2.), mu).real(), 2.665116702872037e-2, 1e-13);
 }
