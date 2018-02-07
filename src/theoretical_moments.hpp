@@ -15,17 +15,18 @@
 using std::vector;
 using std::pow;
 using std::log;
+using std::exp;
 using std::invalid_argument;
 using std::complex;
 using std::cout;
 using std::endl;
-using std::bind;
-using std::placeholders::_1;
+
+using namespace std::complex_literals;
 
 
-class AdlerFunction : public Numerics {
+class AdlerFunction : public Constants, public Numerics {
 public:
-  AdlerFunction(int nc, int nf, int order) : Numerics(1e-7, 1e-7), nc_(nc), nf_(nf), order_(order),
+  AdlerFunction(int nc, int nf, int order) : Numerics(1e-13, 0), nc_(nc), nf_(nf), order_(order),
                                              beta_(5), c_(6, vector<double>(6)),
                                              cRunDec_(CRunDec(nf)) {
     if (order > 5) { throw invalid_argument("order cannot be higher than 5"); };
@@ -78,18 +79,16 @@ public:
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
 
-  complex<double> contourIntegral(double mu) {
-    auto D0Real = [mu, this](double t) {
-      return D0(complex<double>(t, t), mu).real();
-    };
-    auto D0Imag = [mu, this](double t) {
-      return D0(complex<double>(t, t), mu).imag();
+  complex<double> contourIntegral(double s0, function<complex<double>(complex<double>)> weight) {
+    auto gamma = [](double t) {
+      return exp(1i*t);
     };
 
-    double cintReal = integrate(D0Real);
-    double cintImag = integrate(D0Imag);
+    auto func = [s0, gamma, weight, this](double t) {
+      return weight(gamma(t))*D0(s0*gamma(t), s0);
+    };
 
-    return complex<double>(cintReal, cintImag);
+    return 3*kPi*integrateComplex(gamma, 0, kPi);
   };
 
   double alphaMu(double mu) {
