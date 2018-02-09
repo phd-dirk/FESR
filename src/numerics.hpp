@@ -52,6 +52,7 @@ class Numerics {
     return complex<double>(cintReal, cintImag);
   }
 
+  // from https://gist.github.com/lilac/2464434
   template<class T>
   bool invertMatrix (const ublas::matrix<T>& input, ublas::matrix<T>& inverse) {
     using namespace boost::numeric::ublas;
