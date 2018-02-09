@@ -43,15 +43,25 @@ TEST_F(AdlerFunctionTest, AdlerCoefficients) {
   EXPECT_NEAR(adler->getC(5, 5), 5.1257812500000002, 1e-14);
 }
 
+// test alpha_s
+// from Matthias fesr_aleph_2015, VAcorrD0.f90, zarg(...)
 TEST_F(AdlerFunctionTest, alpha_s) {
+  EXPECT_NEAR(adler->alphaMu(2.), 0.43937043533530379, 1e-10);
+  EXPECT_NEAR(adler->alphaMu(2.5), 0.36955272230711317, 1e-10);
   EXPECT_NEAR(adler->alphaMu(3), 0.32889634177720101, 1e-13);
   EXPECT_NEAR(adler->alphaMu(2.9), 0.33566660300951201, 1e-11);
   EXPECT_NEAR(adler->alphaMu(3.1), 0.32263744597428173, 1e-13);
+  EXPECT_NEAR(adler->alphaMu(3.3), 0.31142195542134055, 1e-13);
 }
 
 TEST_F(AdlerFunctionTest, D0) {
   complex<double> s(3., 3.);
-  double mu = sqrt(3.1570893124000001);
-  EXPECT_NEAR(adler->D0(s, mu).real(), 2.6895414253059940e-2, 1e-13);
-  EXPECT_NEAR(adler->D0(complex<double>(7., 2.), mu).real(), 2.665116702872037e-2, 1e-13);
+  complex<double> mu2(3.1570893124000001, 3.1570893124000001);
+  EXPECT_NEAR(adler->D0(s, mu2).real(), 2.6895414253059940e-2, 1e-13);
+  EXPECT_NEAR(adler->D0(s, mu2).imag(), 1.5612542955486550e-3, 1e-13);
+  EXPECT_NEAR(adler->D0(complex<double>(7., 2.), mu2).real(), 2.665116702872037e-2, 1e-13);
+  EXPECT_NEAR(adler->D0(complex<double>(3., 0), mu2).real(), 2.5701647662683784e-2, 1e-13);
+
+  complex<double> mu2_2(3., 3.);
+  EXPECT_NEAR(adler->D0(s, mu2_2).real(), 2.6878635987293748e-2, 1e-13);
 }

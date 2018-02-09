@@ -38,8 +38,8 @@ int main () {
 
   AdlerFunction adler(3, 3, 4);
 
-  cout << adler.D0(-1., 2.) << endl;
   cout << adler.contourIntegral(3., wD00) << endl;
+  cout << adler.contourIntegral(5., wD00) << endl;
 
 
   // gsl_integration_workspace * w = gsl_integration_workspace_alloc(1000);

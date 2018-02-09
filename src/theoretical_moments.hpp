@@ -66,16 +66,24 @@ public:
     c_[5][5] = 1./80.*pow(beta_[1], 4)*c_[1][1];beta_[1] = 11./2. - 1./3.*nf_;  // rgm06
   }
 
-  complex<double> D0(complex<double> s, double mu) {
+  complex<double> D0(complex<double> s, complex<double> mu2) {
     // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
-    complex<double> L = log(-s/pow(mu, 2));
-    complex<double> amu(alphaMu(pow(mu, 2))/kPi, 0.);
+    complex<double> L = log(-s/mu2);
+    complex<double> amu(alphaMu(mu2.real())/kPi, alphaMu(mu2.imag())/kPi);
     complex<double> sum(0., 0.);
     for (int n = 1; n <= order_; n++) {
       for (int k = 1; k <= n; k++) {
         sum += pow(amu, n)*(double)k*c_[n][k]*pow(L,k-1);
       }
     }
+
+    cout << "s\t" << s << endl;
+    cout << "mu2\t" << mu2 << endl;
+    cout << "amu\t" << amu << endl;
+    cout << "L\t" << L << endl;
+    cout << endl;
+    cout << pow(complex<double>(1., 2), 2) << endl;
+
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
 
@@ -85,14 +93,14 @@ public:
     };
 
     auto func = [s0, gamma, weight, this](double t) {
-      return weight(gamma(t))*D0(s0*gamma(t), s0);
+      double mu = sqrt(s0);
+      return weight(gamma(t))*D0(s0*gamma(t), mu);
     };
 
-    return 3*kPi*integrateComplex(gamma, 0, kPi);
+    return 3*kPi*integrateComplex(func, 0, 2.*kPi);
   };
 
   double alphaMu(double mu) {
-
     return cRunDec_.AlphasExact(kAlphaTau, kSTau, mu, 4);
   };
 
