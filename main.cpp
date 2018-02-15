@@ -13,10 +13,13 @@
 #include <string>
 #include <complex>
 
-#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
-#include <boost/numeric/odeint/integrate/integrate_const.hpp>
-using boost::numeric::odeint::runge_kutta4;
-using boost::numeric::odeint::integrate_const;
+#include <boost/numeric/odeint/stepper/generation/make_controlled.hpp>
+#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54.hpp> // neccessary for make_controlled( stepper )
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+using boost::numeric::odeint::make_controlled;
+using boost::numeric::odeint::runge_kutta_cash_karp54;
+using boost::numeric::odeint::integrate_adaptive;
 
 
 #include "./lib/cRunDec/CRunDec.h"
@@ -37,15 +40,12 @@ inline double test(double x) {
 typedef complex< double > state_type;
 
 struct stuart_landau {
-  double m_eta;
-  double m_alpha;
+  double m_beta;
 
-  stuart_landau( double eta = 1.0, double alpha = 1.0 )
-      : m_eta ( eta ) , m_alpha( alpha ) {}
+  stuart_landau( double beta = 9./2. ): m_beta ( beta ) {}
 
   void operator()( const state_type &x, state_type &dxdt, double t) const {
-    const complex< double > I( 0.0, 1.0 );
-    dxdt = ( 1.0 + m_eta * I ) * x - ( 1.0 + m_alpha * I ) * norm( x ) * x;
+    dxdt = -1./t * m_beta * pow(x, 2);
   }
 };
 
@@ -65,13 +65,14 @@ struct streaming_observer {
 int main () {
   cout.precision(17);
 
-  state_type x = complex< double > ( 1.0, 0.0 );
+  state_type x = complex< double > ( 0.101627, 0.0 );
 
-  const double dt = 0.1;
+  const double dt = 0.01;
 
-  typedef runge_kutta4< state_type > stepper_type;
+  // typedef runge_kutta_cash_karp54< state_type > stepper_type;
+  auto stepper = make_controlled( 1.0e-3, 1.0e-3, runge_kutta_cash_karp54< state_type >() );
 
-  integrate_const( stepper_type(), stuart_landau( 2.0, 1.0 ), x, 0.0, 10.0, dt, streaming_observer( cout ) );
+  integrate_adaptive( stepper, stuart_landau( 9./2. ), x, 1.77686, 2.0, dt, streaming_observer( cout ) );
 
   // ExperimentalMoments expMom(projectRoot+"/aleph.json", 0.99363, s0Set, wD00, wD00);
   // State state(s0Set, projectRoot+"/aleph.json", wR00);
