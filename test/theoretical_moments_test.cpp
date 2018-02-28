@@ -54,14 +54,14 @@ TEST_F(AdlerFunctionTest, alpha_s) {
   EXPECT_NEAR(adler->alphaMu(3.3), 0.31142195542134055, 1e-13);
 }
 
-TEST_F(AdlerFunctionTest, D0) {
-  complex<double> s(3., 3.);
-  complex<double> mu2(3.1570893124000001, 3.1570893124000001);
-  EXPECT_NEAR(adler->D0(s, mu2).real(), 2.6895414253059940e-2, 1e-13);
-  EXPECT_NEAR(adler->D0(s, mu2).imag(), 1.5612542955486550e-3, 1e-13);
-  EXPECT_NEAR(adler->D0(complex<double>(7., 2.), mu2).real(), 2.665116702872037e-2, 1e-13);
-  EXPECT_NEAR(adler->D0(complex<double>(3., 0), mu2).real(), 2.5701647662683784e-2, 1e-13);
+// TEST_F(AdlerFunctionTest, D0) {
+//   complex<double> s(3., 3.);
+//   complex<double> mu2(3.1570893124000001, 3.1570893124000001);
+//   EXPECT_NEAR(adler->D0(s, mu2).real(), 2.6895414253059940e-2, 1e-13);
+//   EXPECT_NEAR(adler->D0(s, mu2).imag(), 1.5612542955486550e-3, 1e-13);
+//   EXPECT_NEAR(adler->D0(complex<double>(7., 2.), mu2).real(), 2.665116702872037e-2, 1e-13);
+//   EXPECT_NEAR(adler->D0(complex<double>(3., 0), mu2).real(), 2.5701647662683784e-2, 1e-13);
 
-  complex<double> mu2_2(3., 3.);
-  EXPECT_NEAR(adler->D0(s, mu2_2).real(), 2.6878635987293748e-2, 1e-13);
-}
+//   complex<double> mu2_2(3., 3.);
+//   EXPECT_NEAR(adler->D0(s, mu2_2).real(), 2.6878635987293748e-2, 1e-13);
+// }
