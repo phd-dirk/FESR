@@ -1,9 +1,9 @@
 #ifndef SRC_THEORETICAL_MOMENTS_H
 #define SRC_THEORETICAL_MOMENTS_H
 
-#include "../lib/cRunDec/CRunDec.h"
 #include "./constants.hpp"
 #include "./numerics.hpp"
+#include "./alpha_s.hpp"
 #include <vector>
 #include <functional>
 #include <complex>
@@ -27,8 +27,7 @@ using namespace std::complex_literals;
 class AdlerFunction : public Constants, public Numerics {
 public:
   AdlerFunction(int nc, int nf, int order) : Numerics(1e-13, 0), nc_(nc), nf_(nf), order_(order),
-                                             beta_(5), c_(6, vector<double>(6)),
-                                             cRunDec_(CRunDec(nf)) {
+                                             beta_(5), c_(6, vector<double>(6)) {
     if (order > 5) { throw invalid_argument("order cannot be higher than 5"); };
 
     beta_[1] = 1./6.*(11.*nc_ - 2.*nf_);
@@ -69,20 +68,13 @@ public:
   complex<double> D0(complex<double> s, complex<double> mu2) {
     // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
     complex<double> L = log(-s/mu2);
-    complex<double> amu(alphaMu(mu2.real())/kPi, alphaMu(mu2.imag())/kPi);
+    complex<double> amu = alpha_s(sqrt(mu2));
     complex<double> sum(0., 0.);
     for (int n = 1; n <= order_; n++) {
       for (int k = 1; k <= n; k++) {
         sum += pow(amu, n)*(double)k*c_[n][k]*pow(L,k-1);
       }
     }
-
-    cout << "s\t" << s << endl;
-    cout << "mu2\t" << mu2 << endl;
-    cout << "amu\t" << amu << endl;
-    cout << "L\t" << L << endl;
-    cout << endl;
-    cout << pow(complex<double>(1., 2), 2) << endl;
 
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
@@ -100,10 +92,6 @@ public:
     return 3*kPi*integrateComplex(func, 0, 2.*kPi);
   };
 
-  double alphaMu(double mu) {
-    return cRunDec_.AlphasExact(kAlphaTau, kSTau, mu, 4);
-  };
-
   double getC(int i, int j) {
     return c_[i][j];
   }
@@ -114,10 +102,6 @@ private:
   int nc_;
   int nf_;
   int order_;
-  CRunDec cRunDec_;
 };
-
-CRunDec cRunDec(5);
-double jo = cRunDec.AlphasExact(0.108, 1. ,2., 4);
 
 #endif

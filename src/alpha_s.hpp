@@ -15,7 +15,8 @@ using std::sqrt;
 using std::atan;
 using std::log;
 
-complex<double> newtonRaphson(
+// find root of function
+inline complex<double> newtonRaphson(
     function<complex<double>(complex<double>)> f,
     function<complex<double>(complex<double>)> df,
     complex<double> x0,
@@ -27,12 +28,15 @@ complex<double> newtonRaphson(
   return xNext;
 }
 
-complex<double> alpha_s(complex<double> s) {
+inline complex<double> alpha_s(complex<double> s) {
   complex<double> I(0.0, 1.0);
   double a1 = 0.10162679736189885;
   double mu1 = sqrt(3.1570893124000001);
   complex<double> mu2 = s;
 
+
+  // integrate beta function and find root
+  // from mathematica coefficients.nb
   auto f = [&a1, &mu1, &mu2](complex<double> a2) {
     return 0.2222222222222/a1 - 0.2222222222222/a2 - 0.3730002895803*atan(0.19576224733469 - 2.7775209170642*a1) + 0.3730002895803*atan(0.19576224733469 - 2.777520917064*a2) +
     0.3950617283951*log(a1) - 0.2727626771781*log(0.353968700519 + 1.*a1) - 0.0611495256085*log(0.13459153249825 - 0.14096185280333*a1 + 1.*pow(a1,2)) -
