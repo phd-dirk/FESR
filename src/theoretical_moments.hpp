@@ -18,6 +18,7 @@ using std::log;
 using std::exp;
 using std::invalid_argument;
 using std::complex;
+using std::function;
 using std::cout;
 using std::endl;
 
@@ -26,7 +27,7 @@ using namespace std::complex_literals;
 
 class AdlerFunction : public Constants, public Numerics {
 public:
-  AdlerFunction(int nc, int nf, int order) : Numerics(1e-13, 0), nc_(nc), nf_(nf), order_(order),
+  AdlerFunction(const int &nc, const int &nf, const int &order) : Numerics(1e-13, 0), nc_(nc), nf_(nf), order_(order),
                                              beta_(5), c_(6, vector<double>(6)) {
     if (order > 5) { throw invalid_argument("order cannot be higher than 5"); };
 
@@ -79,7 +80,7 @@ public:
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
 
-  complex<double> contourIntegral(double s0, function<complex<double>(complex<double>)> weight) {
+  double contourIntegral(double s0, function<complex<double>(complex<double>)> weight) {
     auto gamma = [](double t) {
       return exp(1i*t);
     };
@@ -89,7 +90,7 @@ public:
       return weight(gamma(t))*D0(s0*gamma(t), mu2);
     };
 
-    return 3*kPi*integrateComplex(func, 0, 2.*kPi);
+    return (3*kPi*integrateComplex(func, 0, 2.*kPi)).real();
   };
 
   double getC(int i, int j) {
@@ -102,6 +103,29 @@ private:
   int nc_;
   int nf_;
   int order_;
+}; // end AdlerFunction
+
+class TheoreticalMoments: public AdlerFunction {
+ public:
+  TheoreticalMoments(const int &nc, const int &nf, const int &order,
+                     const vector<double> &s0s, function<complex<double>(complex<double>)> weight) :
+      AdlerFunction(nc, nf, order), s0s(s0s), weight(weight) {}
+
+  double operator ()(int i) {
+    return contourIntegral(s0s[i], weight);
+  }
+
+  vector<double> operator ()() {
+    vector<double> moments(s0s.size());
+    for(int i = 0; i < s0s.size(); i++) {
+      moments[i] = contourIntegral(s0s[i], weight);
+    }
+    return moments;
+  }
+
+ private:
+  vector<double> s0s;
+  function<complex<double>(complex<double>)> weight;
 };
 
 #endif

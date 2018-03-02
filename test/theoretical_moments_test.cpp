@@ -58,10 +58,10 @@ TEST_F(AdlerFunctionTest, D0) {
 
 TEST_F(AdlerFunctionTest, CIntD0) {
   double s0 = 3.;
-  EXPECT_NEAR(adler->contourIntegral(s0, wD00).real(), 1.8129891021138491, 1e-13);
-  EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
+  EXPECT_NEAR(adler->contourIntegral(s0, wD00), 1.8129891021138491, 1e-13);
+  // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
 
   s0 = 2.6;
-  // EXPECT_NEAR(adler->contourIntegral(s0, wD00).real(), 1.8396044152966260, 1e-13);
-  EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
+  EXPECT_NEAR(adler->contourIntegral(s0, wD00), 1.8396044152966260, 1e-13);
+  // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
 }

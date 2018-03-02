@@ -1,5 +1,7 @@
 #include <iostream>
+#include <vector>
 
+using std::vector;
 using std::cout;
 using std::endl;
 
@@ -30,7 +32,13 @@ double RosenBrock(const double *xx) {
 int main () {
   cout.precision(17);
 
-  Chisquared chisquared(s0Set, wD00);
+  int nc = 3;
+  int nf = 3;
+  int order = 5;
+
+  vector<double> s0s = s0Set;
+
+  Chisquared chisquared(nc, nf, order, s0s, wD00);
   cout << chisquared() << endl;
 
 
