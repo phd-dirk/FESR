@@ -3,6 +3,11 @@
 using std::cout;
 using std::endl;
 
+// Chisquared
+#include "./src/chisquared.hpp"
+#include "./src/s0_sets.hpp"
+#include "./src/weights.hpp"
+
 // MINUIT
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
@@ -25,34 +30,39 @@ double RosenBrock(const double *xx) {
 int main () {
   cout.precision(17);
 
-  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  Chisquared chisquared(s0Set, wD00);
+  cout << chisquared() << endl;
 
-  // set tolerances
-  min->SetMaxFunctionCalls(10000000); // for Minuit2
-  min->SetMaxIterations(10000000); // for GSL
-  min->SetTolerance(1e-17);
-  // min->SetPrintLevel(1); // activate logging
 
-  // function wrapper
-  Functor f(&RosenBrock, 2);
-  double step[2] = {0.01, 0.01};
-  // starting point
-  double variable[2] = {-1., 1.2};
+  // MINUIT
+  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  min->SetFunction(f);
+  // // set tolerances
+  // min->SetMaxFunctionCalls(10000000); // for Minuit2
+  // min->SetMaxIterations(10000000); // for GSL
+  // min->SetTolerance(1e-17);
+  // // min->SetPrintLevel(1); // activate logging
 
-  // set free variables to be minimized
-  min->SetVariable(0, "x", variable[0], step[0]);
-  min->SetVariable(1, "y", variable[1], step[1]);
+  // // function wrapper
+  // Functor f(&RosenBrock, 2);
+  // double step[2] = {0.01, 0.01};
+  // // starting point
+  // double variable[2] = {-1., 1.2};
 
-  // minimize!
-  min->Minimize();
+  // min->SetFunction(f);
 
-  const double *xs = min->X();
-  cout << "Minimum f(" << xs[0] << "," << xs[1] << "): "
-       << min->MinValue() << endl;
+  // // set free variables to be minimized
+  // min->SetVariable(0, "x", variable[0], step[0]);
+  // min->SetVariable(1, "y", variable[1], step[1]);
 
-  cout << "min " << RosenBrock(xs) << endl;
+  // // minimize!
+  // min->Minimize();
+
+  // const double *xs = min->X();
+  // cout << "Minimum f(" << xs[0] << "," << xs[1] << "): "
+  //      << min->MinValue() << endl;
+
+  // cout << "min " << RosenBrock(xs) << endl;
 
   return 0;
 }
