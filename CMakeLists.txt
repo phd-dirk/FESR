@@ -5,13 +5,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 find_package(Boost 1.66.0)
 find_package(GSL REQUIRED)
+find_package(ROOT COMPONENTS MINUIT)
 
-set(DIR src lib/cRunDec)
+# includes ROOT header files
+include(${ROOT_USE_FILE})
+
+set(DIR src)
 include_directories(${DIR} ${BOOST_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS})
-set(SOURCES main.cpp lib/cRunDec/CRunDec.cpp)
+set(SOURCES main.cpp)
 
 add_executable(FESR ${SOURCES})
-target_link_libraries(FESR GSL::gsl)
+target_link_libraries(FESR GSL::gsl ${ROOT_LIBRARIES})
 
 #################################
 # Testing
@@ -23,7 +27,7 @@ if(test)
   include_directories(${GTEST_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS})
 
   set (TEST_DIR test)
-  set (TEST_SOURCES lib/cRunDec/CRunDec.cpp ${TEST_DIR}/constants_test.cpp ${TEST_DIR}/weights_test.cpp
+  set (TEST_SOURCES ${TEST_DIR}/constants_test.cpp ${TEST_DIR}/weights_test.cpp
     ${TEST_DIR}/data_test.cpp ${TEST_DIR}/theoretical_moments_test.cpp ${TEST_DIR}/numerics_test.cpp ${TEST_DIR}/alpha_s_test.cpp)
 
   #################
