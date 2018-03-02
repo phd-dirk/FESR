@@ -1,4 +1,5 @@
 #include "../src/theoretical_moments.hpp"
+#include "../src/weights.hpp"
 #include <gtest/gtest.h>
 #include <cmath>
 #include <complex>
@@ -53,7 +54,14 @@ TEST_F(AdlerFunctionTest, D0) {
   mu2 = complex<double>(1.5, 2.2);
   EXPECT_NEAR(adler->D0(s, mu2).real(), 2.6732096654905575e-2, 1e-13);
   EXPECT_NEAR(adler->D0(s, mu2).imag(), -1.0995430321549232e-3, 1e-13);
+}
 
-  // complex<double> mu2_2(3., 3.);
-  // EXPECT_NEAR(adler->D0(s, mu2_2).real(), 2.6878635987293748e-2, 1e-13);
+TEST_F(AdlerFunctionTest, CIntD0) {
+  double s0 = 3.;
+  EXPECT_NEAR(adler->contourIntegral(s0, wD00).real(), 1.8129891021138491, 1e-13);
+  EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
+
+  s0 = 2.6;
+  // EXPECT_NEAR(adler->contourIntegral(s0, wD00).real(), 1.8396044152966260, 1e-13);
+  EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
 }

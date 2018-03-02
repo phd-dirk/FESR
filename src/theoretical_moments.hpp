@@ -85,8 +85,8 @@ public:
     };
 
     auto func = [s0, gamma, weight, this](double t) {
-      double mu = sqrt(s0);
-      return weight(gamma(t))*D0(s0*gamma(t), mu);
+      double mu2 = s0;
+      return weight(gamma(t))*D0(s0*gamma(t), mu2);
     };
 
     return 3*kPi*integrateComplex(func, 0, 2.*kPi);
