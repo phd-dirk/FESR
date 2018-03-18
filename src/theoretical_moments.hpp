@@ -66,7 +66,7 @@ public:
     c_[5][5] = 1./80.*pow(beta_[1], 4)*c_[1][1];beta_[1] = 11./2. - 1./3.*nf_;  // rgm06
   }
 
-  complex<double> D0(complex<double> s, complex<double> mu2) {
+  complex<double> D0(const complex<double> &s, const complex<double> &mu2) {
     // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
     complex<double> L = log(-s/mu2);
     complex<double> amu = alpha_s(sqrt(mu2));
@@ -78,6 +78,31 @@ public:
     }
 
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
+  }
+
+  complex<double> D4(const complex<double> &s, const complex<double> &mu2, const double &aGGinv) {
+    auto gluonCondensate = [&]() {
+      complex<double> sum(0.0, 0.0);
+      double pLT3 = 0; // the coefficient is not yet known
+
+      complex<double> amu = alpha_s(sqrt(mu2));
+
+      if (order_ > 0)
+        sum += 1./6.;
+      if (order_ > 1)
+        sum += -11./108.*amu;
+      if (order_ > 2)
+        sum += (11./48. * log(-s/mu2) + pLT3/6. - 8773./15552.)*pow(amu, 2);
+
+      cout << "amu : \t" << amu << endl;
+      cout << "order : \t" << order_ << endl;
+      cout << "s : \t" << s << endl;
+      cout << "mu2 : \t" << mu2 << endl;
+      cout << "aGGinv : \t" << aGGinv << endl;
+
+      return sum*aGGinv/pow(s, 2);
+    };
+    return gluonCondensate();
   }
 
   double contourIntegral(double s0, function<complex<double>(complex<double>)> weight) {

@@ -34,7 +34,6 @@ inline complex<double> alpha_s(complex<double> s) {
   double mu1 = sqrt(3.1570893124000001);
   complex<double> mu2 = s;
 
-
   // integrate beta function and find root
   // from mathematica coefficients.nb
   auto f = [&a1, &mu1, &mu2](complex<double> a2) {
@@ -49,5 +48,13 @@ inline complex<double> alpha_s(complex<double> s) {
 
   return newtonRaphson(f, df, complex<double>(0.01, 0.01), 1e-14);
 }
+
+// inline complex<double> runningMass(complex<double> mu) {
+//   complex<double> I(0.0, 1.0);
+//   double a1 = 0.10162679736189885;
+//   double m1 = 
+//   auto f = []
+// }
+
 
 #endif
