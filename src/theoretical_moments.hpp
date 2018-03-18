@@ -80,7 +80,9 @@ public:
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
 
-  complex<double> D4(const complex<double> &s, const complex<double> &mu2, const double &aGGinv) {
+  complex<double> D4(const int i, const int j, const int r,
+                     const complex<double> &s, const complex<double> &mu2,
+                     const double &aGGinv) {
     auto gluonCondensate = [&]() {
       complex<double> sum(0.0, 0.0);
       double pLT3 = 0; // the coefficient is not yet known
@@ -94,15 +96,45 @@ public:
       if (order_ > 2)
         sum += (11./48. * log(-s/mu2) + pLT3/6. - 8773./15552.)*pow(amu, 2);
 
-      cout << "amu : \t" << amu << endl;
-      cout << "order : \t" << order_ << endl;
-      cout << "s : \t" << s << endl;
-      cout << "mu2 : \t" << mu2 << endl;
-      cout << "aGGinv : \t" << aGGinv << endl;
+      // cout << "amu : \t" << amu << endl;
+      // cout << "order : \t" << order_ << endl;
+      // cout << "s : \t" << s << endl;
+      // cout << "mu2 : \t" << mu2 << endl;
+      // cout << "aGGinv : \t" << aGGinv << endl;
 
       return sum*aGGinv/pow(s, 2);
     };
-    return gluonCondensate();
+
+    auto quarkCondensate = [&]() {
+      double pLT3 = 0., qLT3 = 0., rLT3 = 0., tLT3 = 0.;
+      complex<double> L = log(-s/mu2);
+      complex<double> amu = alpha_s(sqrt(mu2));
+
+      double mqqa = mq[i]*qqinv[i] + mq[j]*qqinv[j];
+      double mqqb = r*(mq[i]*qqinv[j] + mq[j]*qqinv[i]);
+      double mqqs = mq[0]*qqinv[0] + mq[1]*qqinv[1] + mq[2]*qqinv[2];
+
+      cout << "mq[i] : \t" << mq[i] << endl;
+      cout << "mqqa : \t" << mqqa << endl;
+      complex<double> sum(0., 0.);
+      if (order_ > -1)
+        sum += 2.*mqqa;
+      if (order_ > 0)
+        sum += (-2.*mqqa + 8./3.*mqqb + 8./27.*mqqs)*amu;
+      if (order_ > 1)
+        sum += ((4.5*L - 131./12.)*mqqa
+                + (-6.*L + 68./3.)*mqqb
+                + (-2./3.*L - 176./243. + 8./3.*zeta_[3])*mqqs
+                )*pow(amu, 2);
+      if (order_ > 2)
+        sum += ((-81./8.*pow(L, 2) + 457./8.*L + 2.*qLT3)*mqqa
+                + (27./2.*pow(L, 2) - 338/3.*L + 8./3.*tLT3)*mqqb
+                + (1.5*pow(L, 2) + (56./27. -12.*zeta_[3])*L
+                   + 50407./17496. + 8./27.*pLT3 + rLT3 -20./27.*zeta_[3])*mqqs
+                )*pow(amu, 3);
+      return sum/pow(s, 2);
+    };
+    return quarkCondensate();
   }
 
   double contourIntegral(double s0, function<complex<double>(complex<double>)> weight) {
