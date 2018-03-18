@@ -49,12 +49,29 @@ inline complex<double> alpha_s(complex<double> s) {
   return newtonRaphson(f, df, complex<double>(0.01, 0.01), 1e-14);
 }
 
-// inline complex<double> runningMass(complex<double> mu) {
-//   complex<double> I(0.0, 1.0);
-//   double a1 = 0.10162679736189885;
-//   double m1 = 
-//   auto f = []
-// }
+inline complex<double> runMassRatio(const complex<double> &q2,
+                                   const complex<double> &p2) {
+  complex<double> I(0.0, 1.0);
+  complex<double> ap = alpha_s(sqrt(p2));
+  complex<double> aq = alpha_s(sqrt(q2));
+  cout << "ap : \t" << ap << endl;
+                             cout << "aq : \t" << aq << endl;
+
+
+  auto f = [](complex<double> ap, complex<double> aq) {
+    return 0.25000289589113*atan(0.195762247334686 - 2.77752091706421*aq)
+    - 0.25000289589113*atan(0.195762247334686 - 2.77752091706421*ap)
+    - 0.444444444444444*log(aq)
+    - 0.144635029127131*log(0.353968700519028 + 1.*aq)
+    - 0.174068624534112*log(0.134591532498253 - 0.140961852803328*aq
+                            + 1.*pow(aq, 2))
+    + 0.444444444444444*log(ap) + 0.144635029127131*log(0.353968700519028 + 1.*ap)
+    + 0.174068624534112*log(0.134591532498253 - 0.140961852803328*ap
+                            + 1.*pow(ap, 2));
+  };
+
+  return exp(f(ap, aq));
+}
 
 
 #endif

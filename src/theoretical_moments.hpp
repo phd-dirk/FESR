@@ -83,11 +83,13 @@ public:
   complex<double> D4(const int i, const int j, const int r,
                      const complex<double> &s, const complex<double> &mu2,
                      const double &aGGinv) {
+
+    complex<double> L = log(-s/mu2);
+    complex<double> amu = alpha_s(sqrt(mu2));
+
     auto gluonCondensate = [&]() {
       complex<double> sum(0.0, 0.0);
       double pLT3 = 0; // the coefficient is not yet known
-
-      complex<double> amu = alpha_s(sqrt(mu2));
 
       if (order_ > 0)
         sum += 1./6.;
@@ -107,8 +109,6 @@ public:
 
     auto quarkCondensate = [&]() {
       double pLT3 = 0., qLT3 = 0., rLT3 = 0., tLT3 = 0.;
-      complex<double> L = log(-s/mu2);
-      complex<double> amu = alpha_s(sqrt(mu2));
 
       double mqqa = mq[i]*qqinv[i] + mq[j]*qqinv[j];
       double mqqb = r*(mq[i]*qqinv[j] + mq[j]*qqinv[i]);
@@ -134,7 +134,26 @@ public:
                 )*pow(amu, 3);
       return sum/pow(s, 2);
     };
-    return quarkCondensate();
+
+    auto m4 = [&]() {
+      complex<double> rmq = runMassRatio(mu2, kSTau);
+
+      complex<double> m4a = (pow(mq[i], 4) + pow(mq[j], 4))*pow(rmq, 4);
+      complex<double> m4b = r*(mq[i]*pow(mq[j], 3) + mq[j]*pow(mq[i], 3))*pow(rmq, 4);
+      complex<double> m4c = (pow(mq[i], 2)*pow(mq[j], 2))*pow(rmq, 4);
+      complex<double> m4d = (pow(mq[1], 4) + pow(mq[2], 4) + pow(mq[3], 4))*pow(rmq, 4);
+
+      complex<double> sum(0., 0.);
+
+      if ( order_ > 1)
+        sum += (-6./7./amu + 1.5*L - 0.25)*m4a - 8./7.*m4b + 3.*m4c - m4d/14.;
+      if ( order_ > 2)
+        sum += ((-3.*pow(L, 2) + 74./7.*L)*m4a + 32./7.*L*m4b - 12.*L*m4c + 2./7.*L*m4d)*amu;
+
+      return sum/pow(kPi*s, 2);
+    };
+
+    return m4();
   }
 
   double contourIntegral(double s0, function<complex<double>(complex<double>)> weight) {
