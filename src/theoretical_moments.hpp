@@ -114,8 +114,6 @@ public:
       double mqqb = r*(mq[i]*qqinv[j] + mq[j]*qqinv[i]);
       double mqqs = mq[0]*qqinv[0] + mq[1]*qqinv[1] + mq[2]*qqinv[2];
 
-      cout << "mq[i] : \t" << mq[i] << endl;
-      cout << "mqqa : \t" << mqqa << endl;
       complex<double> sum(0., 0.);
       if (order_ > -1)
         sum += 2.*mqqa;
@@ -153,7 +151,7 @@ public:
       return sum/pow(kPi*s, 2);
     };
 
-    return m4();
+    return gluonCondensate() + quarkCondensate() + m4();
   }
 
   double contourIntegral(double s0, function<complex<double>(complex<double>)> weight) {
@@ -164,6 +162,20 @@ public:
     auto func = [s0, gamma, weight, this](double t) {
       double mu2 = s0;
       return weight(gamma(t))*D0(s0*gamma(t), mu2);
+    };
+
+    return (3*kPi*integrateComplex(func, 0, 2.*kPi)).real();
+  };
+
+  double d4ContourIntegral(int r, double s0, function<complex<double>(complex<double>)> weight) {
+    auto gamma = [](double t) {
+      return exp(1i*t);
+    };
+
+    auto func = [s0, gamma, weight, this, r](double t) {
+      double mu2 = s0;
+      double aGGinv = 2.1000000000000001e-2;
+      return weight(gamma(t))*D4(0, 1, r, s0*gamma(t), mu2, aGGinv);
     };
 
     return (3*kPi*integrateComplex(func, 0, 2.*kPi)).real();

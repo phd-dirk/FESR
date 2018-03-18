@@ -54,9 +54,6 @@ inline complex<double> runMassRatio(const complex<double> &q2,
   complex<double> I(0.0, 1.0);
   complex<double> ap = alpha_s(sqrt(p2));
   complex<double> aq = alpha_s(sqrt(q2));
-  cout << "ap : \t" << ap << endl;
-                             cout << "aq : \t" << aq << endl;
-
 
   auto f = [](complex<double> ap, complex<double> aq) {
     return 0.25000289589113*atan(0.195762247334686 - 2.77752091706421*aq)
