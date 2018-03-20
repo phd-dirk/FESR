@@ -55,31 +55,26 @@ int main () {
   // min->SetPrintLevel(1); // activate logging
 
   // function wrapper
-  Functor chi2(chisquared, 1);
+  Functor chi2(chisquared, 2);
 
-  double chi2Step[2] = { 0.01, 0.01 };
+  double step[2] = { 0.2e-2, 1e-2 };
 
   // starting point
-  double chi2Variable[2] = { 0.31927, 2.1e-2 };
+  double variable[2] = { 0.31927, 2.1e-2 };
 
   min->SetFunction(chi2);
 
   // set free variables to be minimized
-  min->SetVariable(0, "astau", chi2Variable[0], chi2Step[0]);
+  min->SetVariable(0, "astau", variable[0], step[0]);
+  min->SetVariable(1, "aGGInv", variable[1], step[1]);
 
   // minimize!
   min->Minimize();
 
   const double *xs = min->X();
 
-  cout << "Minimum chi2(" << xs[0] << ", " << xs[1] << "):"
+  cout << "Minimum chi2(" << xs[0] << "," << xs[1] << "): "
        << min->MinValue() << endl;
-
-  // const double *xs = min->X();
-  // cout << "Minimum f(" << xs[0] << "," << xs[1] << "): "
-  //      << min->MinValue() << endl;
-
-  // cout << "min " << RosenBrock(xs) << endl;
 
   return 0;
 }
