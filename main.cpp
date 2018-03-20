@@ -43,33 +43,8 @@ int main () {
 
   vector<double> s0s = s0Set;
 
-
-  AdlerFunction adler(nc, nf, order);
-  cout << adler.d4ContourIntegral(1, s0s[0], wD00) << endl;
-  // complex<double> s(1.4015061485419573, -2.652045740957900);
-  // complex<double> mu2(3., 0);
-  // double aGGinv = 2.1000000000000001e-2;
-  // cout << "adler" << adler.D4(s, mu2, aGGinv) << endl;
-
-  // complex<double> s(3.1570893123374919, 1.9866720523795795e-5);
-  // complex<double> mu2(3.1570893124000001, 0);
-  // double aGGinv = 2.1000000000000001e-2;
-  // cout << "adler" << adler.D4(s, mu2, aGGinv) << endl;
-
-  // complex<double> s(2.9999999999406022, 1.887819940262645e-5);
-  // complex<double> mu2(3., 0.);
-  // double aGGinv = 2.1000000000000001e-2;
-  // cout << "adler" << adler.D4(s, mu2, aGGinv) << endl;
-
-  // complex<double> s(3.1570893123374919, 1.9866720523795795e-5);
-  // complex<double> mu2(3.1570893124000001, 0);
-  // double aGGinv = 2.1000000000000001e-2;
-  // cout << "adler" << adler.D4(0, 1, 1, s, mu2, aGGinv) << endl;
-
-
-
-  // Chisquared chisquared(nc, nf, order, s0s, wD00);
-  // cout << chisquared() << endl;
+  Chisquared chisquared(nc, nf, order, s0s, wD00);
+  cout << chisquared() << endl;
 
 
   // MINUIT

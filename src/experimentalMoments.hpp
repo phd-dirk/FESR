@@ -2,8 +2,12 @@
 #define SRC_EXPERIMENTALMOMENTS_HPP
 
 #include "./data.hpp"
+#include "./numerics.hpp"
+#include <boost/numeric/ublas/matrix.hpp>
 
-class ExperimentalMoments : public Constants {
+namespace ublas = boost::numeric::ublas;
+
+class ExperimentalMoments : public Constants, public Numerics {
  public:
   // Init. data, vector of all wRatios, exp. Spectral Moments, error Matrix
   // and Covariance matrix
@@ -14,8 +18,8 @@ class ExperimentalMoments : public Constants {
                       const vector<double> &s0s,
                       function<complex<double>(complex<double>)> weight,
                       function<complex<double>(complex<double>)> wTau) :
-      data(Data(filename, normalizationFactor)), s0s(s0s), weight(weight),
-      wTau(wTau) {
+    Numerics(1e-13, 0), data(Data(filename, normalizationFactor)), s0s(s0s),
+    weight(weight), wTau(wTau) {
 
     // init weightRatios
     setWeightRatios(); // (s0s.size() x data.binCount) e.g. (9 x 80)
@@ -59,8 +63,22 @@ class ExperimentalMoments : public Constants {
   double getJacobianMatrix(int i, int j) {
     return this->jacobianMatrix(i, j);
   }
+  matrix<double> getCovarianceMatrix() {
+    return this->covarianceMatrix;
+  }
   double getCovarianceMatrix(int i, int j) {
     return this->covarianceMatrix(i, j);
+  }
+  ublas::matrix<double> getInverseCovarianceMatrix() {
+    // Remove correlations with R_tau, V+A in Aleph fit
+    ublas::matrix<double> covMat = this->covarianceMatrix;
+    ublas::matrix<double> invCovMat(s0s.size(), s0s.size());
+    for (int i = 1; i < 9; i++) {
+      covMat(0, i) = 0.;
+      covMat(i, 0) = 0.;
+    }
+    invertMatrix(covMat, invCovMat);
+    return invCovMat;
   }
 
   // Selects the closest bin number from s0

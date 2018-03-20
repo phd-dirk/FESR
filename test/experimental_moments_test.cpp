@@ -69,4 +69,11 @@ TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
 TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
   EXPECT_NEAR(expMom->getCovarianceMatrix(0, 0), 1.3667648017148091e-4, 1.e-9);
   EXPECT_NEAR(expMom->getCovarianceMatrix(1, 1), 1.1074282562391433e-4, 1.e-14);
+  EXPECT_NEAR(expMom->getCovarianceMatrix(2, 6), 9.6654605190395123e-5, 1.e-8);
+  EXPECT_NEAR(expMom->getCovarianceMatrix(7, 8), 1.2761651087791348e-4, 1.e-8);
+}
+
+TEST_F(ExperimentalMomentsTest, inverseCovarianceMatrix) {
+  EXPECT_NEAR(expMom->getInverseCovarianceMatrix()(0, 0), 7316.5477977290002, 1.e-11);
+  EXPECT_NEAR(expMom->getInverseCovarianceMatrix()(1, 1), 4414609.3425805904, 1.e-2);
 }
