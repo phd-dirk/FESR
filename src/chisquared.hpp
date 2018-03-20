@@ -27,29 +27,10 @@ class Chisquared {
   }
 
 
-  double operator ()(const double astau) {
-    // init fit parameters
-    double chi = 0;
-
-    ublas::matrix<double> covMat = expMom.getCovarianceMatrix();
-    ublas::matrix<double> invCovMat = expMom.getInverseCovarianceMatrix();
-
-    vector<double> momDiff(s0s.size());
-    for(int i = 0; i < s0s.size(); i++) {
-      momDiff[i] = expMom(i) - thMom(i, astau);
-    }
-
-    for(int k = 0; k < s0s.size(); k++) {
-      for(int l = 0; l < s0s.size(); l++) {
-        chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
-      }
-    }
-
-    return chi;
-  }
   double operator ()(const double *xx) {
     // init fit parameters
     double astau = xx[0];
+    double aGGinv = xx[1];
 
     double chi = 0;
 
@@ -58,7 +39,7 @@ class Chisquared {
 
     vector<double> momDiff(s0s.size());
     for(int i = 0; i < s0s.size(); i++) {
-      momDiff[i] = expMom(i) - thMom(i, astau);
+      momDiff[i] = expMom(i) - thMom(i, astau, aGGinv);
     }
 
     for(int k = 0; k < s0s.size(); k++) {

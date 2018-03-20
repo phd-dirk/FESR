@@ -169,11 +169,11 @@ public:
     return (3*kPi*complexContourIntegral(s0, f)).real();
   };
 
-  double d4Int(double s0, function<complex<double>(complex<double>)> weight, const double &astau, int r) {
+  double d4Int(double s0, function<complex<double>(complex<double>)> weight, const double &astau,
+               const double &aGGinv, const int &r) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
       complex<double> mu2 = s0;
-      double aGGinv = 2.1000000000000001e-2;
       return weight(s)*D4(s0*s, mu2, astau, aGGinv, 0, 1, r);
     };
 
@@ -198,9 +198,10 @@ class TheoreticalMoments: public AdlerFunction {
                      const vector<double> &s0s, function<complex<double>(complex<double>)> weight) :
       AdlerFunction(nc, nf, order), s0s(s0s), weight(weight) {}
 
-  double operator ()(int i, double astau) {
+  double operator ()(const int &i, const double &astau, const double &aGGinv) {
     // factor 2 for V PLUS A
-    return 2*pow(kVud, 2)*kSEW*d0CInt(s0s[i], weight, astau);
+    double rTauTh = 2.*d0CInt(s0s[i], weight, astau);
+    return pow(kVud, 2)*kSEW*rTauTh;
   }
 
  private:
