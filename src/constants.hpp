@@ -46,6 +46,14 @@ class Constants {
     ssmtau + 3.*pow(msmtau, 3)/(7.*pow(kPi, 2))*(1./kATauBJ - 53./24.)
   };
 
+  // alpha
+  const double kAlphaTau = 0.31927; // kTauMass^2
+
+  // Various
+  const double kVud = 0.97425; // Towner, Hardy 2009
+  const double kDVud = 0.00022;
+  const double kSEW = 1.0198; // EW radiative corr.
+  const double kDSEW = 0.0006;
 
   constexpr static double kBe = 17.827; // HFAG 2011
   constexpr static double kDBe = 0.04; // HFAG 2011
@@ -53,12 +61,7 @@ class Constants {
   constexpr static double kDFPi = 0.14e-3;
   constexpr static double kTauMass = 1.77682; // PDF 2012
   constexpr static double kPionMinusMass = 0.13957018; // M_pi^-
-  constexpr static double kSEW = 1.0198; // EW radiative corr.
-  constexpr static double kDSEW = 0.0006;
   constexpr static double kSTau = 3.1570893124; // kTauMass^2
-  constexpr static double kAlphaTau = 0.31927; // kTauMass^2
-  constexpr static double kVud = 0.97425; // Towner, Hardy 2009
-  constexpr static double kDVud = 0.00022;
   constexpr static double kDRTauVex = 0.0;
 };
 

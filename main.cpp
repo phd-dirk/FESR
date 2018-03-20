@@ -44,23 +44,29 @@ int main () {
   vector<double> s0s = s0Set;
 
   Chisquared chisquared(nc, nf, order, s0s, wD00);
-  cout << chisquared() << endl;
+  // const double astau = 0.31927;
+  // cout << chisquared(astau) << endl;
 
 
-  // MINUIT
-  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  // // MINUIT
+  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // // set tolerances
-  // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1e-17);
-  // // min->SetPrintLevel(1); // activate logging
+  // set tolerances
+  min->SetMaxFunctionCalls(10000000); // for Minuit2
+  min->SetMaxIterations(10000000); // for GSL
+  min->SetTolerance(1e-17);
+  // min->SetPrintLevel(1); // activate logging
 
-  // // function wrapper
-  // Functor f(&RosenBrock, 2);
-  // double step[2] = {0.01, 0.01};
-  // // starting point
-  // double variable[2] = {-1., 1.2};
+  // function wrapper
+  Functor chi2(chisquared, 1);
+  Functor f(&RosenBrock, 2);
+
+  double step[2] = {0.01, 0.01};
+  double chi2Step[1] = {0.01};
+
+  // starting point
+  double variable[2] = {-1., 1.2};
+  double chi2Variable[1] = { 0.31927 };
 
   // min->SetFunction(f);
 
@@ -68,8 +74,18 @@ int main () {
   // min->SetVariable(0, "x", variable[0], step[0]);
   // min->SetVariable(1, "y", variable[1], step[1]);
 
-  // // minimize!
-  // min->Minimize();
+  min->SetFunction(chi2);
+
+  // set free variables to be minimized
+  min->SetVariable(0, "astau", chi2Variable[0], chi2Step[0]);
+
+  // minimize!
+  min->Minimize();
+
+  const double *xs = min->X();
+
+  cout << "Minimum chi2(" << xs[0] << "):"
+       << min->MinValue() << endl;
 
   // const double *xs = min->X();
   // cout << "Minimum f(" << xs[0] << "," << xs[1] << "): "

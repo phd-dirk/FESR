@@ -27,7 +27,7 @@ using namespace std::complex_literals;
 
 class AdlerFunction : public Constants, public Numerics {
 public:
-  AdlerFunction(const int &nc, const int &nf, const int &order) : Numerics(1e-13, 0), nc_(nc), nf_(nf), order_(order),
+  AdlerFunction(const int &nc, const int &nf, const int &order) : Numerics(1e-10, 0), nc_(nc), nf_(nf), order_(order),
                                              beta_(5), c_(6, vector<double>(6)) {
     if (order > 5) { throw invalid_argument("order cannot be higher than 5"); };
 
@@ -66,10 +66,10 @@ public:
     c_[5][5] = 1./80.*pow(beta_[1], 4)*c_[1][1];beta_[1] = 11./2. - 1./3.*nf_;  // rgm06
   }
 
-  complex<double> D0(const complex<double> &s, const complex<double> &mu2) {
+  complex<double> D0(const complex<double> &s, const complex<double> &mu2, double astau) {
     // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
     complex<double> L = log(-s/mu2);
-    complex<double> amu = alpha_s(sqrt(mu2));
+    complex<double> amu = alpha_s(sqrt(mu2), astau);
     complex<double> sum(0., 0.);
     for (int n = 1; n <= order_; n++) {
       for (int k = 1; k <= n; k++) {
@@ -82,10 +82,10 @@ public:
 
   complex<double> D4(const int i, const int j, const int r,
                      const complex<double> &s, const complex<double> &mu2,
-                     const double &aGGinv) {
+                     const double &aGGinv, const double &astau) {
 
     complex<double> L = log(-s/mu2);
-    complex<double> amu = alpha_s(sqrt(mu2));
+    complex<double> amu = alpha_s(sqrt(mu2), astau);
 
     auto gluonCondensate = [&]() {
       complex<double> sum(0.0, 0.0);
@@ -134,7 +134,7 @@ public:
     };
 
     auto m4 = [&]() {
-      complex<double> rmq = runMassRatio(mu2, kSTau);
+      complex<double> rmq = runMassRatio(mu2, kSTau, astau);
 
       complex<double> m4a = (pow(mq[i], 4) + pow(mq[j], 4))*pow(rmq, 4);
       complex<double> m4b = r*(mq[i]*pow(mq[j], 3) + mq[j]*pow(mq[i], 3))*pow(rmq, 4);
@@ -154,28 +154,28 @@ public:
     return gluonCondensate() + quarkCondensate() + m4();
   }
 
-  double contourIntegral(double s0, function<complex<double>(complex<double>)> weight) {
+  double d0ContourIntegral(double s0, function<complex<double>(complex<double>)> weight, double astau) {
     auto gamma = [](double t) {
       return exp(1i*t);
     };
 
-    auto func = [s0, gamma, weight, this](double t) {
+    auto func = [&](double t) {
       double mu2 = s0;
-      return weight(gamma(t))*D0(s0*gamma(t), mu2);
+      return weight(gamma(t))*D0(s0*gamma(t), mu2, astau);
     };
 
     return (3*kPi*integrateComplex(func, 0, 2.*kPi)).real();
   };
 
-  double d4ContourIntegral(int r, double s0, function<complex<double>(complex<double>)> weight) {
+  double d4ContourIntegral(int r, double s0, function<complex<double>(complex<double>)> weight, const double &astau) {
     auto gamma = [](double t) {
       return exp(1i*t);
     };
 
-    auto func = [s0, gamma, weight, this, r](double t) {
+    auto func = [&](double t) {
       double mu2 = s0;
       double aGGinv = 2.1000000000000001e-2;
-      return weight(gamma(t))*D4(0, 1, r, s0*gamma(t), mu2, aGGinv);
+      return weight(gamma(t))*D4(0, 1, r, s0*gamma(t), mu2, aGGinv, astau);
     };
 
     return (3*kPi*integrateComplex(func, 0, 2.*kPi)).real();
@@ -199,14 +199,15 @@ class TheoreticalMoments: public AdlerFunction {
                      const vector<double> &s0s, function<complex<double>(complex<double>)> weight) :
       AdlerFunction(nc, nf, order), s0s(s0s), weight(weight) {}
 
-  double operator ()(int i) {
-    return contourIntegral(s0s[i], weight);
+  double operator ()(int i, double astau) {
+    // factor 2 for V PLUS A
+    return 2*pow(kVud, 2)*kSEW*d0ContourIntegral(s0s[i], weight, astau);
   }
 
-  vector<double> operator ()() {
+  vector<double> operator ()(double astau) {
     vector<double> moments(s0s.size());
     for(int i = 0; i < s0s.size(); i++) {
-      moments[i] = contourIntegral(s0s[i], weight);
+      moments[i] = 2*pow(kVud, 2)*kSEW*d0ContourIntegral(s0s[i], weight, astau);
     }
     return moments;
   }

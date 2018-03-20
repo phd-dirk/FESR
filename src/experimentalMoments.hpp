@@ -38,6 +38,10 @@ class ExperimentalMoments : public Constants, public Numerics {
     setCovarianceMatrix();
   }
 
+  double operator ()(int i) {
+    return getExpPlusPionMoment(i);
+  }
+
   vector<double> getExpPlusPionPoleMoments() {
     vector<double> expPlusPionMoments(s0s.size());
     for (int i = 0; i < s0s.size(); i++) {

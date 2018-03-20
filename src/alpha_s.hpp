@@ -1,6 +1,7 @@
 #ifndef SRC_ALPHAS_H
 #define SRC_ALPHAS_H
 
+#include "./constants.hpp"
 #include <complex>
 #include <iostream>
 #include <functional>
@@ -28,9 +29,11 @@ inline complex<double> newtonRaphson(
   return xNext;
 }
 
-inline complex<double> alpha_s(complex<double> s) {
+inline complex<double> alpha_s(const complex<double> &s, const double &astau) {
   complex<double> I(0.0, 1.0);
-  double a1 = 0.10162679736189885;
+  // double a1 = 0.10162679736189885;
+  Constants constants;
+  double a1 = astau/constants.kPi;
   double mu1 = sqrt(3.1570893124000001);
   complex<double> mu2 = s;
 
@@ -50,10 +53,10 @@ inline complex<double> alpha_s(complex<double> s) {
 }
 
 inline complex<double> runMassRatio(const complex<double> &q2,
-                                   const complex<double> &p2) {
+                                    const complex<double> &p2, const double &astau) {
   complex<double> I(0.0, 1.0);
-  complex<double> ap = alpha_s(sqrt(p2));
-  complex<double> aq = alpha_s(sqrt(q2));
+  complex<double> ap = alpha_s(sqrt(p2), astau);
+  complex<double> aq = alpha_s(sqrt(q2), astau);
 
   auto f = [](complex<double> ap, complex<double> aq) {
     return 0.25000289589113*atan(0.195762247334686 - 2.77752091706421*aq)
