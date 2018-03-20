@@ -7,7 +7,7 @@
 
 namespace ublas = boost::numeric::ublas;
 
-class ExperimentalMoments : public Constants, public Numerics {
+class ExperimentalMoments : public Numerics {
  public:
   // Init. data, vector of all wRatios, exp. Spectral Moments, error Matrix
   // and Covariance matrix

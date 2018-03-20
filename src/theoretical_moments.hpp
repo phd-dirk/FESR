@@ -25,7 +25,7 @@ using std::endl;
 using namespace std::complex_literals;
 
 
-class AdlerFunction : public Constants, public Numerics {
+class AdlerFunction : public Numerics {
 public:
   AdlerFunction(const int &nc, const int &nf, const int &order) : Numerics(1e-10, 0), nc_(nc), nf_(nf), order_(order),
                                              beta_(5), c_(6, vector<double>(6)) {
@@ -80,9 +80,9 @@ public:
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
 
-  complex<double> D4(const int i, const int j, const int r,
-                     const complex<double> &s, const complex<double> &mu2,
-                     const double &aGGinv, const double &astau) {
+  complex<double> D4(const complex<double> &s, const complex<double> &mu2,
+                     const double &astau, const double &aGGinv, const int i,
+                     const int j, const int r) {
 
     complex<double> L = log(-s/mu2);
     complex<double> amu = alpha_s(sqrt(mu2), astau);
@@ -154,31 +154,30 @@ public:
     return gluonCondensate() + quarkCondensate() + m4();
   }
 
-  double d0ContourIntegral(double s0, function<complex<double>(complex<double>)> weight, double astau) {
-    auto gamma = [](double t) {
-      return exp(1i*t);
+  complex<double> D68(const double &s, function<complex<double>(complex<double>)> weight,
+                      const double &rhoVpA, const double &c8VpA) {
+    return 3. - 2.*rhoVpA/pow(s, 3) + 4.-2.*c8VpA/pow(s, 4);
+  }
+
+  double d0CInt(const double &s0, function<complex<double>(complex<double>)> weight, double astau) {
+    function<complex<double>(complex<double>)> f =
+      [&](complex<double> s) -> complex<double> {
+      complex<double> mu2 = s0;
+      return weight(s)*D0(s0*s, mu2, astau);
     };
 
-    auto func = [&](double t) {
-      double mu2 = s0;
-      return weight(gamma(t))*D0(s0*gamma(t), mu2, astau);
-    };
-
-    return (3*kPi*integrateComplex(func, 0, 2.*kPi)).real();
+    return (3*kPi*complexContourIntegral(s0, f)).real();
   };
 
-  double d4ContourIntegral(int r, double s0, function<complex<double>(complex<double>)> weight, const double &astau) {
-    auto gamma = [](double t) {
-      return exp(1i*t);
-    };
-
-    auto func = [&](double t) {
-      double mu2 = s0;
+  double d4Int(double s0, function<complex<double>(complex<double>)> weight, const double &astau, int r) {
+    function<complex<double>(complex<double>)> f =
+      [&](complex<double> s) -> complex<double> {
+      complex<double> mu2 = s0;
       double aGGinv = 2.1000000000000001e-2;
-      return weight(gamma(t))*D4(0, 1, r, s0*gamma(t), mu2, aGGinv, astau);
+      return weight(s)*D4(s0*s, mu2, astau, aGGinv, 0, 1, r);
     };
 
-    return (3*kPi*integrateComplex(func, 0, 2.*kPi)).real();
+    return (3*kPi*complexContourIntegral(s0, f)).real();
   };
 
   double getC(int i, int j) {
@@ -201,15 +200,7 @@ class TheoreticalMoments: public AdlerFunction {
 
   double operator ()(int i, double astau) {
     // factor 2 for V PLUS A
-    return 2*pow(kVud, 2)*kSEW*d0ContourIntegral(s0s[i], weight, astau);
-  }
-
-  vector<double> operator ()(double astau) {
-    vector<double> moments(s0s.size());
-    for(int i = 0; i < s0s.size(); i++) {
-      moments[i] = 2*pow(kVud, 2)*kSEW*d0ContourIntegral(s0s[i], weight, astau);
-    }
-    return moments;
+    return 2*pow(kVud, 2)*kSEW*d0CInt(s0s[i], weight, astau);
   }
 
  private:

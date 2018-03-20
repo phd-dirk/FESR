@@ -1,6 +1,7 @@
 #ifndef SRC_NUMERICS_H
 #define SRC_NUMERICS_H
 
+#include "constants.hpp"
 #include <gsl/gsl_integration.h>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
@@ -12,11 +13,12 @@
 #include <complex>
 
 namespace ublas = boost::numeric::ublas;
+using namespace std::complex_literals;
 
 using std::function;
 using std::complex;
 
-class Numerics {
+class Numerics: public Constants {
  public:
   Numerics(double epsabs, double epsrel) : w_(gsl_integration_workspace_alloc(1000)), epsrel_(epsrel), epsabs_(epsabs) {}
 
@@ -50,6 +52,18 @@ class Numerics {
     double cintImag = integrate(funcImag, from, to);
 
     return complex<double>(cintReal, cintImag);
+  }
+
+  complex<double> complexContourIntegral(const double &s0, function<complex<double>(complex<double>)> f) {
+    auto gamma = [](double t) {
+      return exp(1i*t);
+    };
+
+    auto func = [&](double t) {
+      return f(gamma(t));
+    };
+
+    return integrateComplex(func, 0., 2.*kPi);
   }
 
   // from https://gist.github.com/lilac/2464434
