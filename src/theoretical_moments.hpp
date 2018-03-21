@@ -98,16 +98,9 @@ public:
     complex<double> amu = alpha_s(sqrt(mu2), astau);
     complex<double> rmq = runMassRatio(mu2, kSTau, astau);
 
-    cout << "rmq : \t" << rmq << endl;
-
     complex<double> m2a = (pow(mq[i], 2) + pow(mq[j], 2))*pow(rmq, 2);
     complex<double> m2b = r*mq[i]*mq[j]*pow(rmq, 2);
     complex<double> m2c = (pow(mq[1], 2) + pow(mq[2], 2) + pow(mq[3], 2))*pow(rmq, 2);
-
-    cout << "m2a : \t" << m2a << endl;
-    cout << "m2b : \t" << m2b << endl;
-    cout << "m2c : \t" << m2c << endl;
-    cout << "amu: \t" << amu << endl;
 
     complex<double> sum = 0.;
 
@@ -120,17 +113,27 @@ public:
               + (-17./6.*L + 769./54. - 55./27.*zeta_[3] - 5./27.*zeta_[5])*m2b
               + (-32./9. + 8./3.*zeta_[3])*m2c
               )*pow(amu, 2);
-    if ( order_ > 2 )
-      sum += ((-221./24.*pow(L, 3) + 1153./12.*pow(L, 2) + (-46253/108. - 1787./108.*zeta_[3] + 3380./27.*zeta_[5])*L
-               + 3909929./5184. - pow(kPi, 4)/36. - 1541./648.*zeta_[3] + 26.5*pow(zeta_[3], 2) - 54265./108.*zeta_[5]
-               + 79835./648.*zeta_[7])*m2a
-              + (221./24.*pow(L, 2) + (-10831./108. + 715./54.*zeta_[3] + 65./54.*zeta_[5])*L + 4421./54. + ePLT3
-                 - 715./54.*zeta_[3] - 65./54.*zeta_[5])*m2b
-              + ((208./9. - 52./3.*zeta_[3])*L - 2222./27. + 1592./27.*zeta_[3] + 4.*pow(zeta_[3], 2) - 80./27.*zeta_[5])*m2c
-              )*pow(amu, 3);
+    // if ( order_ > 2 )
+    //   sum += ((-221./24.*pow(L, 3) + 1153./12.*pow(L, 2) + (-46253/108. - 1787./108.*zeta_[3] + 3380./27.*zeta_[5])*L
+    //            + 3909929./5184. - pow(kPi, 4)/36. - 1541./648.*zeta_[3] + 26.5*pow(zeta_[3], 2) - 54265./108.*zeta_[5]
+    //            + 79835./648.*zeta_[7])*m2a
+    //           + (221./24.*pow(L, 2) + (-10831./108. + 715./54.*zeta_[3] + 65./54.*zeta_[5])*L + 4421./54. + ePLT3
+    //              - 715./54.*zeta_[3] - 65./54.*zeta_[5])*m2b
+    //           + ((208./9. - 52./3.*zeta_[3])*L - 2222./27. + 1592./27.*zeta_[3] + 4.*pow(zeta_[3], 2) - 80./27.*zeta_[5])*m2c
+    //           )*pow(amu, 3);
 
     return 3.*sum/(4*pow(kPi, 2)*s);
   }
+  double D2CInt(double s0, function<complex<double>(complex<double>)> weight, const double &astau,
+                const int &i, const int &j, const int &r) {
+    function<complex<double>(complex<double>)> f =
+      [&](complex<double> s) -> complex<double> {
+      complex<double> mu2 = s0;
+      return weight(s)*D2(s0*s, mu2, astau, i, j, r);
+    };
+
+    return (3*kPi*complexContourIntegral(s0, f)).real();
+  };
 
   complex<double> D4(const complex<double> &s, const complex<double> &mu2,
                      const double &astau, const double &aGGinv, const int i,
