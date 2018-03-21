@@ -79,7 +79,7 @@ public:
 
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
-  double d0CInt(const double &s0, function<complex<double>(complex<double>)> weight, double astau) {
+  double D0CInt(const double &s0, function<complex<double>(complex<double>)> weight, const double &astau) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
       complex<double> mu2 = s0;
@@ -89,9 +89,45 @@ public:
     return (3*kPi*complexContourIntegral(s0, f)).real();
   };
 
+  complex<double> D2(const complex<double> &s, const complex<double> mu2, const double &astau,
+                     const int &i, const int &j, const int &r) {
+
+    double ePLT3 = 1.e2; // guesstimate
+
+    complex<double> L = log(-s/mu2);
+    complex<double> amu = alpha_s(s, astau);
+    complex<double> rmq = runMassRatio(mu2, kSTau, astau);
+
+    complex<double> m2a = (pow(mq[i], 2) + pow(mq[j], 2))*pow(rmq, 2);
+    complex<double> m2b = r*mq[i]*mq[j]*pow(rmq, 2);
+    complex<double> m2c = (pow(mq[1], 2) + pow(mq[2], 2) + pow(mq[3], 2))*pow(rmq, 2);
+
+    complex<double> sum = 0.;
+
+    if ( order_ > -1 )
+      sum += m2a;
+    if ( order_ > 0 )
+      sum += ((13./3.-2.*L)*m2a+2./3.*m2b)*amu;
+    if ( order_ > 1 )
+      sum += ((4.25*pow(L, 2) - 26.*L + 23077./432. + 179./54.*zeta_[3] - 520./27.*zeta_[5])*m2a
+              + (-17./6.*L + 769./54. - 55./27.*zeta_[3] - 5./27.*zeta_[5])*m2b
+              + (-32./9. + 8./3.*zeta_[3])*m2c
+              )*pow(amu, 2);
+    if ( order_ > 2 )
+      sum += ((-221./24.*pow(L, 3) + 1153./12.*pow(L, 2) + (-46253/108. - 1787./108.*zeta_[3] + 3380./27.*zeta_[5])*L
+               + 3909929./5184. - pow(kPi, 4)/36. - 1541./648.*zeta_[3] + 26.5*pow(zeta_[3], 2) - 54265./108.*zeta_[5]
+               + 79835./648.*zeta_[7])*m2a
+              + (221./24.*pow(L, 2) + (-10831./108. + 715./54.*zeta_[3] + 65./53.*zeta_[5])*L + 4421./54. + ePLT3
+                 - 715./54.*zeta_[3] - 65./54.*zeta_[5])*m2b
+              + ((208./9. - 52./3.*zeta_[3])*L - 2222./27. + 1592./27.*zeta_[3] + 4.*pow(zeta_[3], 2) = 80./27.*zeta_[5])*m2c
+              )*pow(amu, 4);
+
+    return 3.*sum/(4*pow(kPi, 2)*s);
+  }
+
   complex<double> D4(const complex<double> &s, const complex<double> &mu2,
                      const double &astau, const double &aGGinv, const int i,
-                     const int j, const int r) {
+                     const int &j, const int &r) {
 
     complex<double> L = log(-s/mu2);
     complex<double> amu = alpha_s(sqrt(mu2), astau);
@@ -162,7 +198,7 @@ public:
 
     return gluonCondensate() + quarkCondensate() + m4();
   }
-  double d4CInt(double s0, function<complex<double>(complex<double>)> weight, const double &astau,
+  double D4CInt(double s0, function<complex<double>(complex<double>)> weight, const double &astau,
                 const double &aGGinv, const int &i, const int &j, const int &r) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
@@ -173,14 +209,14 @@ public:
     return (3*kPi*complexContourIntegral(s0, f)).real();
   };
 
-  complex<double> d68(const complex<double> &s, const double &rhoVpA, const double &c8VpA) {
+  complex<double> D68(const complex<double> &s, const double &rhoVpA, const double &c8VpA) {
     return 3.e-2*rhoVpA/pow(s, 3) + 4.e-2*c8VpA/pow(s, 4);
   }
-  double d68CInt(double s0, function<complex<double>(complex<double>)> weight,
+  double D68CInt(double s0, function<complex<double>(complex<double>)> weight,
                  const double &rhoVpA, const double &c8VpA) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
-      return weight(s)*d68(s0*s, rhoVpA, c8VpA);
+      return weight(s)*D68(s0*s, rhoVpA, c8VpA);
     };
 
     return (3*kPi*complexContourIntegral(s0, f)).real();
@@ -208,10 +244,10 @@ class TheoreticalMoments: public AdlerFunction {
     // factor 2 for V PLUS A
     double s0 = s0s[i];
     // d0 VpA
-    double rTauTh = 2.*d0CInt(s0, weight, astau)
+    double rTauTh = 2.*D0CInt(s0, weight, astau)
       // d4 VpA
-      + d4CInt(s0, weight, astau, aGGinv, 0, 1, 1 )
-      + d4CInt(s0, weight, astau, aGGinv, 0, 1, -1 );
+      + D4CInt(s0, weight, astau, aGGinv, 0, 1, 1 )
+      + D4CInt(s0, weight, astau, aGGinv, 0, 1, -1 );
     return pow(kVud, 2)*kSEW*rTauTh;
   }
 

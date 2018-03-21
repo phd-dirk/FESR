@@ -52,6 +52,10 @@ inline complex<double> alpha_s(const complex<double> &s, const double &astau) {
   return newtonRaphson(f, df, complex<double>(0.01, 0.01), 1e-14);
 }
 
+/*
+  Calculates the ratio m(q^2)/m(p^2) from integrating the RG-equation in the complex
+  q^2 plane from a given a(p^2) at p(^2)
+ */
 inline complex<double> runMassRatio(const complex<double> &q2,
                                     const complex<double> &p2, const double &astau) {
   complex<double> I(0.0, 1.0);
