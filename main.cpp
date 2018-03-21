@@ -42,7 +42,8 @@ int main () {
   vector<double> s0s = s0Set;
 
   TheoreticalMoments thMom(nc, nf, order, s0s, wD00);
-  log("D68", thMom.D68CInt(s0s[0], wD00, -0.1894, 0.16315));
+  log("D2", thMom.D2(complex<double>(3.1570893123374919, 1.9866720523795795e-5), complex<double>(3.1570893124, 0.), 0.31927, 0, 1, 1));
+
   Chisquared chisquared(nc, nf, order, s0s, wD00);
 
   // // // MINUIT
