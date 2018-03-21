@@ -79,6 +79,15 @@ public:
 
     return 1/4./pow(kPi, 2)*(c_[0][1] + sum);
   }
+  double d0CInt(const double &s0, function<complex<double>(complex<double>)> weight, double astau) {
+    function<complex<double>(complex<double>)> f =
+      [&](complex<double> s) -> complex<double> {
+      complex<double> mu2 = s0;
+      return weight(s)*D0(s0*s, mu2, astau);
+    };
+
+    return (3*kPi*complexContourIntegral(s0, f)).real();
+  };
 
   complex<double> D4(const complex<double> &s, const complex<double> &mu2,
                      const double &astau, const double &aGGinv, const int i,
@@ -153,28 +162,25 @@ public:
 
     return gluonCondensate() + quarkCondensate() + m4();
   }
-
-  complex<double> D68(const double &s, function<complex<double>(complex<double>)> weight,
-                      const double &rhoVpA, const double &c8VpA) {
-    return 3. - 2.*rhoVpA/pow(s, 3) + 4.-2.*c8VpA/pow(s, 4);
-  }
-
-  double d0CInt(const double &s0, function<complex<double>(complex<double>)> weight, double astau) {
-    function<complex<double>(complex<double>)> f =
-      [&](complex<double> s) -> complex<double> {
-      complex<double> mu2 = s0;
-      return weight(s)*D0(s0*s, mu2, astau);
-    };
-
-    return (3*kPi*complexContourIntegral(s0, f)).real();
-  };
-
   double d4CInt(double s0, function<complex<double>(complex<double>)> weight, const double &astau,
                 const double &aGGinv, const int &i, const int &j, const int &r) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
       complex<double> mu2 = s0;
       return weight(s)*D4(s0*s, mu2, astau, aGGinv, i, j, r);
+    };
+
+    return (3*kPi*complexContourIntegral(s0, f)).real();
+  };
+
+  complex<double> d68(const complex<double> &s, const double &rhoVpA, const double &c8VpA) {
+    return 3.e-2*rhoVpA/pow(s, 3) + 4.e-2*c8VpA/pow(s, 4);
+  }
+  double d68CInt(double s0, function<complex<double>(complex<double>)> weight,
+                 const double &rhoVpA, const double &c8VpA) {
+    function<complex<double>(complex<double>)> f =
+      [&](complex<double> s) -> complex<double> {
+      return weight(s)*d68(s0*s, rhoVpA, c8VpA);
     };
 
     return (3*kPi*complexContourIntegral(s0, f)).real();
