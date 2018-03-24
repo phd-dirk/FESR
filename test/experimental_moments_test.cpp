@@ -2,13 +2,16 @@
 #include "../src/experimentalMoments.hpp"
 #include "../src/s0_sets.hpp"
 #include "../src/weights.hpp"
+#include "../src/constants.hpp"
 
 class ExperimentalMomentsTest : public ::testing::Test {
  protected:
   ExperimentalMoments * expMom;
   virtual void SetUp() {
+
+    Constants constants(3, 3);
     expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                                     0.99363, s0Set, wD00, wD00);
+                                     0.99363, s0Set, wD00, wD00, constants);
   }
 
   virtual void TearDown() {

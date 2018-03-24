@@ -9,6 +9,7 @@ using std::endl;
 using std::complex;
 using std::string;
 
+#include "./src/constants.hpp"
 // Theoretical Moments
 #include "./src/theoretical_moments.hpp"
 
@@ -41,12 +42,10 @@ int main () {
 
   vector<double> s0s = s0Set;
 
-  TheoreticalMoments thMom(nc, nf, order, s0s, wD00);
-  log("D2", thMom.D2CInt(s0s[0], wD00, 0.31927, 0, 1, 1));
+  Constants constants(nc, nf);
+  Chisquared chisquared(order, s0s, wD00, constants);
 
-  Chisquared chisquared(nc, nf, order, s0s, wD00);
-
-  // // // MINUIT
+  // MINUIT
   // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
   // // set tolerances
@@ -56,7 +55,7 @@ int main () {
   // // min->SetPrintLevel(1); // activate logging
 
   // // function wrapper
-  // Functor chi2(chisquared, 2);
+  // Functor chi2(chisquared, 4);
 
   // double step[2] = { 0.2e-2, 1e-2 };
 
@@ -66,16 +65,28 @@ int main () {
   // min->SetFunction(chi2);
 
   // // set free variables to be minimized
-  // min->SetVariable(0, "astau", variable[0], step[0]);
-  // min->SetVariable(1, "aGGInv", variable[1], step[1]);
+  // min->SetFixedVariable(0, "astau", variable[0]);
+  // min->SetFixedVariable(1, "aGGInv", variable[1]);
+  // min->SetVariable(2, "rhoVpA",  -0.1894, 0.1);
+  // min->SetVariable(3, "c8VpA",  0.16315, 0.3);
 
   // // minimize!
   // min->Minimize();
 
   // const double *xs = min->X();
 
-  // cout << "Minimum chi2(" << xs[0] << "," << xs[1] << "): "
+  // cout << "Minimum chi2("
+  //      << xs[0] << ", " << xs[1] << ", "
+  //      << xs[2] << ", " << xs[3] << "): "
   //      << min->MinValue() << endl;
+
+  // cout << "f() :\t" << chi2(xs) << endl;
+
+  // min->PrintResults();
+
+  TheoreticalMoments thMom(order, s0s, wD00, constants);
+  log("delVpA0FO", thMom.cIntVpAD0FO(s0s[0], wD00, 0.31927, 5));
+  log("deltaP", thMom.deltaP(constants.kSTau, wR00));
 
   return 0;
 }

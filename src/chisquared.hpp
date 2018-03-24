@@ -18,12 +18,15 @@ using std::endl;
 
 class Chisquared {
  public:
-  Chisquared(const int &nc, const int &nf, const int &order, const vector<double> &s0s,
-             function<complex<double>(complex<double>)> weight) :
+  Chisquared(const int &order, const vector<double> &s0s,
+             function<complex<double>(complex<double>)> weight, Constants constants) :
       s0s(s0s),
       expMom(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                                 0.99363, s0s, weight, wD00)),
-      thMom(TheoreticalMoments(nc, nf, order, s0s, weight)) {
+                                 //0.99363,
+                                 1,
+                                 s0s, weight, wD00, constants)),
+      thMom(TheoreticalMoments(order, s0s, weight, constants)) {
+    order_ = order;
   }
 
 
@@ -31,6 +34,8 @@ class Chisquared {
     // init fit parameters
     double astau = xx[0];
     double aGGinv = xx[1];
+    double rhoD6VpA = xx[2];
+    double c8D8VpA = xx[3];
 
     double chi = 0;
 
@@ -39,7 +44,7 @@ class Chisquared {
 
     vector<double> momDiff(s0s.size());
     for(int i = 0; i < s0s.size(); i++) {
-      momDiff[i] = expMom(i) - thMom(i, astau, aGGinv);
+      momDiff[i] = expMom(i) - thMom(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_);
     }
 
     for(int k = 0; k < s0s.size(); k++) {
@@ -52,6 +57,7 @@ class Chisquared {
   }
 
  private:
+  int order_;
   vector<double> s0s;
   ExperimentalMoments expMom;
   TheoreticalMoments thMom;

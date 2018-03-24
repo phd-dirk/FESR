@@ -18,9 +18,10 @@ using namespace std::complex_literals;
 using std::function;
 using std::complex;
 
-class Numerics: public Constants {
+class Numerics {
  public:
-  Numerics(double epsabs, double epsrel) : w_(gsl_integration_workspace_alloc(1000)), epsrel_(epsrel), epsabs_(epsabs) {}
+  Numerics(const double &epsabs, const double &epsrel, Constants constants)
+    : const_(constants), w_(gsl_integration_workspace_alloc(1000)), epsrel_(epsrel), epsabs_(epsabs) {}
 
   static double test(double x) {
     return x*x;
@@ -63,7 +64,7 @@ class Numerics: public Constants {
       return f(gamma(t));
     };
 
-    return integrateComplex(func, 0., 2.*kPi);
+    return integrateComplex(func, 0., 2.*const_.kPi);
   }
 
   // from https://gist.github.com/lilac/2464434
@@ -92,6 +93,7 @@ class Numerics: public Constants {
 
 
  private:
+  Constants const_;
   gsl_integration_workspace * w_;
   double epsrel_; // relative error
   double epsabs_; // absolute error

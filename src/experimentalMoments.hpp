@@ -3,7 +3,9 @@
 
 #include "./data.hpp"
 #include "./numerics.hpp"
+#include "./constants.hpp"
 #include <boost/numeric/ublas/matrix.hpp>
+
 
 namespace ublas = boost::numeric::ublas;
 
@@ -17,9 +19,9 @@ class ExperimentalMoments : public Numerics {
   ExperimentalMoments(const string &filename, const double &normalizationFactor,
                       const vector<double> &s0s,
                       function<complex<double>(complex<double>)> weight,
-                      function<complex<double>(complex<double>)> wTau) :
-    Numerics(1e-13, 0), data(Data(filename, normalizationFactor)), s0s(s0s),
-    weight(weight), wTau(wTau) {
+                      function<complex<double>(complex<double>)> wTau, Constants constants) :
+    Numerics(1e-13, 0, constants), const_(constants), data(Data(filename, normalizationFactor)),
+    s0s(s0s), weight(weight), wTau(wTau) {
 
     // init weightRatios
     setWeightRatios(); // (s0s.size() x data.binCount) e.g. (9 x 80)
@@ -98,13 +100,16 @@ class ExperimentalMoments : public Numerics {
   }
 
   double kPiFac() {
-    return 24.*pow(Constants::kPi*Constants::kVud*Constants::kFPi, 2)*Constants::kSEW;
+    return 24.*pow(const_.kPi*const_.kVud*const_.kFPi, 2)*const_.kSEW;
   }
   double kDPiFac() {
-    return kPiFac()*sqrt(4.*pow(kDVud/kVud, 2) + pow(kDSEW/kSEW, 2) + 4.*pow(kDFPi/kFPi, 2));
+    return kPiFac()*sqrt(4.*pow(const_.kDVud/const_.kVud, 2)
+                         + pow(const_.kDSEW/const_.kSEW, 2)
+                         + 4.*pow(const_.kDFPi/const_.kFPi, 2));
   }
 
  private:
+  Constants const_;
   Data data;
   vector<double> s0s, experimentalMoments;
   function<complex<double>(complex<double>)> weight, wTau;
@@ -119,9 +124,9 @@ class ExperimentalMoments : public Numerics {
       for (int j = 0; j < data.binCount; j++) {
         double s0UpperLimit = data.sbins[j]+data.dsbins[j]/2.;
         double s0LowerLimit = data.sbins[j]-data.dsbins[j]/2.;
-        wRatios(i, j) = (s0s[i]/kSTau*(
+        wRatios(i, j) = (s0s[i]/const_.kSTau*(
             (weight(s0LowerLimit/s0s[i]) - weight(s0UpperLimit/s0s[i]))/
-            (wTau(s0LowerLimit/kSTau) - wTau(s0UpperLimit/kSTau)))).real();
+            (wTau(s0LowerLimit/const_.kSTau) - wTau(s0UpperLimit/const_.kSTau)))).real();
       }
     }
 
@@ -134,7 +139,7 @@ class ExperimentalMoments : public Numerics {
     vector<double> moments(s0s.size());
     for (int i = 0; i < s0s.size(); i++) {
       for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
-        moments[i] += kSTau/s0s[i]/kBe*data.sfm2s[j]*weightRatios(i, j);
+        moments[i] += const_.kSTau/s0s[i]/const_.kBe*data.sfm2s[j]*weightRatios(i, j);
       }
     }
     this->experimentalMoments = moments;
@@ -152,7 +157,7 @@ class ExperimentalMoments : public Numerics {
         }
       }
     }
-    errMat(data.binCount, data.binCount) = pow(kDBe, 2);
+    errMat(data.binCount, data.binCount) = pow(const_.kDBe, 2);
     errMat(data.binCount+1, data.binCount+1) = pow(kDPiFac(), 2);
     this->errorMatrix = errMat;
   }
@@ -163,12 +168,12 @@ class ExperimentalMoments : public Numerics {
     for (int i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount+2; j++) {
         if (j <= closestBinToS0(s0s[i])) {
-          jacobi(j, i) = kSTau/s0s[i]/kBe*weightRatios(i, j);
+          jacobi(j, i) = const_.kSTau/s0s[i]/const_.kBe*weightRatios(i, j);
         } else {
           jacobi(j, i) = 0.;
         }
       }
-      jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/kBe;
+      jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/const_.kBe;
       jacobi(data.binCount+1, i) = pionPoleMoment(s0s[i])/kPiFac();
     }
     this->jacobianMatrix = jacobi;
@@ -200,8 +205,8 @@ class ExperimentalMoments : public Numerics {
   double pionPoleMoment(const double &s0) {
     double axialMoment = 0;
     double pseudoMoment = 0;
-    axialMoment += kPiFac()/s0*wR00(pow(Constants::kPionMinusMass, 2)/s0).real();
-    pseudoMoment += axialMoment*(-2.*pow(kPionMinusMass, 2)/(kSTau + 2.*pow(kPionMinusMass, 2)));
+    axialMoment += kPiFac()/s0*wR00(pow(const_.kPionMinusMass, 2)/s0).real();
+    pseudoMoment += axialMoment*(-2.*pow(const_.kPionMinusMass, 2)/(const_.kSTau + 2.*pow(const_.kPionMinusMass, 2)));
     return axialMoment + pseudoMoment;
   }
 

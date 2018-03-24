@@ -32,7 +32,7 @@ inline complex<double> newtonRaphson(
 inline complex<double> alpha_s(const complex<double> &s, const double &astau) {
   complex<double> I(0.0, 1.0);
   // double a1 = 0.10162679736189885;
-  Constants constants;
+  Constants constants(3, 3);
   double a1 = astau/constants.kPi;
   double mu1 = sqrt(3.1570893124000001);
   complex<double> mu2 = s;

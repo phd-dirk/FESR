@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "../src/constants.hpp"
 #include "../src/numerics.hpp"
 #include <boost/numeric/ublas/matrix.hpp>
 
@@ -8,7 +9,8 @@ class NumericsTest : public ::testing::Test {
  protected:
   Numerics * numerics;
   virtual void SetUp() {
-    numerics = new Numerics(1e-14, 1e-14);
+    Constants const_(3, 3);
+    numerics = new Numerics(1e-14, 1e-14, const_);
   }
 
   virtual void TearDown() {
