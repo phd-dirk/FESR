@@ -47,8 +47,8 @@ class Constants {
   double nf_;
 
   // RGE
-  vector<double> beta_;
-  vector<vector<double>> c_;
+  double beta_[5];
+  double c_[6][6];
 
   // math
   const double kPi = 3.141592653589793;

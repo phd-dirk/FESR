@@ -208,22 +208,21 @@ public:
     double pionPole = -4.*pow(const_.kFPi, 2)/s0*spi/(const_.kSTau + 2.*spi)
       *weightRho(spi/s0).real();
     double xth = 9.*spi/s0;
-    cout << "xth: \t" << xth;
 
     function<double(double)> f = [&](const double &s) -> double {
-      double x = s;
+      double x = s0*s;
       double rhores =  2./pow(x, 2)
       *(pow(const_.kF1P, 2)*pow(const_.kM1P, 4)*breitwigner(x, const_.kM1P, const_.kG1P)
         + pow(const_.kF2P, 2)*pow(const_.kM2P, 4)*breitwigner(x, const_.kM2P, const_.kG2P) );
 
-      return weightRho(x).real()*2.*x/(const_.kSTau + 2.*x)*rhores;
+      return weightRho(s).real()*2.*x/(const_.kSTau + 2.*x)*rhores;
     };
 
     return 4.*pow(const_.kPi, 2)*( pionPole - integrate(f, xth, 1.));
   }
 
   double breitwigner(const double &s, const double &mbw, const double &gbw) {
-    return mbw*gbw/const_.kPi/((s - pow(mbw, 2)) + pow(mbw, 2)*pow(gbw, 2));
+    return mbw*gbw/const_.kPi/(pow(s - pow(mbw, 2), 2)+ pow(mbw, 2)*pow(gbw, 2));
   }
 
  private:
