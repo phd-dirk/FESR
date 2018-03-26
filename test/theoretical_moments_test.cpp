@@ -73,5 +73,7 @@ TEST_F(AdlerFunctionTest, DeltaP) {
   const double c8 = 0.16314594513667133;
   EXPECT_NEAR(thMom_->deltaP(const_->kSTau, wR00), -2.63897241291510083e-3, 1e-13);
   // Test delta_V+A^(8)
-  // EXPECT_NEAR(thMom_->del68(s0, wD00, rho, 0.), -1.2966374009228992e-3, 1e-13);
+  EXPECT_NEAR(thMom_->del68(s0, wD00, 0., c8), -1.2966374009228992e-3, 1e-13);
+  // Test delta_V+A^(6)
+  EXPECT_NEAR(thMom_->del68(s0, wD00, rho, 0.), -7.1284580508113966e-3, 1e-13);
 }
