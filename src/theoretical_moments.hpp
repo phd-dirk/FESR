@@ -106,9 +106,9 @@ public:
   };
 
   complex<double> D4(const complex<double> &s, const complex<double> &mu2,
-                     const double &astau, const double &aGGinv, const int i,
-                     const int &j, const int &r) {
+                     const double &astau, const double &aGGinv, const int &r) {
 
+    const int i = 0, j = 1;
     complex<double> L = log(-s/mu2);
     complex<double> amu = alpha_s(sqrt(mu2), astau);
 
@@ -179,11 +179,11 @@ public:
     return gluonCondensate() + quarkCondensate() + m4();
   }
   double D4CInt(double s0, function<complex<double>(complex<double>)> weight, const double &astau,
-                const double &aGGinv, const int &i, const int &j, const int &r) {
+                const double &aGGinv, const int &r) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
       complex<double> mu2 = s0;
-      return weight(s)*D4(s0*s, mu2, astau, aGGinv, i, j, r);
+      return weight(s)*D4(s0*s, mu2, astau, aGGinv, r);
     };
 
     return (3*const_.kPi*complexContourIntegral(s0, f)).real();
@@ -243,8 +243,8 @@ class TheoreticalMoments: public AdlerFunction {
     // d0 VpA
     double rTauTh = cIntVpAD0FO(s0, weight, astau, order)
       // d4 VpA
-      + D4CInt(s0, weight, astau, aGGinv, 0, 1, 1 )
-      + D4CInt(s0, weight, astau, aGGinv, 0, 1, -1 )
+      + D4CInt(s0, weight, astau, aGGinv, 1 )
+      + D4CInt(s0, weight, astau, aGGinv, -1 )
       // d68 VpA
       + D68CInt(s0, weight, rhoVpA, c8VpA)
       // deltaP
@@ -272,8 +272,8 @@ class TheoreticalMoments: public AdlerFunction {
   double del4(const double &s0,
               function<complex<double>(complex<double>)> weight,
               const double &astau, const double &aGGinv) {
-    return (D4CInt(s0, weight, astau, aGGinv, 0, 1, 1)
-            + D4CInt(s0, weight, astau, aGGinv, 0, 1, -1)
+    return (D4CInt(s0, weight, astau, aGGinv, 1)
+            + D4CInt(s0, weight, astau, aGGinv, -1)
             )/3.;
   }
 
