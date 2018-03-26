@@ -62,7 +62,6 @@ public:
   complex<double> D2(const complex<double> &s,
                      const complex<double> mu2, const double &astau,
                      const int &order, const int &r) {
-
     // double ePLT3 = 1.e2; // guesstimate
     const int i = 0, j = 1;
 
@@ -263,8 +262,8 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   double del0(const double &s0,
-                   function<complex<double>(complex<double>)> weight,
-                   const double &astau, const int &order) {
+              function<complex<double>(complex<double>)> weight,
+              const double &astau, const int &order) {
     return (cIntVpAD0FO(s0, weight, astau, order)
             - cIntVpAD0FO(s0, weight, astau, 0)
             )/3.0;
@@ -272,8 +271,10 @@ class TheoreticalMoments: public AdlerFunction {
 
   double del2(const double &s0,
               function<complex<double>(complex<double>)> weight,
-              const double &astau, const int &order, const int &r) {
-    return D2CInt(s0, weight, astau, order, r)/3.;
+              const double &astau, const int &order) {
+    return (D2CInt(s0, weight, astau, order, 1)
+            + D2CInt(s0, weight, astau, order, -1)
+            )/3.;
   }
 
   double del4(const double &s0,
