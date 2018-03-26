@@ -43,12 +43,12 @@ class Chisquared {
     ublas::matrix<double> invCovMat = expMom.getInverseCovarianceMatrix();
 
     vector<double> momDiff(s0s.size());
-    for(int i = 0; i < s0s.size(); i++) {
+    for(uint i = 0; i < s0s.size(); i++) {
       momDiff[i] = expMom(i) - thMom(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_);
     }
 
-    for(int k = 0; k < s0s.size(); k++) {
-      for(int l = 0; l < s0s.size(); l++) {
+    for(uint k = 0; k < s0s.size(); k++) {
+      for(uint l = 0; l < s0s.size(); l++) {
         chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
       }
     }

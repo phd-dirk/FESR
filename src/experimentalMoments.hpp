@@ -46,7 +46,7 @@ class ExperimentalMoments : public Numerics {
 
   vector<double> getExpPlusPionPoleMoments() {
     vector<double> expPlusPionMoments(s0s.size());
-    for (int i = 0; i < s0s.size(); i++) {
+    for (uint i = 0; i < s0s.size(); i++) {
       expPlusPionMoments[i] = experimentalMoments[i]
           + pionPoleMoment(s0s[i]);
     }
@@ -79,7 +79,7 @@ class ExperimentalMoments : public Numerics {
     // Remove correlations with R_tau, V+A in Aleph fit
     ublas::matrix<double> covMat = this->covarianceMatrix;
     ublas::matrix<double> invCovMat(s0s.size(), s0s.size());
-    for (int i = 1; i < 9; i++) {
+    for (uint i = 1; i < s0s.size(); i++) {
       covMat(0, i) = 0.;
       covMat(i, 0) = 0.;
     }

@@ -40,53 +40,48 @@ int main () {
   int nf = 3;
   int order = 5;
 
-  vector<double> s0s = s0Set;
+  vector<double> s0s = s0Set8;
 
   Constants constants(nc, nf);
   Chisquared chisquared(order, s0s, wD00, constants);
 
   // MINUIT
-  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // // set tolerances
-  // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1e-17);
-  // // min->SetPrintLevel(1); // activate logging
+  // set tolerances
+  min->SetMaxFunctionCalls(10000000); // for Minuit2
+  min->SetMaxIterations(10000000); // for GSL
+  min->SetTolerance(1e-17);
+  // min->SetPrintLevel(1); // activate logging
 
-  // // function wrapper
-  // Functor chi2(chisquared, 4);
+  // function wrapper
+  Functor chi2(chisquared, 4);
 
-  // double step[2] = { 0.2e-2, 1e-2 };
+  min->SetFunction(chi2);
 
-  // // starting point
-  // double variable[2] = { 0.31927, 2.1e-2 };
+  // set free variables to be minimized
+  min->SetFixedVariable(0, "astau", 0.31927);
+  min->SetFixedVariable(1, "aGGInv", 0.21e-1);
+  min->SetVariable(2, "rhoVpA",  -0.1894, 0.1);
+  min->SetVariable(3, "c8VpA",  0.16315, 0.3);
 
-  // min->SetFunction(chi2);
+  // minimize!
+  min->Minimize();
 
-  // // set free variables to be minimized
-  // min->SetFixedVariable(0, "astau", variable[0]);
-  // min->SetFixedVariable(1, "aGGInv", variable[1]);
-  // min->SetVariable(2, "rhoVpA",  -0.1894, 0.1);
-  // min->SetVariable(3, "c8VpA",  0.16315, 0.3);
+  const double *xs = min->X();
 
-  // // minimize!
-  // min->Minimize();
+  cout << "Minimum chi2("
+       << xs[0] << ", " << xs[1] << ", "
+       << xs[2] << ", " << xs[3] << "): "
+       << min->MinValue() << endl;
 
-  // const double *xs = min->X();
+  cout << "f() :\t" << chi2(xs) << endl;
 
-  // cout << "Minimum chi2("
-  //      << xs[0] << ", " << xs[1] << ", "
-  //      << xs[2] << ", " << xs[3] << "): "
-  //      << min->MinValue() << endl;
+  min->PrintResults();
 
-  // cout << "f() :\t" << chi2(xs) << endl;
-
-  // min->PrintResults();
-
-  TheoreticalMoments thMom(order, s0s, wD00, constants);
-  log("delVpA0FO", thMom.cIntVpAD0FO(s0s[0], wD00, 0.31927, 5));
-  log("deltaP", thMom.deltaP(constants.kSTau, wR00));
+  // TheoreticalMoments thMom(order, s0s, wD00, constants);
+  // log("delVpA0FO", thMom.cIntVpAD0FO(s0s[0], wD00, 0.31927, 5));
+  // log("deltaP", thMom.deltaP(constants.kSTau, wR00));
 
   return 0;
 }
