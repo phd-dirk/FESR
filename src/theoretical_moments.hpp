@@ -261,12 +261,9 @@ class TheoreticalMoments: public AdlerFunction {
   double del0(const double &s0,
                    function<complex<double>(complex<double>)> weight,
                    const double &astau, const int &order) {
-    return ( cIntVpAD0FO(s0, weight, astau, order) - cIntVpAD0FO(s0, weight, astau, order) ) / 3.0;
-  }
-
-  double del68(const double &s0, function<complex<double>(complex<double>)> weight,
-               const double &rhoVpA, const double &c8VpA) {
-    return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
+    return (cIntVpAD0FO(s0, weight, astau, order)
+            - cIntVpAD0FO(s0, weight, astau, 0)
+            )/3.0;
   }
 
   double del4(const double &s0,
@@ -276,6 +273,12 @@ class TheoreticalMoments: public AdlerFunction {
             + D4CInt(s0, weight, astau, aGGinv, -1)
             )/3.;
   }
+
+  double del68(const double &s0, function<complex<double>(complex<double>)> weight,
+               const double &rhoVpA, const double &c8VpA) {
+    return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
+  }
+
 
  private:
   Constants const_;

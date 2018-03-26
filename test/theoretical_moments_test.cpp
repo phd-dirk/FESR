@@ -68,10 +68,6 @@ TEST_F(AdlerFunctionTest, CIntD0) {
   // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
 }
 
-TEST_F(AdlerFunctionTest, D4) {
-  
-}
-
 TEST_F(AdlerFunctionTest, D68) {
   const complex<double> s(-1.7585656673884618, 1.9150579086499120);
   const double rho = -0.1894;
@@ -85,6 +81,13 @@ TEST_F(AdlerFunctionTest, D68CInt) {
   const double rho = -0.1894;
   const double c8 = 0.16315;
   EXPECT_NEAR(adler->D68CInt(s0, wD00, rho, c8), -6.0327814112243174e-2, 1e-13);
+}
+
+TEST_F(TheoreticalMomentsTest, Delta0) {
+  const double s0 = const_->kSTau;
+  const double astau = 0.31927;
+  const int order = 5;
+  EXPECT_NEAR(thMom_->del0(s0, wD00, astau, order), 0.20298958142552484, 1e-13);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta4) {
