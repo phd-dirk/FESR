@@ -264,6 +264,8 @@ class TheoreticalMoments: public AdlerFunction {
     return ( cIntVpAD0FO(s0, weight, astau, order) - cIntVpAD0FO(s0, weight, astau, order) ) / 3.0;
   }
 
+
+
  private:
   Constants const_;
   vector<double> s0s;
