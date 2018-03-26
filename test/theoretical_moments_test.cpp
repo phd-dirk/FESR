@@ -24,9 +24,25 @@ class AdlerFunctionTest : public ::testing::Test {
   virtual void TearDown() {
     delete adler;
     delete const_;
+    delete thMom_;
   }
 };
 
+class TheoreticalMomentsTest : public ::testing::Test {
+protected:
+  TheoreticalMoments *thMom_;
+  Constants *const_;
+  virtual void SetUp() {
+    int order = 5;
+    const_ = new Constants(3, 3);
+    thMom_ = new TheoreticalMoments(order, s0Set, wD00, *const_);
+  }
+
+  virtual void TearDown() {
+    delete thMom_;
+    delete const_;
+  }
+};
 
 TEST_F(AdlerFunctionTest, D0) {
   complex<double> s(3., 3.);
@@ -52,6 +68,10 @@ TEST_F(AdlerFunctionTest, CIntD0) {
   // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
 }
 
+TEST_F(AdlerFunctionTest, D4) {
+  
+}
+
 TEST_F(AdlerFunctionTest, D68) {
   const complex<double> s(-1.7585656673884618, 1.9150579086499120);
   const double rho = -0.1894;
@@ -67,13 +87,25 @@ TEST_F(AdlerFunctionTest, D68CInt) {
   EXPECT_NEAR(adler->D68CInt(s0, wD00, rho, c8), -6.0327814112243174e-2, 1e-13);
 }
 
-TEST_F(AdlerFunctionTest, DeltaP) {
+TEST_F(TheoreticalMomentsTest, Delta4) {
+  const double s0 = const_->kSTau;
+  const double aGGinv = 2.1e-2;
+  const double astau = 0.31927;
+  EXPECT_NEAR(thMom_->del4(s0, wD00, astau, aGGinv), 7.93483938348380651e-4, 1e-11);
+}
+
+TEST_F(TheoreticalMomentsTest, Delta68) {
   const double s0 = const_->kSTau;
   const double rho = -0.1893979224795759;
   const double c8 = 0.16314594513667133;
-  EXPECT_NEAR(thMom_->deltaP(const_->kSTau, wR00), -2.63897241291510083e-3, 1e-13);
   // Test delta_V+A^(8)
   EXPECT_NEAR(thMom_->del68(s0, wD00, 0., c8), -1.2966374009228992e-3, 1e-13);
   // Test delta_V+A^(6)
   EXPECT_NEAR(thMom_->del68(s0, wD00, rho, 0.), -7.1284580508113966e-3, 1e-13);
 }
+
+TEST_F(TheoreticalMomentsTest, DeltaP) {
+  const double s0 = const_->kSTau;
+  EXPECT_NEAR(thMom_->deltaP(const_->kSTau, wR00), -2.63897241291510083e-3, 1e-13);
+}
+

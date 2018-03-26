@@ -269,7 +269,13 @@ class TheoreticalMoments: public AdlerFunction {
     return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
   }
 
-
+  double del4(const double &s0,
+              function<complex<double>(complex<double>)> weight,
+              const double &astau, const double &aGGinv) {
+    return (D4CInt(s0, weight, astau, aGGinv, 0, 1, 1)
+            + D4CInt(s0, weight, astau, aGGinv, 0, 1, -1)
+            )/3.;
+  }
 
  private:
   Constants const_;
