@@ -59,10 +59,12 @@ public:
     return (3*const_.kPi*complexContourIntegral(s0, f)).real();
   };
 
-  complex<double> D2(const complex<double> &s, const complex<double> mu2, const double &astau,
-                     const int &i, const int &j, const int &r) {
+  complex<double> D2(const complex<double> &s,
+                     const complex<double> mu2, const double &astau,
+                     const int &order, const int &r) {
 
     // double ePLT3 = 1.e2; // guesstimate
+    const int i = 0, j = 1;
 
     complex<double> L = log(-s/mu2);
     complex<double> amu = alpha_s(sqrt(mu2), astau);
@@ -74,16 +76,16 @@ public:
 
     complex<double> sum = 0.;
 
-    if ( order_ > -1 )
+    if ( order > -1 )
       sum += m2a;
-    if ( order_ > 0 )
+    if ( order > 0 )
       sum += ((13./3.-2.*L)*m2a + 2./3.*m2b)*amu;
-    if ( order_ > 1 )
+    if ( order > 1 )
       sum += ((4.25*pow(L, 2) - 26.*L + 23077./432. + 179./54.*const_.zeta_[3] - 520./27.*const_.zeta_[5])*m2a
               + (-17./6.*L + 769./54. - 55./27.*const_.zeta_[3] - 5./27.*const_.zeta_[5])*m2b
               + (-32./9. + 8./3.*const_.zeta_[3])*m2c
               )*pow(amu, 2);
-    // if ( order_ > 2 )
+    // if ( order > 2 )
     //   sum += ((-221./24.*pow(L, 3) + 1153./12.*pow(L, 2) + (-46253/108. - 1787./108.*zeta_[3] + 3380./27.*zeta_[5])*L
     //            + 3909929./5184. - pow(kPi, 4)/36. - 1541./648.*zeta_[3] + 26.5*pow(zeta_[3], 2) - 54265./108.*zeta_[5]
     //            + 79835./648.*zeta_[7])*m2a
@@ -94,12 +96,13 @@ public:
 
     return 3.*sum/(4*pow(const_.kPi, 2)*s);
   }
-  double D2CInt(double s0, function<complex<double>(complex<double>)> weight, const double &astau,
-                const int &i, const int &j, const int &r) {
+  double D2CInt(double s0,
+                function<complex<double>(complex<double>)> weight,
+                const double &astau, const int &order, const int &r) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
       complex<double> mu2 = s0;
-      return weight(s)*D2(s0*s, mu2, astau, i, j, r);
+      return weight(s)*D2(s0*s, mu2, astau, order, r);
     };
 
     return (3*const_.kPi*complexContourIntegral(s0, f)).real();
@@ -178,7 +181,8 @@ public:
 
     return gluonCondensate() + quarkCondensate() + m4();
   }
-  double D4CInt(double s0, function<complex<double>(complex<double>)> weight, const double &astau,
+  double D4CInt(double s0,
+                function<complex<double>(complex<double>)> weight, const double &astau,
                 const double &aGGinv, const int &r) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
@@ -264,6 +268,12 @@ class TheoreticalMoments: public AdlerFunction {
     return (cIntVpAD0FO(s0, weight, astau, order)
             - cIntVpAD0FO(s0, weight, astau, 0)
             )/3.0;
+  }
+
+  double del2(const double &s0,
+              function<complex<double>(complex<double>)> weight,
+              const double &astau, const int &order, const int &r) {
+    return D2CInt(s0, weight, astau, order, r)/3.;
   }
 
   double del4(const double &s0,
