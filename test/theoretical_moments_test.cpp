@@ -52,6 +52,19 @@ TEST_F(AdlerFunctionTest, CIntD0) {
   // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
 }
 
+TEST_F(AdlerFunctionTest, D68) {
+  const complex<double> s(-1.7585656673884618, 1.9150579086499120);
+  const double rho = -0.1894;
+  const double c8 = 0.16315;
+  EXPECT_NEAR(adler->D68(s, rho, c8).real(), -3.9659215963967076e-4, 1e-13);
+  EXPECT_NEAR(adler->D68(s, rho, c8).imag(), 1.7341429761413442e-4, 1e-13);
+}
+
 TEST_F(AdlerFunctionTest, DeltaP) {
+  const double s0 = const_->kSTau;
+  const double rho = -0.1893979224795759;
+  const double c8 = 0.16314594513667133;
   EXPECT_NEAR(thMom_->deltaP(const_->kSTau, wR00), -2.63897241291510083e-3, 1e-13);
+  // Test delta_V+A^(8)
+  // EXPECT_NEAR(thMom_->del68(s0, wD00, rho, 0.), -1.2966374009228992e-3, 1e-13);
 }

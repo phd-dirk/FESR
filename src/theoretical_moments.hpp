@@ -192,7 +192,7 @@ public:
   complex<double> D68(const complex<double> &s, const double &rhoVpA, const double &c8VpA) {
     return 3.e-2*rhoVpA/pow(s, 3) + 4.e-2*c8VpA/pow(s, 4);
   }
-  double D68CInt(double s0, function<complex<double>(complex<double>)> weight,
+  double D68CInt(const double &s0, function<complex<double>(complex<double>)> weight,
                  const double &rhoVpA, const double &c8VpA) {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
@@ -258,10 +258,15 @@ class TheoreticalMoments: public AdlerFunction {
     return 2.*D0CInt(s0, weight, astau, order);
   }
 
-  double delVpA0FO(const double &s0,
+  double del0(const double &s0,
                    function<complex<double>(complex<double>)> weight,
                    const double &astau, const int &order) {
     return ( cIntVpAD0FO(s0, weight, astau, order) - cIntVpAD0FO(s0, weight, astau, order) ) / 3.0;
+  }
+
+  double del68(const double &s0, function<complex<double>(complex<double>)> weight,
+               const double &rhoVpA, const double &c8VpA) {
+    return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
   }
 
 
