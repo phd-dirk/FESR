@@ -60,6 +60,13 @@ TEST_F(AdlerFunctionTest, D68) {
   EXPECT_NEAR(adler->D68(s, rho, c8).imag(), 1.7341429761413442e-4, 1e-13);
 }
 
+TEST_F(AdlerFunctionTest, D68CInt) {
+  const double s0 = 2.4;
+  const double rho = -0.1894;
+  const double c8 = 0.16315;
+  EXPECT_NEAR(adler->D68CInt(s0, wD00, rho, c8), -6.0327814112243174e-2, 1e-13);
+}
+
 TEST_F(AdlerFunctionTest, DeltaP) {
   const double s0 = const_->kSTau;
   const double rho = -0.1893979224795759;
