@@ -50,6 +50,9 @@ class Chisquared {
     for(uint k = 0; k < s0s.size(); k++) {
       for(uint l = 0; l < s0s.size(); l++) {
         chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
+        // if(k == 0 )
+          // cout << invCovMat << endl;
+          // cout << "chi[i] \t" << chi << endl;
       }
     }
 

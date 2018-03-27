@@ -107,6 +107,7 @@ class Constants {
   const double kDBe = 0.04; // HFAG 2011
   const double kDFPi = 0.14e-3;
   const double kDRTauVex = 0.0;
+  const double deltaEW = 0.001;
 };
 
 #endif

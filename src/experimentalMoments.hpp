@@ -84,6 +84,12 @@ class ExperimentalMoments : public Numerics {
       covMat(i, 0) = 0.;
     }
     invertMatrix(covMat, invCovMat);
+
+    // ublas::matrix<double> invInvCovMat(s0s.size(), s0s.size());
+    // cout << "test InvCov" << endl;
+    // invertMatrix(invCovMat, invInvCovMat);
+    // cout << covMat(1, 1) << " = " << invInvCovMat(1, 1) << endl;
+
     return invCovMat;
   }
 

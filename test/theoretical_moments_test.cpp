@@ -77,6 +77,14 @@ TEST_F(AdlerFunctionTest, D2) {
   EXPECT_NEAR(adler->D2(s, mu2, astau, order, r).real(), 3.4324915657182825e-7, 1e-09);
 }
 
+TEST_F(AdlerFunctionTest, D4) {
+  const complex<double> s(3.1570893123374919, 1.9866720523795795e-5);
+  const complex<double> mu2(3.1570893124, 0.);
+  const double astau = 0.31927;
+  const double aGGinv = 2.1e-2;
+  EXPECT_NEAR(adler->D4(s, mu2, astau, aGGinv, 1).real(), 2.7591458364939887e-4, 1e-13);
+}
+
 TEST_F(AdlerFunctionTest, D68) {
   const complex<double> s(-1.7585656673884618, 1.9150579086499120);
   const double rho = -0.1894;
