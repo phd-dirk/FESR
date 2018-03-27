@@ -13,9 +13,9 @@ include(${ROOT_USE_FILE})
 set(DIR src)
 include_directories(${DIR} ${BOOST_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS})
 # file(GLOB SRC "*.cpp")
-set(SOURCES main.cpp)
+set(SOURCES src/adler_function.cpp)
 
-add_executable(FESR ${SOURCES})
+add_executable(FESR main.cpp ${SOURCES})
 target_link_libraries(FESR GSL::gsl ${ROOT_LIBRARIES})
 
 #################################
@@ -34,7 +34,7 @@ if(test)
   #################
   # Unit Tests
   #################
-  add_executable(runUnitTests ${TEST_SOURCES})
+  add_executable(runUnitTests ${SOURCES} ${TEST_SOURCES})
 
   # Standard linking to gtest stuff.
   target_link_libraries(runUnitTests GTest::GTest GTest::Main GSL::gsl)

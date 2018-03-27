@@ -3,7 +3,6 @@
 
 #include "./adler_function.hpp"
 
-
 class TheoreticalMoments: public AdlerFunction {
  public:
   TheoreticalMoments(const int &order, const vector<double> &s0s,
