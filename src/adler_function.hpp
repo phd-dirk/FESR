@@ -108,15 +108,7 @@ public:
                      const double &astau, const double &aGGinv, const int &r);
   double D4CInt(double s0,
                 function<complex<double>(complex<double>)> weight, const double &astau,
-                const double &aGGinv, const int &r) {
-    function<complex<double>(complex<double>)> f =
-      [&](complex<double> s) -> complex<double> {
-      complex<double> mu2 = s0;
-      return weight(s)*D4(s0*s, mu2, astau, aGGinv, r);
-    };
-
-    return (3*const_.kPi*complexContourIntegral(s0, f)).real();
-  };
+                const double &aGGinv, const int &r);
 
   complex<double> D68(const complex<double> &s, const double &rhoVpA, const double &c8VpA) {
     return 3.e-2*rhoVpA/pow(s, 3) + 4.e-2*c8VpA/pow(s, 4);

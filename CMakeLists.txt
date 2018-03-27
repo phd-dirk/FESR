@@ -29,7 +29,7 @@ if(test)
 
   set (TEST_DIR test)
   set (TEST_SOURCES ${TEST_DIR}/constants_test.cpp ${TEST_DIR}/weights_test.cpp
-    ${TEST_DIR}/data_test.cpp ${TEST_DIR}/experimental_moments_test.cpp ${TEST_DIR}/theoretical_moments_test.cpp ${TEST_DIR}/numerics_test.cpp ${TEST_DIR}/alpha_s_test.cpp ${TEST_DIR}/chisquared_test.cpp)
+    ${TEST_DIR}/data_test.cpp ${TEST_DIR}/experimental_moments_test.cpp ${TEST_DIR}/theoretical_moments_test.cpp ${TEST_DIR}/numerics_test.cpp ${TEST_DIR}/alpha_s_test.cpp ${TEST_DIR}/chisquared_test.cpp test/adler_function_test.cpp)
 
   #################
   # Unit Tests

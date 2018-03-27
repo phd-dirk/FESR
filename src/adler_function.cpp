@@ -67,3 +67,14 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
 
   return gluonCondensate() + quarkCondensate() + m4();
 }
+double AdlerFunction::D4CInt(double s0,
+                             function<complex<double>(complex<double>)> weight, const double &astau,
+                             const double &aGGinv, const int &r) {
+  function<complex<double>(complex<double>)> f =
+    [&](complex<double> s) -> complex<double> {
+    complex<double> mu2 = s0;
+    return weight(s)*D4(s0*s, mu2, astau, aGGinv, r);
+  };
+
+  return (3*const_.kPi*complexContourIntegral(s0, f)).real();
+};
