@@ -11,10 +11,12 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <functional>
 #include <complex>
+#include <iostream>
 
 namespace ublas = boost::numeric::ublas;
 using namespace std::complex_literals;
-
+using std::cout;
+using std::endl;
 using std::function;
 using std::complex;
 
@@ -23,11 +25,27 @@ class Numerics {
   Numerics(const double &epsabs, const double &epsrel, Constants constants)
     : const_(constants), w_(gsl_integration_workspace_alloc(1200)), epsrel_(epsrel), epsabs_(epsabs) {}
 
-  static double test(double x) {
-    return x*x;
+  double gaussLegendre(function<double(double)> func, double from, double to) {
+    double result;
+    gsl_integration_fixed_workspace * q;
+    const gsl_integration_fixed_type * T = gsl_integration_fixed_legendre;
+    q = gsl_integration_fixed_alloc(T, 1200, from, to, 0.0, 0.0);
+
+    gsl_function F;
+    F = {
+      [](double d, void* vf) -> double {
+        auto& f = *static_cast<std::function<double(double)>*>(vf);
+        return f(d);
+      },
+      &func
+    };
+
+    gsl_integration_fixed(&F, &result, q);
+
+    return result;
   }
 
-  double integrate(function<double(double)> func, double from, double to) {
+  double adaptiveIntegrate(function<double(double)> func, double from, double to) {
     double result, error;
     gsl_function F;
     F = {
@@ -38,6 +56,7 @@ class Numerics {
       &func
     };
     gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1200, 6, w_, &result, &error);
+    // cout << "error \t" << error << endl;
     return result;
   }
 
@@ -49,13 +68,13 @@ class Numerics {
       return func(t).imag();
     };
 
-    double cintReal = integrate(funcReal, from, to);
-    double cintImag = integrate(funcImag, from, to);
+    double cintReal = adaptiveIntegrate(funcReal, from, to);
+    double cintImag = adaptiveIntegrate(funcImag, from, to);
 
     return complex<double>(cintReal, cintImag);
   }
 
-  complex<double> complexContourIntegral(const double &s0, function<complex<double>(complex<double>)> f) {
+  complex<double> complexContourIntegral(function<complex<double>(complex<double>)> f) {
     auto gamma = [](double t) {
       return exp(1i*t);
     };
@@ -64,7 +83,7 @@ class Numerics {
       return f(gamma(t));
     };
 
-    return integrateComplex(func, 0., 2.*const_.kPi);
+    return integrateComplex(func, -const_.kPi, const_.kPi);
   }
 
   // from https://gist.github.com/lilac/2464434

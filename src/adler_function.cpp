@@ -110,5 +110,5 @@ double AdlerFunction::D4CInt(double s0,
     return weight(s)*D4(s0*s, mu2, astau, aGGinv, order, r);
   };
 
-  return (3*const_.kPi*complexContourIntegral(s0, f)).real();
+  return (3*const_.kPi*complexContourIntegral(f)).real();
 };

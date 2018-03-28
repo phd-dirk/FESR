@@ -14,6 +14,7 @@ protected:
   TheoreticalMoments *thMom_;
   Constants *const_;
   const uint order_ = 5;
+  const double s0_ = 3.1570893124;
   const double astau_ = 0.31927;
   const double aGGinv_ = 2.1e-2;
   const double rhoVpA_ = -0.1894;
@@ -30,8 +31,11 @@ protected:
 };
 
 TEST_F(TheoreticalMomentsTest, IntegralMoment) {
-  const int i = 0;
-  EXPECT_NEAR((*thMom_)(i, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.4634999665533375, 1.e-14);
+  EXPECT_NEAR((*thMom_)(0, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.4634999665533375, 1.e-14);
+  EXPECT_NEAR((*thMom_)(1, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.4756222200597624, 1.e-6);
+  EXPECT_NEAR((*thMom_)(2, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.4923558272581996, 1.e-5);
+  EXPECT_NEAR((*thMom_)(3, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.5106424444197484, 1.e-5);
+  EXPECT_NEAR((*thMom_)(4, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.5305070134366181, 1.e-5);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta0) {
@@ -49,11 +53,9 @@ TEST_F(TheoreticalMomentsTest, Delta2) {
 }
 
 TEST_F(TheoreticalMomentsTest, Delta4) {
-  const double s0 = const_->kSTau;
-  const double aGGinv = 2.1e-2;
-  const double astau = 0.31927;
-  const int order = 5;
-  EXPECT_NEAR(thMom_->del4(s0, wD00, astau, aGGinv, order), 7.93483938348380651e-4, 1e-11);
+  EXPECT_NEAR(thMom_->del4(s0_, wD00, astau_, aGGinv_, order_), 7.93483938348380651e-4, 1e-11);
+  const double s0 = 3.;
+  EXPECT_NEAR(thMom_->del4(s0, wD00, astau_, aGGinv_, order_), 9.0756967163837078e-4, 1e-06);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta68) {
@@ -67,7 +69,6 @@ TEST_F(TheoreticalMomentsTest, Delta68) {
 }
 
 TEST_F(TheoreticalMomentsTest, DeltaP) {
-  const double s0 = const_->kSTau;
-  EXPECT_NEAR(thMom_->deltaP(const_->kSTau, wR00), -2.63897241291510083e-3, 1e-13);
+  EXPECT_NEAR(thMom_->deltaP(s0_, wR00), -2.63897241291510083e-3, 1e-13);
 }
 

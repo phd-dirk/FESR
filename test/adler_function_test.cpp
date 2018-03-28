@@ -14,11 +14,13 @@ protected:
   TheoreticalMoments *thMom_;
   AdlerFunction *adler;
   Constants *const_;
+  const uint order_ = 5;
+  const double astau_ = 0.31927;
+  const double aGGinv_ = 2.1e-2;
   virtual void SetUp() {
-    int order = 5;
     const_ = new Constants(3, 3);
     adler = new AdlerFunction(5, *const_);
-    thMom_ = new TheoreticalMoments(order, s0Set, wD00, *const_);
+    thMom_ = new TheoreticalMoments(order_, s0Set, wD00, *const_);
   }
 };
 
@@ -26,13 +28,13 @@ TEST_F(AdlerFunctionTest, D0) {
   complex<double> s(3., 3.);
   complex<double> mu2(3.0, 0);
   int order = 5;
-  EXPECT_NEAR(adler->D0(s, mu2, const_->kAlphaTau, order).real(), 2.6878635987293748e-2, 1e-13);
-  EXPECT_NEAR(adler->D0(s, mu2, const_->kAlphaTau, order).imag(), 1.5454361164073294e-3, 1e-13);
+  EXPECT_NEAR(adler->D0(s, mu2, const_->kAlphaTau, order).real(), 2.6878635987293748e-2, 1e-15);
+  EXPECT_NEAR(adler->D0(s, mu2, const_->kAlphaTau, order).imag(), 1.5454361164073294e-3, 1e-15);
 
   s = complex<double>(7.0, 2.0);
   mu2 = complex<double>(1.5, 2.2);
-  EXPECT_NEAR(adler->D0(s, mu2, const_->kAlphaTau, order).real(), 2.6732096654905575e-2, 1e-13);
-  EXPECT_NEAR(adler->D0(s, mu2, const_->kAlphaTau, order).imag(), -1.0995430321549232e-3, 1e-13);
+  EXPECT_NEAR(adler->D0(s, mu2, const_->kAlphaTau, order).real(), 2.6732096654905575e-2, 1e-15);
+  EXPECT_NEAR(adler->D0(s, mu2, const_->kAlphaTau, order).imag(), -1.0995430321549232e-3, 1e-15);
 }
 
 TEST_F(AdlerFunctionTest, CIntD0) {
@@ -56,12 +58,17 @@ TEST_F(AdlerFunctionTest, D2) {
 }
 
 TEST_F(AdlerFunctionTest, D4) {
-  const complex<double> s(3.1570893123374919, 1.9866720523795795e-5);
-  const complex<double> mu2(3.1570893124, 0.);
-  const double astau = 0.31927;
-  const double aGGinv = 2.1e-2;
-  const int order = 5;
-  EXPECT_NEAR(adler->D4(s, mu2, astau, aGGinv, order, 1).real(), 2.7591458364939887e-4, 1e-13);
+  complex<double> s(3.1570893123374919, 1.9866720523795795e-5);
+  complex<double> mu2(3.1570893124, 0.);
+  EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, 1).real(), 2.7591458364939887e-4, 1e-15);
+  s = complex<double>(2.8735226351854122, -1.3077004976474509);
+  mu2 = complex<double>(3.1570893124000001, 0.);
+  EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, 1).real(), 1.6118530368558565e-4, 1e-15);
+  EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, 1).imag(), 2.2444197547483058e-4, 1e-15);
+  s = complex<double>(-2.1537305702568648, 2.3083885195545712);
+  mu2 = complex<double>(3.1570893124000001, 0.);
+  EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, 1).real(), -1.1095466575342775e-5, 1e-15);
+  EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, 1).imag(), 2.7283500628353362e-4, 1e-15);
 }
 TEST_F(AdlerFunctionTest, D4CInt) {
   const double s0 = 3.1570893124;

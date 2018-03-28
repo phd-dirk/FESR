@@ -26,7 +26,7 @@ using namespace std::complex_literals;
 class AdlerFunction : public Numerics {
 public:
   AdlerFunction(const int &order, Constants constants) :
-    Numerics(1e-13, 0, constants), const_(constants), order_(order) {
+    Numerics(1e-14, 0, constants), const_(constants), order_(order) {
     if (order > 5) { throw invalid_argument("order cannot be higher than 5");
     };
   }
@@ -53,7 +53,7 @@ public:
       return weight(s)*D0(s0*s, mu2, astau, order);
     };
 
-    return (3*const_.kPi*complexContourIntegral(s0, f)).real();
+    return (3*const_.kPi*complexContourIntegral(f)).real();
   };
 
   complex<double> D2(const complex<double> &s,
@@ -68,7 +68,7 @@ public:
       return weight(s)*D2(s0*s, mu2, astau, order, r);
     };
 
-    return (3*const_.kPi*complexContourIntegral(s0, f)).real();
+    return (3*const_.kPi*complexContourIntegral(f)).real();
   };
 
   complex<double> D4(const complex<double> &s, const complex<double> &mu2,
@@ -88,7 +88,7 @@ public:
       return weight(s)*D68(s0*s, rhoVpA, c8VpA);
     };
 
-    return (3*const_.kPi*complexContourIntegral(s0, f)).real();
+    return (3*const_.kPi*complexContourIntegral(f)).real();
   };
 
   // Pseudoscalar contribution from pion pion pole and excited resonances
@@ -107,7 +107,7 @@ public:
       return weightRho(s).real()*2.*x/(const_.kSTau + 2.*x)*rhores;
     };
 
-    return 4.*pow(const_.kPi, 2)*( pionPole - integrate(f, xth, 1.));
+    return 4.*pow(const_.kPi, 2)*( pionPole - adaptiveIntegrate(f, xth, 1.));
   }
 
   double breitwigner(const double &s, const double &mbw, const double &gbw) {
