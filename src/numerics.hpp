@@ -12,6 +12,7 @@
 #include <functional>
 #include <complex>
 #include <iostream>
+#include <cmath>
 
 namespace ublas = boost::numeric::ublas;
 using namespace std::complex_literals;
@@ -19,13 +20,49 @@ using std::cout;
 using std::endl;
 using std::function;
 using std::complex;
+using std::cos;
+using std::abs;
 
 class Numerics {
  public:
   Numerics(const double &epsabs, const double &epsrel, Constants constants)
-    : const_(constants), w_(gsl_integration_workspace_alloc(1200)), epsrel_(epsrel), epsabs_(epsabs) {}
+    : const_(constants), w_(gsl_integration_workspace_alloc(1200)), epsrel_(epsrel), epsabs_(epsabs),
+      gaulegX(1201), gaulegW(1201) {
+    // init Gaussian quadratures from Numerical recepies
+    gauleg(-const_.kPi, const_.kPi, gaulegX, gaulegW, 1201);
+    cout << gaulegX[0] << "\t" << gaulegW[0] << endl;
+  }
 
-  double gaussLegendre(function<double(double)> func, double from, double to) {
+  void gauleg(const double &x1, const double &x2, vector<double> &x,
+                vector<double> &w, const int &n) {
+    double z1, z, pp, p3, p2, p1;
+    int m = (n + 1)/2;
+    double xm = 0.5*(x2+x1);
+    double xl = 0.5*(x2-x1);
+
+    for(int i = 0; i < m; i++) {
+      z = cos(const_.kPi*(i + 0.75)/(n + 0.5));
+
+      do {
+        p1 = 1.;
+        p2 = 0.;
+        for(int j = 0; j < n; j++){
+          p3 = p2;
+          p2 = p1;
+          p1 = ((2.*j + 1.)*z*p2 - j*p3)/(j+1);
+        }
+        pp = n*(z*p1 - p2)/(z*z - 1.);
+        z1 = z;
+        z = z1 - p1/pp;
+      } while(abs(z - z1) > epsabs_);
+      x[i] = xm - xl*z;
+      x[n-1-i] = xm+xl*z;
+      w[i] = 2.*xl/((1. - z*z)*pp*pp);
+      w[n-1-i] = w[i];
+    }
+  }
+
+  double gslFixedPointLegendre(function<double(double)> func, double from, double to) {
     double result;
     gsl_integration_fixed_workspace * q;
     const gsl_integration_fixed_type * T = gsl_integration_fixed_legendre;
@@ -116,6 +153,8 @@ class Numerics {
   gsl_integration_workspace * w_;
   double epsrel_; // relative error
   double epsabs_; // absolute error
+  vector<double> gaulegX;
+  vector<double> gaulegW;
 };
 
 #endif
