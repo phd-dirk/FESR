@@ -32,29 +32,9 @@ public:
   }
 
   complex<double> D0(const complex<double> &s, const complex<double> &mu2,
-                     const double &astau, const double &order) {
-    // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
-    complex<double> L = log(-s/mu2);
-    complex<double> amu = alpha_s(sqrt(mu2), astau);
-    complex<double> sum(0., 0.);
-    for (int n = 1; n <= order; n++) {
-      for (int k = 1; k <= n; k++) {
-        sum += pow(amu, n)*(double)k*const_.c_[n][k]*pow(L,k-1);
-      }
-    }
-
-    return 1/4./pow(const_.kPi, 2)*(const_.c_[0][1] + sum);
-  }
+                     const double &astau, const double &order);
   double D0CInt(const double &s0, function<complex<double>(complex<double>)> weight,
-                const double &astau, const double &order) {
-    function<complex<double>(complex<double>)> f =
-      [&](complex<double> s) -> complex<double> {
-      complex<double> mu2 = s0;
-      return weight(s)*D0(s0*s, mu2, astau, order);
-    };
-
-    return (3*const_.kPi*complexContourIntegral(f)).real();
-  };
+                const double &astau, const double &order);
 
   complex<double> D2(const complex<double> &s,
                      const complex<double> mu2, const double &astau,

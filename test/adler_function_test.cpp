@@ -40,11 +40,11 @@ TEST_F(AdlerFunctionTest, D0) {
 TEST_F(AdlerFunctionTest, CIntD0) {
   double s0 = 3.;
   int order = 5;
-  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order), 1.8129891021138491, 1e-13);
+  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order), 1.8129891021138491, 1e-14);
   // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
 
   s0 = 2.6;
-  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order), 1.8396044152966260, 1e-13);
+  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order), 1.8396044152966260, 1e-14);
   // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
 }
 
@@ -69,14 +69,15 @@ TEST_F(AdlerFunctionTest, D4) {
   mu2 = complex<double>(3.1570893124000001, 0.);
   EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, 1).real(), -1.1095466575342775e-5, 1e-15);
   EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, 1).imag(), 2.7283500628353362e-4, 1e-15);
+  EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, -1).real(), -1.6819854236697827e-5, 1e-15);
+  EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, -1).imag(), 2.8808404431198147e-4, 1e-15);
 }
 TEST_F(AdlerFunctionTest, D4CInt) {
   const double s0 = 3.1570893124;
-  const double astau = 0.31927;
-  const double aGGinv = 2.1e-2;
-  const uint r = 1;
-  const int order = 5;
-  EXPECT_NEAR(adler->D4CInt(s0, wD00, astau, aGGinv, order, r), 1.6944347548019322e-3, 1e-11);
+  int r = 1;
+  EXPECT_NEAR(adler->D4CInt(s0, wD00, astau_, aGGinv_, order_, r), 1.6944347548019322e-3, 1e-15);
+  r = -1;
+  // EXPECT_NEAR(adler->D4CInt(s0, wD00, astau_, aGGinv_, order_, r), 1.6944347548019322e-3, 1e-15);
 }
 
 TEST_F(AdlerFunctionTest, D68) {

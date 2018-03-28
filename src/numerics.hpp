@@ -30,7 +30,6 @@ class Numerics {
       gaulegX(1201), gaulegW(1201) {
     // init Gaussian quadratures from Numerical recepies
     gauleg(-const_.kPi, const_.kPi, gaulegX, gaulegW, 1201);
-    cout << gaulegX[0] << "\t" << gaulegW[0] << endl;
   }
 
   void gauleg(const double &x1, const double &x2, vector<double> &x,
@@ -60,6 +59,15 @@ class Numerics {
       w[i] = 2.*xl/((1. - z*z)*pp*pp);
       w[n-1-i] = w[i];
     }
+  }
+
+  complex<double> gaussIntegration(function<complex<double>(complex<double>)> func) {
+    complex<double> sum(0.0, 0.0);
+    for( int i = 0; i < 1201; i++) {
+      complex<double> x = -exp(1i*gaulegX[i]);
+      sum += func(x)*gaulegW[i];
+    }
+    return sum;
   }
 
   double gslFixedPointLegendre(function<double(double)> func, double from, double to) {

@@ -56,9 +56,7 @@ class TheoreticalMoments: public AdlerFunction {
   double del4(const double &s0,
               function<complex<double>(complex<double>)> weight,
               const double &astau, const double &aGGinv, const int &order) {
-    return (D4CInt(s0, weight, astau, aGGinv, order, 1)
-            + D4CInt(s0, weight, astau, aGGinv, order, -1)
-            )/3.;
+    return cIntVpAD4FO(s0, weight, astau, aGGinv, order)/3.;
   }
 
   double del68(const double &s0, function<complex<double>(complex<double>)> weight,

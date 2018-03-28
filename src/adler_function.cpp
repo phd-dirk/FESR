@@ -1,5 +1,31 @@
 #include "./adler_function.hpp"
 
+complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double> &mu2,
+                                  const double &astau, const double &order) {
+  // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
+  complex<double> L = log(-s/mu2);
+  complex<double> amu = alpha_s(sqrt(mu2), astau);
+  complex<double> sum(0., 0.);
+  for (int n = 1; n <= order; n++) {
+    for (int k = 1; k <= n; k++) {
+      sum += pow(amu, n)*(double)k*const_.c_[n][k]*pow(L,k-1);
+    }
+  }
+
+  return 1/4./pow(const_.kPi, 2)*(const_.c_[0][1] + sum);
+}
+
+double AdlerFunction::D0CInt(const double &s0, function<complex<double>(complex<double>)> weight,
+                             const double &astau, const double &order) {
+  function<complex<double>(complex<double>)> f =
+    [&](complex<double> s) -> complex<double> {
+    complex<double> mu2 = s0;
+    return weight(s)*D0(s0*s, mu2, astau, order);
+  };
+
+  return (3*const_.kPi*complexContourIntegral(f)).real();
+};
+
 complex<double> AdlerFunction::D2(const complex<double> &s,
                                   const complex<double> mu2, const double &astau,
                                   const int &order, const int &r) {
@@ -104,11 +130,21 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
 double AdlerFunction::D4CInt(double s0,
                              function<complex<double>(complex<double>)> weight, const double &astau,
                              const double &aGGinv, const int &order, const int &r) {
+  function<complex<double>(complex<double>)> fTest =
+    [&](complex<double> s) -> complex<double> {
+    return weight(s)/pow(s, 2);
+  };
+
+  double norder = 2;
+  if ( abs(gaussIntegration(fTest).real()) < 2.e-14) {
+    norder = 3;
+  }
+
   function<complex<double>(complex<double>)> f =
     [&](complex<double> s) -> complex<double> {
     complex<double> mu2 = s0;
-    return weight(s)*D4(s0*s, mu2, astau, aGGinv, order, r);
+    return weight(s)*D4(s0*s, mu2, astau, aGGinv, norder, r);
   };
 
-  return (3*const_.kPi*complexContourIntegral(f)).real();
+  return (3*const_.kPi*gaussIntegration(f)).real();
 };
