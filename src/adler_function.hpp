@@ -2,6 +2,8 @@
 #define SRC_ADLER_FUNCTION_H
 
 #include "./numerics.hpp"
+#include "./alpha_s.hpp"
+#include "./mq_run.hpp"
 #include "./constants.hpp"
 #include "./alpha_s.hpp"
 #include "./weights.hpp"
@@ -23,10 +25,10 @@ using std::cout;
 using std::endl;
 using namespace std::complex_literals;
 
-class AdlerFunction : public Numerics {
+class AdlerFunction : Numerics {
 public:
-  AdlerFunction(const int &order, Constants constants) :
-    Numerics(1e-14, 0, constants), const_(constants), order_(order) {
+  AdlerFunction(const int &order, const Constants &constants) :
+    Numerics(constants), const_(constants), order_(order), amu_(constants), mq_(constants) {
     if (order > 5) { throw invalid_argument("order cannot be higher than 5");
     };
   }
@@ -97,6 +99,8 @@ public:
  private:
   Constants const_;
   int order_;
+  AlphaS amu_;
+  MQRun mq_;
 }; // end AdlerFunction
 
 #endif

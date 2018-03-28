@@ -4,7 +4,7 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
                                   const double &astau, const double &order) {
   // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
   complex<double> L = log(-s/mu2);
-  complex<double> amu = alpha_s(sqrt(mu2), astau);
+  complex<double> amu = amu_(mu2, const_.kSTau, astau);
   complex<double> sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
@@ -33,8 +33,8 @@ complex<double> AdlerFunction::D2(const complex<double> &s,
   const int i = 0, j = 1;
 
   complex<double> L = log(-s/mu2);
-  complex<double> amu = alpha_s(sqrt(mu2), astau);
-  complex<double> rmq = runMassRatio(mu2, const_.kSTau, astau);
+  complex<double> amu = amu_(mu2, const_.kSTau, astau);
+  complex<double> rmq = mq_(mu2, const_.kSTau, astau);
 
   complex<double> m2a = (pow(const_.mq[i], 2) + pow(const_.mq[j], 2))*pow(rmq, 2);
   complex<double> m2b = r*const_.mq[i]*const_.mq[j]*pow(rmq, 2);
@@ -69,7 +69,7 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
 
   const int i = 0, j = 1;
   complex<double> L = log(-s/mu2);
-  complex<double> amu = alpha_s(sqrt(mu2), astau);
+  complex<double> amu = amu_s(sqrt(mu2), astau);
 
 
   complex<double> gluonCondensate(0.0, 0.0);

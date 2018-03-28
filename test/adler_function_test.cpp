@@ -73,11 +73,12 @@ TEST_F(AdlerFunctionTest, D4) {
   EXPECT_NEAR(adler->D4(s, mu2, astau_, aGGinv_, order_, -1).imag(), 2.8808404431198147e-4, 1e-15);
 }
 TEST_F(AdlerFunctionTest, D4CInt) {
-  const double s0 = 3.1570893124;
-  int r = 1;
-  EXPECT_NEAR(adler->D4CInt(s0, wD00, astau_, aGGinv_, order_, r), 1.6944347548019322e-3, 1e-15);
-  r = -1;
-  // EXPECT_NEAR(adler->D4CInt(s0, wD00, astau_, aGGinv_, order_, r), 1.6944347548019322e-3, 1e-15);
+  double s0 = 3.1570893124;
+  EXPECT_NEAR(adler->D4CInt(s0, wD00, astau_, aGGinv_, order_, 1), 1.6944347548019322e-3, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(s0, wD00, astau_, aGGinv_, order_, -1), 6.8601706024321041e-4, 1e-15);
+  s0 = 2.0;
+  // EXPECT_NEAR(adler->D4CInt(s0, wD00, astau_, aGGinv_, order_, 1), 5.9016068520545409e-3, 1e-15);
+  // EXPECT_NEAR(adler->D4CInt(s0, wD00, astau_, aGGinv_, order_, -1), 2.2220948788460476e-3, 1e-15);
 }
 
 TEST_F(AdlerFunctionTest, D68) {

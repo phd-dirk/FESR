@@ -15,7 +15,6 @@
 #include <cmath>
 
 namespace ublas = boost::numeric::ublas;
-using namespace std::complex_literals;
 using std::cout;
 using std::endl;
 using std::function;
@@ -25,12 +24,26 @@ using std::abs;
 
 class Numerics {
  public:
-  Numerics(const double &epsabs, const double &epsrel, Constants constants)
-    : const_(constants), w_(gsl_integration_workspace_alloc(1200)), epsrel_(epsrel), epsabs_(epsabs),
+  Numerics(Constants constants)
+    : const_(constants), w_(gsl_integration_workspace_alloc(1200)),
       gaulegX(1201), gaulegW(1201) {
     // init Gaussian quadratures from Numerical recepies
     gauleg(-const_.kPi, const_.kPi, gaulegX, gaulegW, 1201);
   }
+
+  // find root of function
+  complex<double> newtonRaphson(
+                                function<complex<double>(complex<double>)> f,
+                                function<complex<double>(complex<double>)> df,
+                                complex<double> x0,
+                                double acc ) {
+    complex<double> xNext = x0;
+    while( abs(f(xNext)) > acc ) {
+      xNext = xNext - f(xNext)/df(xNext);
+    }
+    return xNext;
+  }
+
 
   void gauleg(const double &x1, const double &x2, vector<double> &x,
                 vector<double> &w, const int &n) {
@@ -62,9 +75,10 @@ class Numerics {
   }
 
   complex<double> gaussIntegration(function<complex<double>(complex<double>)> func) {
+    complex<double> I(0., 1.);
     complex<double> sum(0.0, 0.0);
     for( int i = 0; i < 1201; i++) {
-      complex<double> x = -exp(1i*gaulegX[i]);
+      complex<double> x = -exp(I*gaulegX[i]);
       sum += func(x)*gaulegW[i];
     }
     return sum;
@@ -121,7 +135,8 @@ class Numerics {
 
   complex<double> complexContourIntegral(function<complex<double>(complex<double>)> f) {
     auto gamma = [](double t) {
-      return exp(1i*t);
+      complex<double> I(0., 1.);
+      return exp(I*t);
     };
 
     auto func = [&](double t) {
@@ -159,8 +174,8 @@ class Numerics {
  private:
   Constants const_;
   gsl_integration_workspace * w_;
-  double epsrel_; // relative error
-  double epsabs_; // absolute error
+  const double epsrel_ = 0.; // relative error
+  const double epsabs_ = 1e-15; // absolute error
   vector<double> gaulegX;
   vector<double> gaulegW;
 };
