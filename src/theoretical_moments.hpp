@@ -16,7 +16,7 @@ class TheoreticalMoments: public AdlerFunction {
     // d0 VpA
     double rTauTh = 0.//cIntVpAD0FO(s0, weight, astau, order);
       // d4 VpA
-      + cIntVpAD4FO(s0, weight, astau, aGGinv);
+      + cIntVpAD4FO(s0, weight, astau, aGGinv, order);
       // d68 VpA
       // + D68CInt(s0, weight, rhoVpA, c8VpA);
       // + D0CInt(s0, weight, astau, 0)*const_.deltaEW
@@ -27,14 +27,14 @@ class TheoreticalMoments: public AdlerFunction {
 
   double cIntVpAD0FO(const double &s0,
                      function<complex<double>(complex<double>)> weight,
-                     const double &astau, const double &order) {
+                     const double &astau, const int &order) {
     return 2.*D0CInt(s0, weight, astau, order);
   }
 
   double cIntVpAD4FO(const double &s0,
                      function<complex<double>(complex<double>)> weight,
-                     const double &astau, const double &aGGinv) {
-    return  D4CInt(s0, weight, astau, aGGinv, 1 ) + D4CInt(s0, weight, astau, aGGinv, -1 );
+                     const double &astau, const double &aGGinv, const int &order) {
+    return  D4CInt(s0, weight, astau, aGGinv, order, 1) + D4CInt(s0, weight, astau, aGGinv, order, -1);
   }
 
   double del0(const double &s0,
@@ -55,9 +55,9 @@ class TheoreticalMoments: public AdlerFunction {
 
   double del4(const double &s0,
               function<complex<double>(complex<double>)> weight,
-              const double &astau, const double &aGGinv) {
-    return (D4CInt(s0, weight, astau, aGGinv, 1)
-            + D4CInt(s0, weight, astau, aGGinv, -1)
+              const double &astau, const double &aGGinv, const int &order) {
+    return (D4CInt(s0, weight, astau, aGGinv, order, 1)
+            + D4CInt(s0, weight, astau, aGGinv, order, -1)
             )/3.;
   }
 

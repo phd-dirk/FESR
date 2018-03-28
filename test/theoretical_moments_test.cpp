@@ -43,7 +43,8 @@ TEST_F(TheoreticalMomentsTest, Delta4) {
   const double s0 = const_->kSTau;
   const double aGGinv = 2.1e-2;
   const double astau = 0.31927;
-  EXPECT_NEAR(thMom_->del4(s0, wD00, astau, aGGinv), 7.93483938348380651e-4, 1e-11);
+  const int order = 5;
+  EXPECT_NEAR(thMom_->del4(s0, wD00, astau, aGGinv, order), 7.93483938348380651e-4, 1e-11);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta68) {

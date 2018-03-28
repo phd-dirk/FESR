@@ -20,12 +20,6 @@ protected:
     adler = new AdlerFunction(5, *const_);
     thMom_ = new TheoreticalMoments(order, s0Set, wD00, *const_);
   }
-
-  virtual void TearDown() {
-    delete adler;
-    delete const_;
-    delete thMom_;
-  }
 };
 
 TEST_F(AdlerFunctionTest, D0) {
@@ -66,14 +60,16 @@ TEST_F(AdlerFunctionTest, D4) {
   const complex<double> mu2(3.1570893124, 0.);
   const double astau = 0.31927;
   const double aGGinv = 2.1e-2;
-  EXPECT_NEAR(adler->D4(s, mu2, astau, aGGinv, 1).real(), 2.7591458364939887e-4, 1e-13);
+  const int order = 5;
+  EXPECT_NEAR(adler->D4(s, mu2, astau, aGGinv, order, 1).real(), 2.7591458364939887e-4, 1e-13);
 }
 TEST_F(AdlerFunctionTest, D4CInt) {
   const double s0 = 3.1570893124;
   const double astau = 0.31927;
   const double aGGinv = 2.1e-2;
   const uint r = 1;
-  EXPECT_NEAR(adler->D4CInt(s0, wD00, astau, aGGinv, r), 1.6944347548019322e-3, 1e-11);
+  const int order = 5;
+  EXPECT_NEAR(adler->D4CInt(s0, wD00, astau, aGGinv, order, r), 1.6944347548019322e-3, 1e-11);
 }
 
 TEST_F(AdlerFunctionTest, D68) {
