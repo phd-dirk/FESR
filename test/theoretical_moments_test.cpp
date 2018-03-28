@@ -13,10 +13,14 @@ class TheoreticalMomentsTest : public ::testing::Test {
 protected:
   TheoreticalMoments *thMom_;
   Constants *const_;
+  const uint order_ = 5;
+  const double astau_ = 0.31927;
+  const double aGGinv_ = 2.1e-2;
+  const double rhoVpA_ = -0.1894;
+  const double c8VpA_ = 0.16315;
   virtual void SetUp() {
-    int order = 5;
     const_ = new Constants(3, 3);
-    thMom_ = new TheoreticalMoments(order, s0Set, wD00, *const_);
+    thMom_ = new TheoreticalMoments(order_, s0Set, wD00, *const_);
   }
 
   virtual void TearDown() {
@@ -24,6 +28,11 @@ protected:
     delete const_;
   }
 };
+
+TEST_F(TheoreticalMomentsTest, IntegralMoment) {
+  const int i = 0;
+  EXPECT_NEAR((*thMom_)(i, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.4634999665533375, 1.e-14);
+}
 
 TEST_F(TheoreticalMomentsTest, Delta0) {
   const double s0 = const_->kSTau;

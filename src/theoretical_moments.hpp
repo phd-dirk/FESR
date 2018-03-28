@@ -14,14 +14,14 @@ class TheoreticalMoments: public AdlerFunction {
     // factor 2 for V PLUS A
     double s0 = s0s[i];
     // d0 VpA
-    double rTauTh = 0.//cIntVpAD0FO(s0, weight, astau, order);
+    double rTauTh = cIntVpAD0FO(s0, weight, astau, order)
       // d4 VpA
-      + cIntVpAD4FO(s0, weight, astau, aGGinv, order);
+      + cIntVpAD4FO(s0, weight, astau, aGGinv, order)
       // d68 VpA
-      // + D68CInt(s0, weight, rhoVpA, c8VpA);
-      // + D0CInt(s0, weight, astau, 0)*const_.deltaEW
+       + D68CInt(s0, weight, rhoVpA, c8VpA)
+       // + D0CInt(s0, weight, astau, 0)*const_.deltaEW
       // deltaP
-      // + 3.*deltaP(s0, wR00);
+       + 3.*deltaP(s0, wR00);
     return pow(const_.kVud, 2)*const_.kSEW*rTauTh;
   }
 
