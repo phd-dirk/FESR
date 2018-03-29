@@ -73,14 +73,14 @@ int main () {
   min->SetFunction(chi2);
 
   // set free variables to be minimized
-  min->SetVariable(0, "astau", 0.31927, 0.2e-2);
-  // min->SetFixedVariable(0, "astau", 0.31927);
+  // min->SetVariable(0, "astau", 0.31927, 0.2e-2);
+  min->SetFixedVariable(0, "astau", 0.31927);
   // min->SetVariable(1, "aGGInv", 0.21e-1, 1.e-2);
   min->SetFixedVariable(1, "aGGInv", 0.21e-1);
-  // min->SetVariable(2, "rhoVpA",  -0.1894, 0.1);
-  min->SetFixedVariable(2, "rhoVpA",  -0.1894);
-  // min->SetVariable(3, "c8VpA",  0.16315, 0.3);
-  min->SetFixedVariable(3, "c8VpA",  0.16315);
+  min->SetVariable(2, "rhoVpA",  -0.1894, 0.1);
+  // min->SetFixedVariable(2, "rhoVpA",  -0.1894);
+  min->SetVariable(3, "c8VpA",  0.16315, 0.3);
+  // min->SetFixedVariable(3, "c8VpA",  0.16315);
 
   // minimize!
   min->Minimize();

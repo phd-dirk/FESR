@@ -2,8 +2,8 @@
     "Adler": {
         "D0": true,
         "D2": false,
-        "D4": false,
-        "D68": false,
+        "D4": true,
+        "D68": true,
         "PionPole": true
     }
 }
