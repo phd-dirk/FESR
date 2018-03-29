@@ -4,6 +4,7 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
                                   const double &astau, const double &order) {
   // ATTENTION: alphaMu(mu)  is only equal to Matthias zarg() within a certain range around mu^2 ~ 3.
   complex<double> L = log(-s/mu2);
+
   complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
   complex<double> sum(0., 0.);
   for (int n = 1; n <= order; n++) {

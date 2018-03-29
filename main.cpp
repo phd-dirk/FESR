@@ -29,6 +29,11 @@ using std::runtime_error;
 #include "TRandom2.h"
 #include "TError.h"
 
+// Config
+#include "json.hpp"
+#include <fstream>
+using json = nlohmann::json;
+
 using ROOT::Math::Minimizer;
 using ROOT::Math::Factory;
 using ROOT::Math::Functor;
@@ -40,6 +45,10 @@ void log(string name, complex<double> x) {
 int main () {
   cout.precision(17);
 
+  std::ifstream configFile("./configuration.json");
+  json config;
+  configFile >> config;
+
   const int nc = 3;
   const int nf = 3;
   const int order = 5;
@@ -47,47 +56,47 @@ int main () {
   vector<double> s0s = s0Set;
 
   Constants constants(nc, nf);
-  Chisquared chisquared(order, s0s, wD00, constants);
+  Chisquared chisquared(order, s0s, wD00, config, constants);
 
   // MINUIT
-  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // // set tolerances
-  // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1e-14);
-  // min->SetPrintLevel(1); // activate logging
+  // set tolerances
+  min->SetMaxFunctionCalls(10000000); // for Minuit2
+  min->SetMaxIterations(10000000); // for GSL
+  min->SetTolerance(1e-15);
+  min->SetPrintLevel(1); // activate logging
 
-  // // function wrapper
-  // Functor chi2(chisquared, 4);
+  // function wrapper
+  Functor chi2(chisquared, 4);
 
-  // min->SetFunction(chi2);
+  min->SetFunction(chi2);
 
-  // // set free variables to be minimized
-  // // min->SetVariable(0, "astau", 0.31927, 0.2e-2);
+  // set free variables to be minimized
+  min->SetVariable(0, "astau", 0.31927, 0.2e-2);
   // min->SetFixedVariable(0, "astau", 0.31927);
-  // // min->SetVariable(1, "aGGInv", 0.21e-1, 1.e-2);
-  // min->SetFixedVariable(1, "aGGInv", 0.21e-1);
+  // min->SetVariable(1, "aGGInv", 0.21e-1, 1.e-2);
+  min->SetFixedVariable(1, "aGGInv", 0.21e-1);
   // min->SetVariable(2, "rhoVpA",  -0.1894, 0.1);
-  // // min->SetFixedVariable(2, "rhoVpA",  -0.1894);
+  min->SetFixedVariable(2, "rhoVpA",  -0.1894);
   // min->SetVariable(3, "c8VpA",  0.16315, 0.3);
-  // // min->SetFixedVariable(3, "c8VpA",  0.16315);
+  min->SetFixedVariable(3, "c8VpA",  0.16315);
 
-  // // minimize!
-  // min->Minimize();
+  // minimize!
+  min->Minimize();
 
-  // const double *xs = min->X();
+  const double *xs = min->X();
 
-  // cout << "Minimum chi2("
-  //      << xs[0] << ", " << xs[1] << ", "
-  //      << xs[2] << ", " << xs[3] << "): "
-  //      << min->MinValue() << endl;
+  cout << "Minimum chi2("
+       << xs[0] << ", " << xs[1] << ", "
+       << xs[2] << ", " << xs[3] << "): "
+       << min->MinValue() << endl;
 
 
-  // min->PrintResults();
-  // cout << "f() :\t" << chi2(xs) << endl;
+  min->PrintResults();
+  cout << "f() :\t" << chi2(xs) << endl;
 
-  // double xs2[4] = { 0.31921, 0.21e-1, -0.18939792247957590, 0.16314594513667133 };
-  // cout << "fotro() \t" << chi2(xs2) << endl;
+  double xs2[4] = { 0.31921, 0.21e-1, -0.18939792247957590, 0.16314594513667133 };
+  cout << "fotro() \t" << chi2(xs2) << endl;
   return 0;
 }

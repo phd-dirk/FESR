@@ -5,7 +5,9 @@
 #include <gtest/gtest.h>
 #include <cmath>
 #include <complex>
+#include "json.hpp"
 
+using json = nlohmann::json;
 using std::pow;
 using std::complex;
 
@@ -18,9 +20,14 @@ protected:
   const double astau_ = 0.31927;
   const double aGGinv_ = 2.1e-2;
   virtual void SetUp() {
+    json config;
+    config["Adler"] = {
+      { "D0", "D2", "D4", "D68", "PionPole" },
+      { true, false, true, true, true }
+    };
     const_ = new Constants(3, 3);
     adler = new AdlerFunction(5, *const_);
-    thMom_ = new TheoreticalMoments(order_, s0Set, wD00, *const_);
+    thMom_ = new TheoreticalMoments(order_, s0Set, wD00, config, *const_);
   }
 };
 

@@ -2,8 +2,10 @@
 #include "../src/weights.hpp"
 #include "../src/chisquared.hpp"
 #include "../src/s0_sets.hpp"
+#include "json.hpp"
 #include <gtest/gtest.h>
 #include <complex>
+using json = nlohmann::json;
 
 class ChisquaredTest : public ::testing::Test {
  protected:
@@ -13,8 +15,13 @@ class ChisquaredTest : public ::testing::Test {
   virtual void SetUp() {
     const uint order = 5;
     const uint nc = 3, nf = 3;
+    json config;
+    config["Adler"] = {
+      { "D0", "D2", "D4", "D68", "PionPole" },
+      { true, false, true, true, true }
+    };
     const_ = new Constants(nc, nf);
-    chi_ = new Chisquared(order, s0Set, wD00, *const_);
+    chi_ = new Chisquared(order, s0Set, wD00, config, *const_);
   }
 
   virtual void TearDown() {

@@ -5,7 +5,9 @@
 #include <gtest/gtest.h>
 #include <cmath>
 #include <complex>
+#include "json.hpp"
 
+using json = nlohmann::json;
 using std::pow;
 using std::complex;
 
@@ -20,8 +22,13 @@ protected:
   const double rhoVpA_ = -0.1894;
   const double c8VpA_ = 0.16315;
   virtual void SetUp() {
+    json config;
+    config["Adler"] = {
+      { "D0", "D2", "D4", "D68", "PionPole" },
+      { true, false, true, true, true }
+    };
     const_ = new Constants(3, 3);
-    thMom_ = new TheoreticalMoments(order_, s0Set, wD00, *const_);
+    thMom_ = new TheoreticalMoments(order_, s0Set, wD00, config, *const_);
   }
 
   virtual void TearDown() {

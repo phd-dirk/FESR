@@ -4,6 +4,7 @@
 #include "./experimentalMoments.hpp"
 #include "./theoretical_moments.hpp"
 #include "./weights.hpp"
+#include "json.hpp"
 #include <vector>
 #include <functional>
 #include <iostream>
@@ -11,6 +12,7 @@
 
 namespace ublas = boost::numeric::ublas;
 
+using json = nlohmann::json;
 using std::vector;
 using std::function;
 using std::cout;
@@ -19,13 +21,14 @@ using std::endl;
 class Chisquared {
  public:
   Chisquared(const int &order, const vector<double> &s0s,
-             function<complex<double>(complex<double>)> weight, Constants constants) :
+             function<complex<double>(complex<double>)> weight,
+             const json &configuration, Constants constants) :
       s0s(s0s),
       expMom(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
                                  //0.99363,
                                  1,
                                  s0s, weight, wD00, constants)),
-      thMom(TheoreticalMoments(order, s0s, weight, constants)) {
+      thMom(TheoreticalMoments(order, s0s, weight, configuration, constants)) {
     order_ = order;
   }
 
@@ -50,9 +53,6 @@ class Chisquared {
     for(uint k = 0; k < s0s.size(); k++) {
       for(uint l = 0; l < s0s.size(); l++) {
         chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
-        // if(k == 0 )
-          // cout << invCovMat << endl;
-          // cout << "chi[i] \t" << chi << endl;
       }
     }
 

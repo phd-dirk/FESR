@@ -2,26 +2,36 @@
 #define SRC_THEORETICAL_MOMENTS_H
 
 #include "./adler_function.hpp"
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 class TheoreticalMoments: public AdlerFunction {
  public:
   TheoreticalMoments(const int &order, const vector<double> &s0s,
-                     function<complex<double>(complex<double>)> weight, Constants constants) :
-    AdlerFunction(order, constants), const_(constants), s0s(s0s), weight(weight) {}
+                     function<complex<double>(complex<double>)> weight,
+                     const json &configuration, Constants &constants) :
+    AdlerFunction(order, constants), const_(constants), config_(configuration),
+    s0s(s0s), weight(weight) {}
 
   double operator ()(const int &i, const double &astau, const double &aGGinv,
                      const double &rhoVpA, const double &c8VpA, const double &order) {
-    // factor 2 for V PLUS A
     double s0 = s0s[i];
-    // d0 VpA
-    double rTauTh = cIntVpAD0FO(s0, weight, astau, order)
-      // d4 VpA
-      + cIntVpAD4FO(s0, weight, astau, aGGinv, order)
-      // d68 VpA
-       + D68CInt(s0, weight, rhoVpA, c8VpA)
-       // + D0CInt(s0, weight, astau, 0)*const_.deltaEW
-      // deltaP
-       + 3.*deltaP(s0, wR00);
+
+    double rTauTh = 0.;
+    // D0
+    if ( config_["Adler"]["D0"] )
+      rTauTh += cIntVpAD0FO(s0, weight, astau, order);
+    // D4
+    if ( config_["Adler"]["D4"] )
+      rTauTh += cIntVpAD4FO(s0, weight, astau, aGGinv, order);
+    // D68
+    if ( config_["Adler"]["D68"] )
+      rTauTh += D68CInt(s0, weight, rhoVpA, c8VpA);
+    // PionPole
+    if ( config_["Adler"]["PionPole"] )
+      rTauTh += 3.*deltaP(s0, wR00);
+
     return pow(const_.kVud, 2)*const_.kSEW*rTauTh;
   }
 
@@ -67,6 +77,7 @@ class TheoreticalMoments: public AdlerFunction {
 
  private:
   Constants const_;
+  json config_;
   vector<double> s0s;
   function<complex<double>(complex<double>)> weight;
 };
