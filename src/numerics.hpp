@@ -175,7 +175,7 @@ class Numerics {
   Constants const_;
   gsl_integration_workspace * w_;
   const double epsrel_ = 0.; // relative error
-  const double epsabs_ = 1e-15; // absolute error
+  const double epsabs_ = 1e-13; // absolute error
   vector<double> gaulegX;
   vector<double> gaulegW;
 };

@@ -20,7 +20,7 @@ class ExperimentalMoments : public Numerics {
                       const vector<double> &s0s,
                       function<complex<double>(complex<double>)> weight,
                       function<complex<double>(complex<double>)> wTau, Constants constants) :
-    Numerics(1e-13, 0, constants), const_(constants), data(Data(filename, normalizationFactor)),
+    Numerics(constants), const_(constants), data(Data(filename, normalizationFactor)),
     s0s(s0s), weight(weight), wTau(wTau) {
 
     // init weightRatios

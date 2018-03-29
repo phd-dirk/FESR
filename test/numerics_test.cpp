@@ -10,7 +10,7 @@ class NumericsTest : public ::testing::Test {
   Numerics * numerics;
   virtual void SetUp() {
     Constants const_(3, 3);
-    numerics = new Numerics(1e-14, 1e-14, const_);
+    numerics = new Numerics(const_);
   }
 
   virtual void TearDown() {
