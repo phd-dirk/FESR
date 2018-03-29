@@ -39,13 +39,13 @@ TEST_F(AdlerFunctionTest, D0) {
 
 TEST_F(AdlerFunctionTest, CIntD0) {
   double s0 = 3.;
-  int order = 5;
-  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order), 1.8129891021138491, 1e-14);
-  // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
+  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order_), 1.8129891021138491, 1e-14);
 
   s0 = 2.6;
-  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order), 1.8396044152966260, 1e-14);
-  // EXPECT_NEAR(adler->contourIntegral(s0, wD00).imag(), 0., 1e-13);
+  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order_), 1.8396044152966260, 1e-14);
+
+  s0 = 2.;
+  EXPECT_NEAR(adler->D0CInt(s0, wD00, const_->kAlphaTau, order_), 1.9023472322728381, 1e-13);
 }
 
 TEST_F(AdlerFunctionTest, D2) {

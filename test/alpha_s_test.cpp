@@ -26,14 +26,20 @@ TEST_F(AlphaSTest, complex) {
   complex<double> q2(3., 3.);
   EXPECT_NEAR((*amu_)(q2, const_->kSTau, astau_/const_->kPi).real(),
               8.9725951245272245e-2, 1e-14);
-  // EXPECT_NEAR(
-  //             alpha_s(sqrt(complex<double>(3, 3)), astau).imag(),
-  //             -1.8025823222497021e-2, 1e-14);
+  EXPECT_NEAR((*amu_)(q2, const_->kSTau, astau_/const_->kPi).imag(),
+              -1.8025823222497021e-2, 1e-14);
 
-  // EXPECT_NEAR(
-  //             alpha_s(sqrt(complex<double>(1.5, 2.0)), astau).real(),
-  //             9.9728959436126022e-2, 1e-14);
-  // EXPECT_NEAR(
-  //             alpha_s(sqrt(complex<double>(1.5, 2.0)), astau).imag(),
-  //             -2.8233893471810996e-2, 1e-14);
+  q2 = complex<double>(1.5, 2.);
+  EXPECT_NEAR((*amu_)(q2, const_->kSTau, astau_/const_->kPi).real(),
+              9.9728959436126022e-2, 1e-14);
+  EXPECT_NEAR((*amu_)(q2, const_->kSTau, astau_/const_->kPi).imag(),
+              -2.8233893471810996e-2, 1e-14);
+
+  q2 = complex<double>(2., 0.);
+  EXPECT_NEAR((*amu_)(q2, const_->kSTau, astau_/const_->kPi).real(),
+              0.11721885219529733, 1e-14);
+
+  q2 = complex<double>(2.6, 0.);
+  EXPECT_NEAR((*amu_)(q2, const_->kSTau, astau_/const_->kPi).real(),
+              0.10764199710166374, 1e-14);
 }

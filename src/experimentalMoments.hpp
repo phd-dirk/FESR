@@ -83,7 +83,8 @@ class ExperimentalMoments : public Numerics {
       covMat(0, i) = 0.;
       covMat(i, 0) = 0.;
     }
-    invertMatrix(covMat, invCovMat);
+    // invertMatrix(covMat, invCovMat);
+    // cout << prod(covMat, invCovMat) << endl;
 
     // ublas::matrix<double> invInvCovMat(s0s.size(), s0s.size());
     // cout << "test InvCov" << endl;
@@ -126,7 +127,7 @@ class ExperimentalMoments : public Numerics {
   void setWeightRatios() {
     matrix<double> wRatios(s0s.size(), data.binCount);
 
-    for (int i = 0; i < s0s.size(); i++) {
+    for (uint i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount; j++) {
         double s0UpperLimit = data.sbins[j]+data.dsbins[j]/2.;
         double s0LowerLimit = data.sbins[j]-data.dsbins[j]/2.;
@@ -143,7 +144,7 @@ class ExperimentalMoments : public Numerics {
   // return the experimental spectral moment
   void setExperimentalMoments() {
     vector<double> moments(s0s.size());
-    for (int i = 0; i < s0s.size(); i++) {
+    for (uint i = 0; i < s0s.size(); i++) {
       for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
         moments[i] += const_.kSTau/s0s[i]/const_.kBe*data.sfm2s[j]*weightRatios(i, j);
       }
@@ -171,7 +172,7 @@ class ExperimentalMoments : public Numerics {
   // returns the Jacobian Matrix
   void setJacobianMatrix() {
     matrix<double> jacobi(data.binCount+2, data.binCount+2);
-    for (int i = 0; i < s0s.size(); i++) {
+    for (uint i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount+2; j++) {
         if (j <= closestBinToS0(s0s[i])) {
           jacobi(j, i) = const_.kSTau/s0s[i]/const_.kBe*weightRatios(i, j);
@@ -188,8 +189,8 @@ class ExperimentalMoments : public Numerics {
   // returns the covariance matrix
   void setCovarianceMatrix() {
     matrix<double> covMat(s0s.size(), s0s.size());
-    for (int i = 0; i < s0s.size(); i++) {
-      for (int j = 0; j < s0s.size(); j++) {
+    for (uint i = 0; i < s0s.size(); i++) {
+      for (uint j = 0; j < s0s.size(); j++) {
         covMat(i, j) = 0.;
         for (int k = 0; k < data.binCount+2; k++) {
           for (int l = 0; l < data.binCount+2; l++) {

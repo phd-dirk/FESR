@@ -19,7 +19,7 @@ double AdlerFunction::D0CInt(const double &s0, function<complex<double>(complex<
                              const double &astau, const double &order) {
   function<complex<double>(complex<double>)> f =
     [&](complex<double> s) -> complex<double> {
-    complex<double> mu2 = s0;
+    complex<double> mu2(s0, 0.);
     return weight(s)*D0(s0*s, mu2, astau, order);
   };
 
