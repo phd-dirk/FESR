@@ -49,9 +49,9 @@ int main () {
   json config;
   configFile >> config;
 
-  const int nc = 3;
-  const int nf = 3;
-  const int order = 5;
+  const int nc = config["parameters"]["nc"];
+  const int nf = config["parameters"]["nf"];
+  const int order = config["parameters"]["order"];
 
   vector<double> s0s = s0Set;
 
@@ -73,30 +73,31 @@ int main () {
   min->SetFunction(chi2);
 
   // set free variables to be minimized
-  // min->SetVariable(0, "astau", 0.31927, 0.2e-2);
-  min->SetFixedVariable(0, "astau", 0.31927);
-  // min->SetVariable(1, "aGGInv", 0.21e-1, 1.e-2);
-  min->SetFixedVariable(1, "aGGInv", 0.21e-1);
-  min->SetVariable(2, "rhoVpA",  -0.1894, 0.1);
-  // min->SetFixedVariable(2, "rhoVpA",  -0.1894);
-  min->SetVariable(3, "c8VpA",  0.16315, 0.3);
-  // min->SetFixedVariable(3, "c8VpA",  0.16315);
+  if (config["variables"]["astau"]["fixed"]) {
+    min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
+  } else {
+    min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
+  }
+  if (config["variables"]["aGGInv"]["fixed"]) {
+    min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
+  } else {
+    min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
+  }
+  if (config["variables"]["rhoVpA"]["fixed"]) {
+    min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
+  } else {
+    min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
+  }
+  if (config["variables"]["c8VpA"]["fixed"]) {
+    min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
+  } else {
+    min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
+  }
 
   // minimize!
   min->Minimize();
 
-  const double *xs = min->X();
 
-  cout << "Minimum chi2("
-       << xs[0] << ", " << xs[1] << ", "
-       << xs[2] << ", " << xs[3] << "): "
-       << min->MinValue() << endl;
-
-
-  min->PrintResults();
-  cout << "f() :\t" << chi2(xs) << endl;
-
-  double xs2[4] = { 0.31921, 0.21e-1, -0.18939792247957590, 0.16314594513667133 };
-  cout << "fotro() \t" << chi2(xs2) << endl;
+  // min->PrintResults();
   return 0;
 }

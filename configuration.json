@@ -1,5 +1,32 @@
 {
-    "Adler": {
+    "parameters": {
+        "nc": 3,
+        "nf": 3,
+        "order": 5
+    },
+    "variables": {
+        "astau": {
+            "fixed": true,
+            "value": 0.31927,
+            "stepSize": 0.002
+        },
+        "aGGInv": {
+            "fixed": true,
+            "value": 0.021,
+            "stepSize": 0.01
+        },
+        "rhoVpA": {
+            "fixed": false,
+            "value": -0.1894,
+            "stepSize": 0.1
+        },
+        "c8VpA": {
+            "fixed": false,
+            "value": 0.16315,
+            "stepSize": 0.3
+        }
+    },
+    "adler": {
         "D0": true,
         "D2": false,
         "D4": true,

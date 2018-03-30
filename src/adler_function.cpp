@@ -125,8 +125,7 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
 
   m4 /= pow(const_.kPi*s, 2);
 
-  return m4;
-    //gluonCondensate + quarkCondensate + m4;
+  return gluonCondensate + quarkCondensate + m4;
 }
 double AdlerFunction::D4CInt(double s0,
                              function<complex<double>(complex<double>)> weight, const double &astau,

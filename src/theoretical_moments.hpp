@@ -20,16 +20,16 @@ class TheoreticalMoments: public AdlerFunction {
 
     double rTauTh = 0.;
     // D0
-    if ( config_["Adler"]["D0"] )
+    if ( config_["adler"]["D0"] )
       rTauTh += cIntVpAD0FO(s0, weight, astau, order);
     // D4
-    if ( config_["Adler"]["D4"] )
+    if ( config_["adler"]["D4"] )
       rTauTh += cIntVpAD4FO(s0, weight, astau, aGGinv, order);
     // D68
-    if ( config_["Adler"]["D68"] )
+    if ( config_["adler"]["D68"] )
       rTauTh += D68CInt(s0, weight, rhoVpA, c8VpA);
     // PionPole
-    if ( config_["Adler"]["PionPole"] )
+    if ( config_["adler"]["PionPole"] )
       rTauTh += 3.*deltaP(s0, wR00);
 
     return pow(const_.kVud, 2)*const_.kSEW*rTauTh;
