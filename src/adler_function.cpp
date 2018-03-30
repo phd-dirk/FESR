@@ -15,12 +15,12 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
   return 1/4./pow(const_.kPi, 2)*(const_.c_[0][1] + sum);
 }
 
-double AdlerFunction::D0CInt(const double &s0, function<complex<double>(complex<double>)> weight,
+double AdlerFunction::D0CInt(const double &s0, const Weight weight,
                              const double &astau, const double &order) {
   function<complex<double>(complex<double>)> f =
     [&](complex<double> s) -> complex<double> {
     complex<double> mu2(s0, 0.);
-    return weight(s)*D0(s0*s, mu2, astau, order);
+    return weight.wD(s)*D0(s0*s, mu2, astau, order);
   };
 
   return (3*const_.kPi*complexContourIntegral(f)).real();
@@ -127,12 +127,11 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
 
   return gluonCondensate + quarkCondensate + m4;
 }
-double AdlerFunction::D4CInt(double s0,
-                             function<complex<double>(complex<double>)> weight, const double &astau,
+double AdlerFunction::D4CInt(const double &s0, const Weight &weight, const double &astau,
                              const double &aGGinv, const int &order, const int &r) {
   function<complex<double>(complex<double>)> fTest =
     [&](complex<double> s) -> complex<double> {
-    return weight(s)/pow(s, 2);
+    return weight.wD(s)/pow(s, 2);
   };
 
   double norder = 2;
@@ -143,7 +142,7 @@ double AdlerFunction::D4CInt(double s0,
   function<complex<double>(complex<double>)> f =
     [&](complex<double> s) -> complex<double> {
     complex<double> mu2(s0, 0.);
-    return weight(s)*D4(s0*s, mu2, astau, aGGinv, norder, r);
+    return weight.wD(s)*D4(s0*s, mu2, astau, aGGinv, norder, r);
   };
 
   return (3*const_.kPi*gaussIntegration(f)).real();

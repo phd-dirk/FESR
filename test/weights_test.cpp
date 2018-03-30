@@ -5,5 +5,5 @@
 using std::complex;
 
 TEST (weights_test, wDs) {
-  EXPECT_DOUBLE_EQ(wD00(complex<double>(2., 0.)).real(), -3.);
+  EXPECT_DOUBLE_EQ(Weight::wD00(complex<double>(2., 0.)).real(), -3.);
 }

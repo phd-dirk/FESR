@@ -21,7 +21,8 @@ class ChisquaredTest : public ::testing::Test {
       { true, false, true, true, true }
     };
     const_ = new Constants(nc, nf);
-    chi_ = new Chisquared(order, s0Set, wD00, config, *const_);
+    Weight weight(1);
+    chi_ = new Chisquared(order, s0Set, weight, config, *const_);
   }
 
   virtual void TearDown() {

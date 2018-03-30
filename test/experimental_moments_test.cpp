@@ -9,9 +9,10 @@ class ExperimentalMomentsTest : public ::testing::Test {
   ExperimentalMoments * expMom;
   virtual void SetUp() {
 
+    Weight weight(1);
     Constants constants(3, 3);
     expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                                     1, s0Set, wD00, wD00, constants);
+                                     1, s0Set, weight, constants);
   }
 
   virtual void TearDown() {

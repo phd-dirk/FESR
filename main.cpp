@@ -53,10 +53,11 @@ int main () {
   const int nf = config["parameters"]["nf"];
   const int order = config["parameters"]["order"];
 
-  vector<double> s0s = s0Set;
+  const vector<double> s0s = config["parameters"]["s0Set"];
 
-  Constants constants(nc, nf);
-  Chisquared chisquared(order, s0s, wD00, config, constants);
+  const Constants constants(nc, nf);
+  const Weight weight(1);
+  Chisquared chisquared(order, s0s, weight, config, constants);
 
   // MINUIT
   Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");

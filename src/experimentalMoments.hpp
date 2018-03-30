@@ -17,11 +17,9 @@ class ExperimentalMoments : public Numerics {
   // The Spectral Moments and Covariance matrix can then bet exported via the
   // public getter functions
   ExperimentalMoments(const string &filename, const double &normalizationFactor,
-                      const vector<double> &s0s,
-                      function<complex<double>(complex<double>)> weight,
-                      function<complex<double>(complex<double>)> wTau, Constants constants) :
+                      const vector<double> &s0s, const Weight &weight, Constants constants) :
     Numerics(constants), const_(constants), data(Data(filename, normalizationFactor)),
-    s0s(s0s), weight(weight), wTau(wTau) {
+    s0s(s0s), weight_(weight) {
 
     // init weightRatios
     setWeightRatios(); // (s0s.size() x data.binCount) e.g. (9 x 80)
@@ -119,7 +117,7 @@ class ExperimentalMoments : public Numerics {
   Constants const_;
   Data data;
   vector<double> s0s, experimentalMoments;
-  function<complex<double>(complex<double>)> weight, wTau;
+  Weight weight_;
   matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix;
 
 
@@ -132,8 +130,8 @@ class ExperimentalMoments : public Numerics {
         double s0UpperLimit = data.sbins[j]+data.dsbins[j]/2.;
         double s0LowerLimit = data.sbins[j]-data.dsbins[j]/2.;
         wRatios(i, j) = (s0s[i]/const_.kSTau*(
-            (weight(s0LowerLimit/s0s[i]) - weight(s0UpperLimit/s0s[i]))/
-            (wTau(s0LowerLimit/const_.kSTau) - wTau(s0UpperLimit/const_.kSTau)))).real();
+            (weight_.wD(s0LowerLimit/s0s[i]) - weight_.wD(s0UpperLimit/s0s[i]))/
+            (weight_.wTau(s0LowerLimit/const_.kSTau) - weight_.wTau(s0UpperLimit/const_.kSTau)))).real();
       }
     }
 
@@ -212,7 +210,7 @@ class ExperimentalMoments : public Numerics {
   double pionPoleMoment(const double &s0) {
     double axialMoment = 0;
     double pseudoMoment = 0;
-    axialMoment += kPiFac()/s0*wR00(pow(const_.kPionMinusMass, 2)/s0).real();
+    axialMoment += kPiFac()/s0*weight_.wR(pow(const_.kPionMinusMass, 2)/s0).real();
     pseudoMoment += axialMoment*(-2.*pow(const_.kPionMinusMass, 2)/(const_.kSTau + 2.*pow(const_.kPionMinusMass, 2)));
     return axialMoment + pseudoMoment;
   }
