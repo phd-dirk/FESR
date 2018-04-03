@@ -14,7 +14,8 @@ class Constants {
   Constants(const json &configuration) : nc_(configuration["parameters"]["nc"]),
                                          nf_(configuration["parameters"]["nf"]),
                                          kSTau(configuration["constants"]["sTau"]),
-                                         kBe(configuration["constants"]["be"])
+                                         kBe(configuration["constants"]["be"]),
+                                         kDBe(configuration["constants"]["dBe"])
   {
     initializeBetaCoefficients();
     initializeAdlerCoefficients();
@@ -77,8 +78,7 @@ class Constants {
   };
 
   // s
-  const double kSTau;;// = 3.1570893124; // kTauMass^2
-  // const double kSTau = 3.1572314596;
+  const double kSTau; // PDG
 
   // masses
   const double mumtau = 2.8e-3;
@@ -117,8 +117,8 @@ class Constants {
   const double kDVud = 0.00022;
   const double kSEW = 1.0198; // EW radiative corr.
   const double kDSEW = 0.0006;
-  const double kBe;
-  const double kDBe = 0.04; // HFAG 2011
+  const double kBe; // HFAG
+  const double kDBe; // HFAG
   const double kDFPi = 0.14e-3;
   const double kDRTauVex = 0.0;
   const double deltaEW = 0.001;

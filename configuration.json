@@ -9,7 +9,8 @@
     },
     "constants": {
         "sTau": 3.1572314596,
-        "be": 17.815
+        "be": 17.815,
+        "dBe": 0.023
     },
     "variables": {
         "astau": {
