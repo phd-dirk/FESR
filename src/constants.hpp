@@ -1,23 +1,39 @@
 #ifndef SRC_CONSTANTS_H
 #define SRC_CONSTANTS_H
 
+#include "json.hpp"
 #include <vector>
 #include <cmath>
 
 using std::pow;
 using std::vector;
+using json = nlohmann::json;
 
 class Constants {
  public:
-  Constants(const int &nc, const int &nf) : nc_(nc), nf_(nf) {
+  Constants(const int &nc, const int &nf) : nc_(nc), nf_(nf), kSTau(3.1570893124) {
+    initializeBetaCoefficients();
+    initializeAdlerCoefficients();
+  }
+
+  Constants(const json &configuration) : nc_(configuration["parameters"]["nc"]),
+                                         nf_(configuration["parameters"]["nf"]),
+                                         kSTau(configuration["constants"]["sTau"]) {
+    initializeBetaCoefficients();
+    initializeAdlerCoefficients();
+  };
+
+  void initializeBetaCoefficients() {
     beta_[1] = 1./6.*(11.*nc_ - 2.*nf_);
     beta_[2] = 51./4. - 19./12.*nf_;  // rgm06
     beta_[3] = 2857./64. - 5033./576.*nf_ + 325./1728.*pow(nf_, 2);  // rgm06
     beta_[4] = 149753./768. + 891./32.*zeta_[3]  // rgm06
-        -(1078361./20736. + 1627./864.*zeta_[3])*nf_
-        + (50065./20736. + 809./1296.*zeta_[3])*pow(nf_, 2)
-        + 1093./93312.*pow(nf_, 3);
+      -(1078361./20736. + 1627./864.*zeta_[3])*nf_
+      + (50065./20736. + 809./1296.*zeta_[3])*pow(nf_, 2)
+      + 1093./93312.*pow(nf_, 3);
+  }
 
+  void initializeAdlerCoefficients() {
     c_[0][0] = -5./3.; c_[0][1] = 1;  // rgm06
     c_[1][1] = 1.; c_[1][2] = 0.;  //  rgm06
     c_[2][1] = 365./24. - 11.*zeta_[3] - (11./12. - 2./3.*zeta_[3])*nf_;
@@ -43,8 +59,8 @@ class Constants {
     c_[5][5] = 1./80.*pow(beta_[1], 4)*c_[1][1];beta_[1] = 11./2. - 1./3.*nf_;  // rgm06
   }
 
-  double nc_;
-  double nf_;
+  const double nc_;
+  const double nf_;
 
   // RGE
   double beta_[5];
@@ -64,7 +80,7 @@ class Constants {
   };
 
   // s
-  const double kSTau = 3.1570893124; // kTauMass^2
+  const double kSTau;;// = 3.1570893124; // kTauMass^2
   // const double kSTau = 3.1572314596;
 
   // masses

@@ -2,7 +2,9 @@
 #include "../src/experimentalMoments.hpp"
 #include "../src/weights.hpp"
 #include "../src/constants.hpp"
-#include <vector>
+#include "json.hpp"
+using json = nlohmann::json;
+#include <fstream>
 
 using std::vector;
 
@@ -12,10 +14,13 @@ class ExperimentalMomentsTest : public ::testing::Test {
   virtual void SetUp() {
 
     Weight weight(1);
-    Constants constants(3, 3);
-    const vector<double> s0Set { 3.1570893124, 3., 2.8, 2.6, 2.4, 2.3, 2.2, 2.1, 2. };
+    std::ifstream configFile("./test/configuration_test.json");
+    json config;
+    configFile >> config;
+
+    Constants constants(config);
     expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                                     1, s0Set, weight, constants);
+                                     1, config["parameters"]["s0Set"], weight, constants);
   }
 
   virtual void TearDown() {

@@ -5,6 +5,7 @@
 #include "json.hpp"
 #include <gtest/gtest.h>
 #include <complex>
+#include <fstream>
 using json = nlohmann::json;
 
 class ChisquaredTest : public ::testing::Test {
@@ -15,15 +16,11 @@ class ChisquaredTest : public ::testing::Test {
   virtual void SetUp() {
     const uint order = 5;
     const uint nc = 3, nf = 3;
+    std::ifstream configFile("./test/configuration_test.json");
     json config;
-    config["parameters"] = {
-      {"RVANormalization", 1}
-    };
-    config["Adler"] = {
-      { "D0", "D2", "D4", "D68", "PionPole" },
-      { true, false, true, true, true }
-    };
-    const_ = new Constants(nc, nf);
+    configFile >> config;
+
+    const_ = new Constants(config);
     Weight weight(1);
     chi_ = new Chisquared(order, s0Set, weight, config, *const_);
   }
