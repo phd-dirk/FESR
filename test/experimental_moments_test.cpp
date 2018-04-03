@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include "../src/experimentalMoments.hpp"
-#include "../src/s0_sets.hpp"
 #include "../src/weights.hpp"
 #include "../src/constants.hpp"
+#include <vector>
+
+using std::vector;
 
 class ExperimentalMomentsTest : public ::testing::Test {
  protected:
@@ -11,6 +13,7 @@ class ExperimentalMomentsTest : public ::testing::Test {
 
     Weight weight(1);
     Constants constants(3, 3);
+    const vector<double> s0Set { 3.1570893124, 3., 2.8, 2.6, 2.4, 2.3, 2.2, 2.1, 2. };
     expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
                                      1, s0Set, weight, constants);
   }

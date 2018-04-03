@@ -24,9 +24,11 @@ class Chisquared {
              const json &configuration, const Constants &constants) :
       s0s(s0s),
       expMom(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                                 1, s0s, weight, constants)),
+                                 configuration["parameters"]["RVANormalization"], s0s,
+                                 weight, constants)),
       thMom(TheoreticalMoments(order, s0s, weight, configuration, constants)) {
     order_ = order;
+    cout << "expmom(0) \t" << expMom(0) << endl;
   }
 
 

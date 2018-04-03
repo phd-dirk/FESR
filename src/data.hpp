@@ -91,10 +91,12 @@ struct Data {
 
   // normalize sfm2s and derr (multiply data vector by 'factor' scalar)
   void normalizeData(const double &factor) {
-    transform(sfm2s.begin(), sfm2s.end(), sfm2s.begin(),
-              std::bind1st(std::multiplies<double>(), factor));
-    transform(derrs.begin(), derrs.end(), derrs.begin(),
-              std::bind1st(std::multiplies<double>(), factor));
+    for(auto &value: sfm2s ) {
+      value *= factor;
+    }
+    for(auto &value: derrs ) {
+      value *= factor;
+    }
   }
 
   int binCount;

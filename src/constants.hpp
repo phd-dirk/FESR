@@ -65,6 +65,7 @@ class Constants {
 
   // s
   const double kSTau = 3.1570893124; // kTauMass^2
+  // const double kSTau = 3.1572314596;
 
   // masses
   const double mumtau = 2.8e-3;

@@ -82,13 +82,6 @@ class ExperimentalMoments : public Numerics {
       covMat(i, 0) = 0.;
     }
     invertMatrix(covMat, invCovMat);
-    // cout << prod(covMat, invCovMat) << endl;
-
-    // ublas::matrix<double> invInvCovMat(s0s.size(), s0s.size());
-    // cout << "test InvCov" << endl;
-    // invertMatrix(invCovMat, invInvCovMat);
-    // cout << covMat(1, 1) << " = " << invInvCovMat(1, 1) << endl;
-
     return invCovMat;
   }
 
@@ -193,16 +186,10 @@ class ExperimentalMoments : public Numerics {
         for (int k = 0; k < data.binCount+2; k++) {
           for (int l = 0; l < data.binCount+2; l++) {
             covMat(i,j) = covMat(i, j) + jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
-            // if (i == 0 && j == 0 && k == 0) {
-            //   cout << "l=" << l << "\t" << covMat(i,j) << endl;
-            // }
           }
         }
       }
     }
-    // cout << std::setprecision(17);
-    // cout << jacobianMatrix(0, 0)*errorMatrix(0, 0)*jacobianMatrix(0, 0) << endl;
-    // cout << jacobianMatrix(0, 0)*errorMatrix(0, 1)*jacobianMatrix(1, 0) << endl;
     this->covarianceMatrix = covMat;
   }
 

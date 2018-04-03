@@ -16,6 +16,9 @@ class ChisquaredTest : public ::testing::Test {
     const uint order = 5;
     const uint nc = 3, nf = 3;
     json config;
+    config["parameters"] = {
+      {"RVANormalization", 1}
+    };
     config["Adler"] = {
       { "D0", "D2", "D4", "D68", "PionPole" },
       { true, false, true, true, true }
