@@ -6,6 +6,7 @@
 #include <cmath>
 #include <complex>
 #include "json.hpp"
+#include <fstream>
 
 using json = nlohmann::json;
 using std::pow;
@@ -21,12 +22,10 @@ protected:
   const double astau_ = 0.31927;
   const double aGGinv_ = 2.1e-2;
   virtual void SetUp() {
+    std::ifstream configFile("./test/configuration_test.json");
     json config;
-    config["Adler"] = {
-      { "D0", "D2", "D4", "D68", "PionPole" },
-      { true, false, true, true, true }
-    };
-    const_ = new Constants(3, 3);
+    configFile >> config;
+    const_ = new Constants(config);
     adler = new AdlerFunction(5, *const_);
     weight_ = new Weight(1);
     thMom_ = new TheoreticalMoments(order_, s0Set, *weight_, config, *const_);

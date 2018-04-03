@@ -2,6 +2,9 @@
 #include "../src/constants.hpp"
 #include "../src/numerics.hpp"
 #include <boost/numeric/ublas/matrix.hpp>
+#include "json.hpp"
+#include <fstream>
+using json = nlohmann::json;
 
 using boost::numeric::ublas::matrix;
 
@@ -9,7 +12,10 @@ class NumericsTest : public ::testing::Test {
  protected:
   Numerics * numerics;
   virtual void SetUp() {
-    Constants const_(3, 3);
+    std::ifstream configFile("./test/configuration_test.json");
+    json config;
+    configFile >> config;
+    Constants const_(config);
     numerics = new Numerics(const_);
   }
 

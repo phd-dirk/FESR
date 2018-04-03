@@ -1,11 +1,18 @@
 #include <gtest/gtest.h>
 #include "../src/constants.hpp"
+#include "json.hpp"
+#include <fstream>
+using json = nlohmann::json;
 
 class ConstantsTest : public ::testing::Test {
 protected:
   Constants * constants;
   virtual void SetUp() {
-    constants = new Constants(3, 3);
+    std::ifstream configFile("./test/configuration_test.json");
+    json config;
+    configFile >> config;
+
+    constants = new Constants(config);
   }
 
   virtual void TearDown() {

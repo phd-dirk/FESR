@@ -89,11 +89,14 @@ class ExperimentalMoments : public Numerics {
   // If s0 is exactly between two bins we select the smaller one
   int closestBinToS0(const double &s0) {
     int i = data.dsbins.size()-1;
+    if (s0 > data.sbins.back())
+      return i;
+
     // -1.e-6: if exactly between two bins choose smaller one as closest
     // e.g. s0 = 2.1; sbins[71] = 2.05; sbins[72] = 2.15 => closest bin: 71
-    while(abs(s0-data.sbins[i]-1.e-6) > data.dsbins[i]/2.) {
+    while(abs(s0-data.sbins[i]-1.e-6) > data.dsbins[i]/2.)
       i--;
-    }
+
     return i;
   }
 

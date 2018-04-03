@@ -11,14 +11,11 @@ using json = nlohmann::json;
 
 class Constants {
  public:
-  Constants(const int &nc, const int &nf) : nc_(nc), nf_(nf), kSTau(3.1570893124) {
-    initializeBetaCoefficients();
-    initializeAdlerCoefficients();
-  }
-
   Constants(const json &configuration) : nc_(configuration["parameters"]["nc"]),
                                          nf_(configuration["parameters"]["nf"]),
-                                         kSTau(configuration["constants"]["sTau"]) {
+                                         kSTau(configuration["constants"]["sTau"]),
+                                         kBe(configuration["constants"]["be"])
+  {
     initializeBetaCoefficients();
     initializeAdlerCoefficients();
   };
@@ -120,7 +117,7 @@ class Constants {
   const double kDVud = 0.00022;
   const double kSEW = 1.0198; // EW radiative corr.
   const double kDSEW = 0.0006;
-  const double kBe = 17.827; // HFAG 2011
+  const double kBe;
   const double kDBe = 0.04; // HFAG 2011
   const double kDFPi = 0.14e-3;
   const double kDRTauVex = 0.0;

@@ -24,10 +24,10 @@ protected:
   const double rhoVpA_ = -0.1894;
   const double c8VpA_ = 0.16315;
   virtual void SetUp() {
-    std::ifstream configFile("./configuration.json");
+    std::ifstream configFile("./test/configuration_test.json");
     json config;
     configFile >> config;
-    const_ = new Constants(3, 3);
+    const_ = new Constants(config);
     weight_ = new Weight(1);
     thMom_ = new TheoreticalMoments(order_, s0Set, *weight_, config, *const_);
   }

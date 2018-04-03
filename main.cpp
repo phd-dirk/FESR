@@ -55,7 +55,7 @@ int main () {
 
   const vector<double> s0s = config["parameters"]["s0Set"];
 
-  const Constants constants(nc, nf);
+  const Constants constants(config);
   const uint weightId = config["parameters"]["weight"];
   const Weight weight(weightId);
   Chisquared chisquared(order, s0s, weight, config, constants);

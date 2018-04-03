@@ -28,9 +28,7 @@ class Chisquared {
                                  weight, constants)),
       thMom(TheoreticalMoments(order, s0s, weight, configuration, constants)) {
     order_ = order;
-    cout << "expmom(0) \t" << expMom(0) << endl;
   }
-
 
   double operator ()(const double *xx) {
     // init fit parameters

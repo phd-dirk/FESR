@@ -8,7 +8,8 @@
         "RVANormalization": 1
     },
     "constants": {
-        "sTau": 3.1570893124
+        "sTau": 3.1570893124,
+        "be": 17.827
     },
     "variables": {
         "astau": {

@@ -3,6 +3,9 @@
 #include "../src/alpha_s.hpp"
 #include <complex>
 #include <cmath>
+#include "json.hpp"
+#include <fstream>
+using json = nlohmann::json;
 
 using std::complex;
 using std::sqrt;
@@ -15,9 +18,10 @@ class AlphaSTest : public ::testing::Test {
   const double astau_ = 0.31927;
 
   virtual void SetUp() {
-    const int nc = 3;
-    const int nf = 3;
-    const_ = new Constants(nc, nf);
+    std::ifstream configFile("./test/configuration_test.json");
+    json config;
+    configFile >> config;
+    const_ = new Constants(config);
     amu_ = new AlphaS(*const_);
   }
 };

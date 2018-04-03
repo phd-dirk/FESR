@@ -1,6 +1,9 @@
 #include "../src/constants.hpp"
 #include "../src/mq_run.hpp"
 #include <gtest/gtest.h>
+#include "json.hpp"
+#include <fstream>
+using json = nlohmann::json;
 
 class MQRunTest : public ::testing::Test {
 protected:
@@ -9,9 +12,10 @@ protected:
   const double astau_ = 0.31927;
   double atau_;
   virtual void SetUp() {
-    const int nc = 3;
-    const int nf = 3;
-    const_ = new Constants(nc, nf);
+    std::ifstream configFile("./test/configuration_test.json");
+    json config;
+    configFile >> config;
+    const_ = new Constants(config);
     mq_ = new MQRun(*const_);
     atau_ = astau_/const_->kPi;
   }
