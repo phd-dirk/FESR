@@ -97,7 +97,7 @@ int main () {
   }
 
   // minimize!
-  // min->Minimize();
+  min->Minimize();
 
   // min->PrintResults();
   return 0;
