@@ -2,7 +2,7 @@
     "parameters": {
         "nc": 3,
         "nf": 3,
-        "order": 5,
+        "order": 4,
         "s0Set": [3.1572314596, 3.0, 2.8, 2.6, 2.4, 2.3, 2.2, 2.1, 2.0],
         "weight": 1,
         "RVANormalization": 0.99743669
@@ -15,7 +15,7 @@
     "variables": {
         "astau": {
             "fixed": false,
-            "value": 0.31927,
+            "value": 0.32307,
             "stepSize": 0.002
         },
         "aGGInv": {
@@ -25,12 +25,12 @@
         },
         "rhoVpA": {
             "fixed": false,
-            "value": -0.1894,
+            "value": -0.30949,
             "stepSize": 0.1
         },
         "c8VpA": {
             "fixed": false,
-            "value": 0.16315,
+            "value": -0.030869,
             "stepSize": 0.3
         }
     },

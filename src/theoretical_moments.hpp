@@ -68,6 +68,10 @@ class TheoreticalMoments: public AdlerFunction {
     return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
   }
 
+  void log(const double &astau, const int &order) {
+    cout << "Delta_0: \t" << del0(s0s[0], weight_, astau, order) << endl;
+  }
+
 
  private:
   Constants const_;

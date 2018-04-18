@@ -56,6 +56,10 @@ class Chisquared {
     return chi;
   }
 
+  void log(const double &astau) {
+    thMom.log(astau, order_);
+  }
+
  private:
   int order_;
   vector<double> s0s;
