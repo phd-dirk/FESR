@@ -17,7 +17,7 @@ protected:
   TheoreticalMoments *thMom_;
   Constants *const_;
   Weight *weight_;
-  const uint order_ = 5;
+  const uint order_ = 4;
   const double s0_ = 3.1570893124;
   const double astau_ = 0.31927;
   const double aGGinv_ = 2.1e-2;
@@ -39,7 +39,7 @@ protected:
 };
 
 TEST_F(TheoreticalMomentsTest, IntegralMoment) {
-  EXPECT_NEAR((*thMom_)(0, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.4634999665533375, 1.e-14);
+  EXPECT_NEAR((*thMom_)(0, astau_, aGGinv_, rhoVpA_, c8VpA_, 5), 3.4634999665533375, 1.e-14);
   // EXPECT_NEAR((*thMom_)(1, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.4756222200597624, 1.e-);
   // EXPECT_NEAR((*thMom_)(2, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.4923558272581996, 1.e-5);
   // EXPECT_NEAR((*thMom_)(3, astau_, aGGinv_, rhoVpA_, c8VpA_, order_), 3.5106424444197484, 1.e-5);
