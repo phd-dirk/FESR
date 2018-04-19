@@ -60,47 +60,47 @@ int main () {
   const Weight weight(weightId);
   Chisquared chisquared(order, s0s, weight, config, constants);
 
-  chisquared.log(0.32307175541329564);
+  // chisquared.log(0.32307175541329564, 2.1e-2, -0.30948630708349700, -3.0869411117237483e-2);
 
 
   // MINUIT
-  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // // set tolerances
-  // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1e-15);
-  // min->SetPrintLevel(1); // activate logging
+  // set tolerances
+  min->SetMaxFunctionCalls(10000000); // for Minuit2
+  min->SetMaxIterations(10000000); // for GSL
+  min->SetTolerance(1e-15);
+  min->SetPrintLevel(1); // activate logging
 
-  // // function wrapper
-  // Functor chi2(chisquared, 4);
+  // function wrapper
+  Functor chi2(chisquared, 4);
 
-  // min->SetFunction(chi2);
+  min->SetFunction(chi2);
 
-  // // set free variables to be minimized
-  // if (config["variables"]["astau"]["fixed"]) {
-  //   min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
-  // } else {
-  //   min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
-  // }
-  // if (config["variables"]["aGGInv"]["fixed"]) {
-  //   min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
-  // } else {
-  //   min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
-  // }
-  // if (config["variables"]["rhoVpA"]["fixed"]) {
-  //   min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
-  // } else {
-  //   min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
-  // }
-  // if (config["variables"]["c8VpA"]["fixed"]) {
-  //   min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
-  // } else {
-  //   min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
-  // }
+  // set free variables to be minimized
+  if (config["variables"]["astau"]["fixed"]) {
+    min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
+  } else {
+    min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
+  }
+  if (config["variables"]["aGGInv"]["fixed"]) {
+    min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
+  } else {
+    min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
+  }
+  if (config["variables"]["rhoVpA"]["fixed"]) {
+    min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
+  } else {
+    min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
+  }
+  if (config["variables"]["c8VpA"]["fixed"]) {
+    min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
+  } else {
+    min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
+  }
 
-  // // minimize!
-  // min->Minimize();
+  // minimize!
+  min->Minimize();
 
   // min->PrintResults();
   return 0;

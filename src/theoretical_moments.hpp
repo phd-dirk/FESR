@@ -63,13 +63,27 @@ class TheoreticalMoments: public AdlerFunction {
     return cIntVpAD4FO(s0, weight, astau, aGGinv, order)/3.;
   }
 
+  double del6(const double &s0, const Weight &weight,
+               const double &rhoVpA) {
+    return D68CInt(s0, weight, rhoVpA, 0.0)/3.;
+  }
+
+  double del8(const double &s0, const Weight &weight,
+              const double &c8VpA) {
+    return D68CInt(s0, weight, 0.0, c8VpA)/3.;
+  }
+
   double del68(const double &s0, const Weight &weight,
                const double &rhoVpA, const double &c8VpA) {
     return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
   }
 
-  void log(const double &astau, const int &order) {
-    cout << "Delta_0: \t" << del0(s0s[0], weight_, astau, order) << endl;
+  void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) {
+    cout << "Delta^(0): \t" << del0(s0s[0], weight_, astau, order) << endl;
+    cout << "Delta^(4): \t" << del4(s0s[0], weight_, astau, aGGinv, order) << endl;
+    cout << "Delta^(6): \t" << del6(s0s[0], weight_, rhoVpA) << endl;
+    cout << "Delta^(8): \t" << del8(s0s[0], weight_, c8VpA) << endl;
+    cout << "Delta_P+S: \t" << deltaP(s0s[0], weight_) << endl;
   }
 
 

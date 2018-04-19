@@ -35,7 +35,7 @@ class AlphaS: public Numerics {
     // from mathematica coefficients.nb
     function<complex<double>(complex<double>)> f, df;
 
-    if (order_ == 4) {
+    if (true) {
       // BETA 4th order --------------------------------------------------
       f = [&ap, &p2, &q2](complex<double> a2) {
         return 0.2222222222222/ap - 0.2222222222222/a2 - 0.3730002895803*atan(0.19576224733469 - 2.7775209170642*ap) + 0.3730002895803*atan(0.19576224733469 - 2.777520917064*a2) +

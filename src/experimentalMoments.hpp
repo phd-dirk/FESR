@@ -81,6 +81,8 @@ class ExperimentalMoments : public Numerics {
       covMat(0, i) = 0.;
       covMat(i, 0) = 0.;
     }
+    // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
+    covMat(0, 0) = pow(0.0072, 2);
     invertMatrix(covMat, invCovMat);
     return invCovMat;
   }

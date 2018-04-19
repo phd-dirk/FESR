@@ -56,8 +56,8 @@ class Chisquared {
     return chi;
   }
 
-  void log(const double &astau) {
-    thMom.log(astau, order_);
+  void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) {
+    thMom.log(astau, aGGinv, rhoVpa, c8Vpa, order_);
   }
 
  private:
