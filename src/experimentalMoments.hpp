@@ -42,6 +42,11 @@ class ExperimentalMoments : public Numerics {
     return getExpPlusPionMoment(i);
   }
 
+  void log() {
+    cout << "ExpMom = \t" << getExpPlusPionMoment(0) << endl;
+    cout << "InvCov = \t" << getInverseCovarianceMatrix() << endl;
+  }
+
   vector<double> getExpPlusPionPoleMoments() {
     vector<double> expPlusPionMoments(s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {

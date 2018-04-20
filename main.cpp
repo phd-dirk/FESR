@@ -60,7 +60,7 @@ int main () {
   const Weight weight(weightId);
   Chisquared chisquared(order, s0s, weight, config, constants);
 
-  // chisquared.log(0.32307175541329564, 2.1e-2, -0.30948630708349700, -3.0869411117237483e-2);
+  chisquared.log(0.32326096168471358, 2.1e-2, -0.31488720134123538, -2.6524803026353995E-002);
 
 
   // MINUIT

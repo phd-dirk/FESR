@@ -57,7 +57,11 @@ class Chisquared {
   }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) {
+    cout << "Theoretical Moments:" << endl;
     thMom.log(astau, aGGinv, rhoVpa, c8Vpa, order_);
+    cout << endl;
+    cout << "Experimental Moments:" << endl;
+    expMom.log();
   }
 
  private:
