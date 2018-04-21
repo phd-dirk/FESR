@@ -20,15 +20,12 @@ using std::endl;
 
 class Chisquared {
  public:
-  Chisquared(const int &order, const vector<double> &s0s, const Weight &weight,
-             const json &configuration, const Constants &constants) :
-      s0s(s0s),
-      expMom(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                                 configuration["parameters"]["RVANormalization"], s0s,
-                                 weight, constants)),
-      thMom(TheoreticalMoments(order, s0s, weight, configuration, constants)) {
-    order_ = order;
-  }
+  Chisquared(const json &config, const Constants &constants) :
+    order_(config["parameters"]["order"]), s0s_(config["parameters"]["s0Set"].get<vector<double>>()),
+    expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
+                               config["parameters"]["RVANormalization"],
+                                s0s_, Weight(config["parameters"]["weight"].get<int>()), constants)),
+    thMom_(TheoreticalMoments(order_, s0s_, Weight(config["parameters"]["weight"].get<int>()), config, constants)) {}
 
   double operator ()(const double *xx) {
     // init fit parameters
@@ -39,16 +36,16 @@ class Chisquared {
 
     double chi = 0;
 
-    ublas::matrix<double> covMat = expMom.getCovarianceMatrix();
-    ublas::matrix<double> invCovMat = expMom.getInverseCovarianceMatrix();
+    ublas::matrix<double> covMat = expMom_.getCovarianceMatrix();
+    ublas::matrix<double> invCovMat = expMom_.getInverseCovarianceMatrix();
 
-    vector<double> momDiff(s0s.size());
-    for(uint i = 0; i < s0s.size(); i++) {
-      momDiff[i] = expMom(i) - thMom(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_);
+    vector<double> momDiff(s0s_.size());
+    for(uint i = 0; i < s0s_.size(); i++) {
+      momDiff[i] = expMom_(i) - thMom_(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_);
     }
 
-    for(uint k = 0; k < s0s.size(); k++) {
-      for(uint l = 0; l < s0s.size(); l++) {
+    for(uint k = 0; k < s0s_.size(); k++) {
+      for(uint l = 0; l < s0s_.size(); l++) {
         chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
       }
     }
@@ -58,18 +55,18 @@ class Chisquared {
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) {
     cout << "Theoretical Moments:" << endl;
-    thMom.log(astau, aGGinv, rhoVpa, c8Vpa, order_);
+    thMom_.log(astau, aGGinv, rhoVpa, c8Vpa, order_);
     cout << endl;
     cout << "Experimental Moments:" << endl;
-    expMom.log();
+    expMom_.log();
     cout << endl;
   }
 
  private:
-  int order_;
-  vector<double> s0s;
-  ExperimentalMoments expMom;
-  TheoreticalMoments thMom;
+  const int order_;
+  const vector<double> s0s_;
+  ExperimentalMoments expMom_;
+  TheoreticalMoments thMom_;
 };
 
 #endif

@@ -14,7 +14,7 @@ typedef complex<double> dComplex;
 
 class Weight {
  public:
-  Weight(uint i) : weightId_(i) {}
+  Weight(int i) : weightId_(i) {}
 
   dComplex wD(dComplex x) const {
     switch(weightId_) {
@@ -43,7 +43,7 @@ class Weight {
   }
 
  private:
-  uint weightId_;
+  int weightId_;
 };
 
 // inline complex<double> wR00(complex<double> x) {

@@ -28,7 +28,6 @@ class ExperimentalMoments : public Numerics {
     setExperimentalMoments();
 
     // init error matrix
-
     setErrorMatrix();
 
     // init jacobian matrix
@@ -122,7 +121,6 @@ class ExperimentalMoments : public Numerics {
   vector<double> s0s, experimentalMoments;
   Weight weight_;
   matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix;
-
 
   // returns weightRatios
   void setWeightRatios() {

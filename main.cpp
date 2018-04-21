@@ -49,19 +49,12 @@ int main () {
   json config;
   configFile >> config;
 
-  const int nc = config["parameters"]["nc"];
-  const int nf = config["parameters"]["nf"];
-  const int order = config["parameters"]["order"];
-
-  const vector<double> s0s = config["parameters"]["s0Set"];
 
   const Constants constants(config);
   const uint weightId = config["parameters"]["weight"];
-  const Weight weight(weightId);
-  Chisquared chisquared(order, s0s, weight, config, constants);
+  Chisquared chisquared(config, constants);
 
   chisquared.log(0.32326096168471358, 2.1e-2, -0.31488720134123538, -2.6524803026353995E-002);
-
 
   // MINUIT
   Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
