@@ -55,4 +55,7 @@ TEST_F(AlphaSTest, complex) {
   complex<double> q(3.0, 0.0);
   EXPECT_NEAR((*amu5_)(q, 3.1572314596, 0.10162679736189885).real(),
               0.10470997092165853, 1e-14);
+  q = complex<double>(2.0, 0.0);
+  EXPECT_NEAR((*amu5_)(q, 3.1572314596, 0.31927/const_->kPi).real(),
+              0.14036116867237544, 1e-14);
 }

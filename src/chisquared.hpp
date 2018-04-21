@@ -62,6 +62,7 @@ class Chisquared {
     cout << endl;
     cout << "Experimental Moments:" << endl;
     expMom.log();
+    cout << endl;
   }
 
  private:

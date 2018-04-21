@@ -5,6 +5,7 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
   complex<double> L = log(-s/mu2);
 
   complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
+
   complex<double> sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
