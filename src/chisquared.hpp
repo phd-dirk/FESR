@@ -36,7 +36,7 @@ class Chisquared {
 
     double chi = 0;
 
-    ublas::matrix<double> covMat = expMom_.getCovarianceMatrix();
+    ublas::matrix<double> covMat = expMom_.covarianceMatrix;
     ublas::matrix<double> invCovMat = expMom_.getInverseCovarianceMatrix();
 
     vector<double> momDiff(s0s_.size());

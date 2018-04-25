@@ -40,7 +40,9 @@ using ROOT::Math::Functor;
 
 // UBLAS
 #include <boost/numeric/ublas/matrix.hpp>
-using boost::ublas::matrix;
+using ublas::matrix;
+
+using std::ifstream;
 
 vector<double> readExpMomentsFromFile() {
   vector<double> expMoms;
@@ -59,8 +61,29 @@ vector<double> readExpMomentsFromFile() {
   return expMoms;
 }
 
-matrix<double> readCovMatrixFromFile() {
+matrix<double> readCovMatrixFromFile(const int &size) {
+  matrix<double> covMat(size, size);
+  ifstream covMatFile;
+  covMatFile.open("./data/covMat.dat");
+  if(!covMatFile) {
+    std::cerr << "Unable to open file expMom.dat";
+    exit(1);
+  }
 
+  double row = 0;
+  double col = 0;
+  double x;
+  while (covMatFile >> x) {
+    covMat(row, col) = x;
+    if (col == size-1) {
+      col = 0;
+      row++;
+    } else {
+      col++;
+    }
+  }
+  covMatFile.close();
+  return covMat;
 }
 
 bool areSame(double a, double b) {
@@ -70,17 +93,24 @@ bool areSame(double a, double b) {
 bool compareVectors(const vector<double> &vec1, const vector<double> &vec2) {
   for(std::vector<double>::size_type i = 0; i != vec1.size(); i++) {
     if(!areSame(vec1[i], vec2[i])) {
+      cout << vec1[i] << " = " << vec2[i] << endl;
       return false;
     }
-    cout << vec1[i] << " = " << vec2[i] << endl;
   }
   return true;
 }
 
-bool compareSquareMatrix(const matrix<double> &mat1, const matrix<double> &mat2, const int &size) {
-  for(int i = 0; i != size; i++) {
-
+bool compareSquareMatrix(const matrix<double> &m1, const matrix<double> &m2) {
+  for (auto i = 0; i < m1.size1(); i++) {
+    cout << endl;
+    for (auto j = 0; j < m1.size2(); j++) {
+      if (!areSame(m1(i, j), m2(i, j))) {
+        cout << "at m(" << i << ", " << j << ") \t" << m1(i, j) << " != " << m2(i, j) << endl;
+        return false;
+      }
+    }
   }
+  return true;
 }
 
 int main () {
@@ -94,6 +124,7 @@ int main () {
   Chisquared chisquared(config, constants);
 
   cout << "Are same: " << compareVectors(readExpMomentsFromFile(), chisquared.expMom_.getExpPlusPionPoleMoments()) << endl;
+  cout << "Are CovMat same: " << compareSquareMatrix(readCovMatrixFromFile(9), chisquared.expMom_.covarianceMatrix) << endl;
 
 
   chisquared.log(0.32307175541329564, 2.1e-2, -0.309486307083497, -3.0869411117237483e-2);

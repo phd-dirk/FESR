@@ -73,12 +73,6 @@ class ExperimentalMoments : public Numerics {
   double getJacobianMatrix(int i, int j) {
     return this->jacobianMatrix(i, j);
   }
-  matrix<double> getCovarianceMatrix() {
-    return this->covarianceMatrix;
-  }
-  double getCovarianceMatrix(int i, int j) {
-    return this->covarianceMatrix(i, j);
-  }
   ublas::matrix<double> getInverseCovarianceMatrix() {
     // Remove correlations with R_tau, V+A in Aleph fit
     ublas::matrix<double> covMat = this->covarianceMatrix;
@@ -118,12 +112,6 @@ class ExperimentalMoments : public Numerics {
                          + 4.*pow(const_.kDFPi/const_.kFPi, 2));
   }
 
- private:
-  Constants const_;
-  Data data;
-  vector<double> s0s, experimentalMoments;
-  Weight weight_;
-  matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix;
 
   // returns weightRatios
   void setWeightRatios() {
@@ -212,6 +200,12 @@ class ExperimentalMoments : public Numerics {
     pseudoMoment += axialMoment*(-2.*pow(const_.kPionMinusMass, 2)/(const_.kSTau + 2.*pow(const_.kPionMinusMass, 2)));
     return axialMoment + pseudoMoment;
   }
+
+  Constants const_;
+  Data data;
+  vector<double> s0s, experimentalMoments;
+  Weight weight_;
+  matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix;
 
 }; // END ExperimentalMoments
 
