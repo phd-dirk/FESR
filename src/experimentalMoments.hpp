@@ -19,7 +19,8 @@ class ExperimentalMoments : public Numerics {
   ExperimentalMoments(const string &filename, const double &normalizationFactor,
                       const vector<double> &s0s, const Weight &weight, Constants constants) :
     Numerics(constants), const_(constants), data(Data(filename, normalizationFactor)),
-    s0s(s0s), weight_(weight) {
+    s0s(s0s), weight_(weight), covarianceMatrix(s0s.size(), s0s.size()),
+    inverseCovarianceMatrix(s0s.size(), s0s.size()) {
 
     // init weightRatios
     setWeightRatios(); // (s0s.size() x data.binCount) e.g. (9 x 80)
@@ -33,8 +34,21 @@ class ExperimentalMoments : public Numerics {
     // init jacobian matrix
     setJacobianMatrix();
 
+    cout << "setting covariance matrix" << endl;
     // init covariance matrix
     setCovarianceMatrix();
+
+    // Remove correlations with R_tau,V+A in Aleph fit
+    for (uint i = 1; i < s0s.size(); i++) {
+      covarianceMatrix(0, i) = 0.;
+      covarianceMatrix(i, 0) = 0.;
+    }
+    // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
+    covarianceMatrix(0, 0) = pow(0.0072, 2);
+
+    cout << "inverting covariance matrix" << endl;
+    // init inverse covariance matrix
+    invertMatrix(covarianceMatrix, inverseCovarianceMatrix);
   }
 
   double operator ()(int i) {
@@ -45,7 +59,7 @@ class ExperimentalMoments : public Numerics {
     cout << "s0 \t" << s0s[1] << endl;
     cout << "ExpMom = \t" << getExpPlusPionMoment(1) << endl;
     cout << "CovMom = \t" << covarianceMatrix << endl;
-    cout << "InvCov = \t" << getInverseCovarianceMatrix() << endl;
+    cout << "InvCov = \t" << inverseCovarianceMatrix << endl;
   }
 
   vector<double> getExpPlusPionPoleMoments() {
@@ -72,20 +86,6 @@ class ExperimentalMoments : public Numerics {
   }
   double getJacobianMatrix(int i, int j) {
     return this->jacobianMatrix(i, j);
-  }
-  ublas::matrix<double> getInverseCovarianceMatrix() {
-    // Remove correlations with R_tau, V+A in Aleph fit
-    ublas::matrix<double> covMat = this->covarianceMatrix;
-    ublas::matrix<double> invCovMat(s0s.size(), s0s.size());
-    // Remove correlations with R_tau,V+A in Aleph fit
-    for (uint i = 1; i < s0s.size(); i++) {
-      covMat(0, i) = 0.;
-      covMat(i, 0) = 0.;
-    }
-    // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
-    covMat(0, 0) = pow(0.0072, 2);
-    invertMatrix(covMat, invCovMat);
-    return invCovMat;
   }
 
   // Selects the closest bin number from s0
@@ -178,20 +178,17 @@ class ExperimentalMoments : public Numerics {
 
   // returns the covariance matrix
   void setCovarianceMatrix() {
-    matrix<double> covMat(s0s.size(), s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       for (uint j = 0; j < s0s.size(); j++) {
-        covMat(i, j) = 0.;
+        covarianceMatrix(i, j) = 0.;
         for (int k = 0; k < data.binCount+2; k++) {
           for (int l = 0; l < data.binCount+2; l++) {
-            covMat(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
+            covarianceMatrix(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
           }
         }
       }
     }
-    this->covarianceMatrix = covMat;
   }
-
 
   double pionPoleMoment(const double &s0) {
     double axialMoment = 0;
@@ -205,8 +202,7 @@ class ExperimentalMoments : public Numerics {
   Data data;
   vector<double> s0s, experimentalMoments;
   Weight weight_;
-  matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix;
-
+  matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix, inverseCovarianceMatrix;
 }; // END ExperimentalMoments
 
 #endif

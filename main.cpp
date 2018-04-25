@@ -102,7 +102,6 @@ bool compareVectors(const vector<double> &vec1, const vector<double> &vec2) {
 
 bool compareSquareMatrix(const matrix<double> &m1, const matrix<double> &m2) {
   for (auto i = 0; i < m1.size1(); i++) {
-    cout << endl;
     for (auto j = 0; j < m1.size2(); j++) {
       if (!areSame(m1(i, j), m2(i, j))) {
         cout << "at m(" << i << ", " << j << ") \t" << m1(i, j) << " != " << m2(i, j) << endl;
@@ -120,8 +119,10 @@ int main () {
   json config;
   configFile >> config;
 
+  cout << "ok " << endl;
   const Constants constants(config);
   Chisquared chisquared(config, constants);
+  cout << "not ok" << endl;
 
   cout << "Are same: " << compareVectors(readExpMomentsFromFile(), chisquared.expMom_.getExpPlusPionPoleMoments()) << endl;
   cout << "Are CovMat same: " << compareSquareMatrix(readCovMatrixFromFile(9), chisquared.expMom_.covarianceMatrix) << endl;
