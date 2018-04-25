@@ -23,20 +23,19 @@ class ExperimentalMoments : public Numerics {
     inverseCovarianceMatrix(s0s.size(), s0s.size()) {
 
     // init weightRatios
-    setWeightRatios(); // (s0s.size() x data.binCount) e.g. (9 x 80)
+    initWeightRatios(); // (s0s.size() x data.binCount) e.g. (9 x 80)
 
     // init exp. moments
-    setExperimentalMoments();
+    initExperimentalMoments();
 
     // init error matrix
-    setErrorMatrix();
+    initErrorMatrix();
 
     // init jacobian matrix
-    setJacobianMatrix();
+    initJacobianMatrix();
 
-    cout << "setting covariance matrix" << endl;
     // init covariance matrix
-    setCovarianceMatrix();
+    initCovarianceMatrix();
 
     // Remove correlations with R_tau,V+A in Aleph fit
     for (uint i = 1; i < s0s.size(); i++) {
@@ -46,11 +45,9 @@ class ExperimentalMoments : public Numerics {
     // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
     covarianceMatrix(0, 0) = pow(0.0072, 2);
 
-    cout << "inverting covariance matrix" << endl;
     // init inverse covariance matrix
     invertMatrix(covarianceMatrix, inverseCovarianceMatrix);
   }
-
   double operator ()(int i) {
     return getExpPlusPionMoment(i);
   }
@@ -114,7 +111,7 @@ class ExperimentalMoments : public Numerics {
 
 
   // returns weightRatios
-  void setWeightRatios() {
+  void initWeightRatios() {
     matrix<double> wRatios(s0s.size(), data.binCount);
 
     for (uint i = 0; i < s0s.size(); i++) {
@@ -132,7 +129,7 @@ class ExperimentalMoments : public Numerics {
 
 
   // return the experimental spectral moment
-  void setExperimentalMoments() {
+  void initExperimentalMoments() {
     vector<double> moments(s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
@@ -143,7 +140,7 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the error matrix
-  void setErrorMatrix() {
+  void initErrorMatrix() {
     matrix<double> errMat(data.binCount+2, data.binCount+2);
     for (int i = 0; i < data.binCount+2; i++) {
       for (int j = 0; j < data.binCount+2; j++) {
@@ -160,7 +157,7 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the Jacobian Matrix
-  void setJacobianMatrix() {
+  void initJacobianMatrix() {
     matrix<double> jacobi(data.binCount+2, s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount+2; j++) {
@@ -177,7 +174,7 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the covariance matrix
-  void setCovarianceMatrix() {
+  void initCovarianceMatrix() {
     for (uint i = 0; i < s0s.size(); i++) {
       for (uint j = 0; j < s0s.size(); j++) {
         covarianceMatrix(i, j) = 0.;
