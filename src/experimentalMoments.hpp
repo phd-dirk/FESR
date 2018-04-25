@@ -42,7 +42,9 @@ class ExperimentalMoments : public Numerics {
   }
 
   void log() {
-    cout << "ExpMom = \t" << getExpPlusPionMoment(0) << endl;
+    cout << "s0 \t" << s0s[1] << endl;
+    cout << "ExpMom = \t" << getExpPlusPionMoment(1) << endl;
+    cout << "CovMom = \t" << covarianceMatrix << endl;
     cout << "InvCov = \t" << getInverseCovarianceMatrix() << endl;
   }
 
@@ -81,6 +83,7 @@ class ExperimentalMoments : public Numerics {
     // Remove correlations with R_tau, V+A in Aleph fit
     ublas::matrix<double> covMat = this->covarianceMatrix;
     ublas::matrix<double> invCovMat(s0s.size(), s0s.size());
+    // Remove correlations with R_tau,V+A in Aleph fit
     for (uint i = 1; i < s0s.size(); i++) {
       covMat(0, i) = 0.;
       covMat(i, 0) = 0.;
@@ -170,7 +173,7 @@ class ExperimentalMoments : public Numerics {
 
   // returns the Jacobian Matrix
   void setJacobianMatrix() {
-    matrix<double> jacobi(data.binCount+2, data.binCount+2);
+    matrix<double> jacobi(data.binCount+2, s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount+2; j++) {
         if (j <= closestBinToS0(s0s[i])) {
@@ -193,7 +196,7 @@ class ExperimentalMoments : public Numerics {
         covMat(i, j) = 0.;
         for (int k = 0; k < data.binCount+2; k++) {
           for (int l = 0; l < data.binCount+2; l++) {
-            covMat(i,j) = covMat(i, j) + jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
+            covMat(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
           }
         }
       }

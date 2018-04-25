@@ -3,3 +3,4 @@
 
 ((c++-mode
   (flycheck-gcc-language-standard . "c++11")))
+9eR&Io#TS*cn

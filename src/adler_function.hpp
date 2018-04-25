@@ -27,8 +27,8 @@ using namespace std::complex_literals;
 
 class AdlerFunction : Numerics {
 public:
-  AdlerFunction(const int &order, const Constants &constants) :
-    Numerics(constants), const_(constants), order_(order), amu_(constants, order), mq_(constants, order) {
+  AdlerFunction(const int &order, const int &alphaLoops, const Constants &constants) :
+    Numerics(constants), const_(constants), order_(order), amu_(constants, alphaLoops), mq_(constants, order) {
     if (order > 5) { throw invalid_argument("order cannot be higher than 5");
     };
   }

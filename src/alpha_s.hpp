@@ -19,7 +19,7 @@ using std::log;
 
 class AlphaS: public Numerics {
  public:
-  AlphaS(const Constants &constants, const int &order) : Numerics(constants), order_(order), const_(constants) {}
+  AlphaS(const Constants &constants, const int &alphaLoops) : Numerics(constants), alphaLoops_(alphaLoops), const_(constants) {}
 
   complex<double> operator ()(const complex<double> &q2, const double &p2, const double &ap) {
     return zarg(q2, p2, ap);
@@ -35,7 +35,7 @@ class AlphaS: public Numerics {
     // from mathematica coefficients.nb
     function<complex<double>(complex<double>)> f, df;
 
-    if (false) {
+    if (alphaLoops_ == 4) {
       // BETA 4th order --------------------------------------------------
       f = [&ap, &p2, &q2](complex<double> a2) {
         return 0.2222222222222/ap - 0.2222222222222/a2 - 0.3730002895803*atan(0.19576224733469 - 2.7775209170642*ap) + 0.3730002895803*atan(0.19576224733469 - 2.777520917064*a2) +
@@ -69,7 +69,7 @@ class AlphaS: public Numerics {
   }
 
  private:
-  int order_;
+  const int alphaLoops_;
   Constants const_;
 };
 

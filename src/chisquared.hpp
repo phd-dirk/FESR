@@ -62,7 +62,6 @@ class Chisquared {
     cout << endl;
   }
 
- private:
   const int order_;
   const vector<double> s0s_;
   ExperimentalMoments expMom_;

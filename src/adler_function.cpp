@@ -6,6 +6,8 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
 
   complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
 
+  // cout << "amu_, mu2, sTau, atau" << amu << "\t" << mu2 << "\t" << const_.kSTau << "\t" <<  astau/const_.kPi << endl;
+
   complex<double> sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
