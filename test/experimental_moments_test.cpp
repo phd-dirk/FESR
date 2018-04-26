@@ -40,7 +40,7 @@ TEST_F(ExperimentalMomentsTest, closestBinToS0) {
 }
 
 TEST_F(ExperimentalMomentsTest, weightRatios) {
-  matrix<double> weightRatios = expMom->getWeightRatios();
+  matrix<double> weightRatios = expMom->weightRatios;
   EXPECT_NEAR(weightRatios(0, 0), 1., 1.e-15);
   EXPECT_NEAR(weightRatios(1, 1), 0.99968000816184477, 1.e-14);
   EXPECT_NEAR(weightRatios(2, 2), 0.99851573355014112, 1.e-14);
@@ -66,19 +66,19 @@ TEST_F(ExperimentalMomentsTest, kPiFac) {
 }
 
 TEST_F(ExperimentalMomentsTest, errorMatrix) {
-  EXPECT_NEAR(expMom->getErrorMatrix(0, 0), 2.2268960999999995e-7, 1.e-15);
-  EXPECT_NEAR(expMom->getErrorMatrix(21, 48), -1.6821367980824591e-5, 1.e-15);
-  EXPECT_NEAR(expMom->getErrorMatrix(0, 79), -8.9303148579275616e-11, 1.e-15);
-  EXPECT_NEAR(expMom->getErrorMatrix(80, 80), 1.6e-3, 1.e-15);
-  EXPECT_NEAR(expMom->getErrorMatrix(81, 81), 3.7134137767198075e-5, 1.e-15);
+  EXPECT_NEAR(expMom->errorMatrix(0, 0), 2.2268960999999995e-7, 1.e-15);
+  EXPECT_NEAR(expMom->errorMatrix(21, 48), -1.6821367980824591e-5, 1.e-15);
+  EXPECT_NEAR(expMom->errorMatrix(0, 79), -8.9303148579275616e-11, 1.e-15);
+  EXPECT_NEAR(expMom->errorMatrix(80, 80), 1.6e-3, 1.e-15);
+  EXPECT_NEAR(expMom->errorMatrix(81, 81), 3.7134137767198075e-5, 1.e-15);
 }
 
 TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
-  EXPECT_NEAR(expMom->getJacobianMatrix(0, 0), 5.6094687833062200e-2, 1.e-15);
-  EXPECT_NEAR(expMom->getJacobianMatrix(21, 4), 6.8565471537930633e-2, 1.e-14);
-  EXPECT_NEAR(expMom->getJacobianMatrix(79, 0), 0., 1.e-14);
-  EXPECT_NEAR(expMom->getJacobianMatrix(80, 0), -0.16084302411518711, 1.e-14);
-  EXPECT_NEAR(expMom->getJacobianMatrix(81, 2), 0.35273831585987608, 1.e-14);
+  EXPECT_NEAR(expMom->jacobianMatrix(0, 0), 5.6094687833062200e-2, 1.e-15);
+  EXPECT_NEAR(expMom->jacobianMatrix(21, 4), 6.8565471537930633e-2, 1.e-14);
+  EXPECT_NEAR(expMom->jacobianMatrix(79, 0), 0., 1.e-14);
+  EXPECT_NEAR(expMom->jacobianMatrix(80, 0), -0.16084302411518711, 1.e-14);
+  EXPECT_NEAR(expMom->jacobianMatrix(81, 2), 0.35273831585987608, 1.e-14);
 }
 
 TEST_F(ExperimentalMomentsTest, covarianceMatrix) {

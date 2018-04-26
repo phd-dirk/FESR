@@ -75,15 +75,6 @@ class ExperimentalMoments : public Numerics {
     return this->experimentalMoments;
   }
 
-  matrix<double> getWeightRatios() {
-    return this->weightRatios;
-  }
-  double getErrorMatrix(int i, int j) {
-    return this->errorMatrix(i, j);
-  }
-  double getJacobianMatrix(int i, int j) {
-    return this->jacobianMatrix(i, j);
-  }
 
   // Selects the closest bin number from s0
   // If s0 is exactly between two bins we select the smaller one

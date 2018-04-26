@@ -52,6 +52,14 @@ class Chisquared {
 
     return chi;
   }
+  double operator ()(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA) {
+    double xx [4];
+    xx[0] = astau;
+    xx[1] = aGGinv;
+    xx[2] = rhoVpA;
+    xx[3] = c8VpA;
+    return operator()(xx);
+  }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) {
     cout << "Theoretical Moments:" << endl;
