@@ -93,7 +93,15 @@ class Chisquared {
     xx[3] = c8VpA;
     return operator()(xx);
   }
-  
+  double operator ()(const json &config) {
+    double xx[4];
+    xx[0] = config["variables"]["astau"]["value"];
+    xx[1] = config["variables"]["aGGInv"]["value"];
+    xx[2] = config["variables"]["rhoVpA"]["value"];
+    xx[3] = config["variables"]["c8VpA"]["value"];
+
+    return operator()(xx);
+  }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) {
     cout << "Theoretical Moments:" << endl;

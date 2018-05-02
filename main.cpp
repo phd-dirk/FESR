@@ -103,7 +103,6 @@ int main () {
   configFile >> config;
 
   const Constants constants(config);
-  Chisquared chisquared(config, constants);
 
   // cout << "Are ExpMom same: " << compareVectors(readExpMomentsFromFile(), chisquared.expMom_.getExpPlusPionPoleMoments()) << endl;
   // cout << "Is CovMat same: " << compareSquareMatrix(readMatrixFromFile(9, "./data/covMat.dat"), chisquared.expMom_.covarianceMatrix) << endl;
