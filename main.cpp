@@ -61,30 +61,6 @@ vector<double> readExpMomentsFromFile() {
   return expMoms;
 }
 
-matrix<double> readMatrixFromFile(const int &size, const string filePath) {
-  matrix<double> m(size, size);
-  ifstream file;
-  file.open(filePath);
-  if(!file) {
-    std::cerr << "Unable to open file expMom.dat";
-    exit(1);
-  }
-
-  double row = 0;
-  double col = 0;
-  double x;
-  while (file >> x) {
-    m(row, col) = x;
-    if (col == size-1) {
-      col = 0;
-      row++;
-    } else {
-      col++;
-    }
-  }
-  file.close();
-  return m;
-}
 
 // following https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
 bool almostEqualRelative(const double &a, const double &b) {
@@ -135,54 +111,56 @@ int main () {
 
   // cout << "invInvCovMat: " << prod(chisquared.expMom_.covarianceMatrix, chisquared.expMom_.inverseCovarianceMatrix) << endl;
 
+  chisquared.log(0.32307175541329564, 2.1e-2, -0.309486307083497, -3.0869411117237483e-2);
+
   // beta 4th order
   // cout << "Matthias CHI2: " << chisquared(0.32307175541329564, 2.1e-2, -0.309486307083497, -3.0869411117237483e-2) << endl;
   // cout << "MY CHI2: " << chisquared(0.32306509503077424, 2.1e-2, -0.30906464837998099, -0.029781360856290042)  << endl;
 
   // beta 5th order
-  cout << "Matthias CHI2: " << chisquared(0.32326096168471358, 2.1e-2, -0.31488720134123538, -2.6524803026353995e-2) << endl;
-  cout << "MY CHI2: " << chisquared(0.31541087265066009, 2.1e-2, 0.81120226780379001, 5.2853783566688879)  << endl;
+  // cout << "Matthias CHI2: " << chisquared(0.32326096168471358, 2.1e-2, -0.31488720134123538, -2.6524803026353995e-2) << endl;
+  // cout << "MY CHI2: " << chisquared(0.31541087265066009, 2.1e-2, 0.81120226780379001, 5.2853783566688879)  << endl;
 
 
   // MINUIT
-  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // set tolerances
-  min->SetMaxFunctionCalls(10000000); // for Minuit2
-  min->SetMaxIterations(10000000); // for GSL
-  min->SetTolerance(1e-15);
-  min->SetPrintLevel(1); // activate logging
-  min->SetStrategy( 2 );
+  // // set tolerances
+  // min->SetMaxFunctionCalls(10000000); // for Minuit2
+  // min->SetMaxIterations(10000000); // for GSL
+  // min->SetTolerance(1e-15);
+  // min->SetPrintLevel(1); // activate logging
+  // min->SetStrategy( 2 );
 
-  // function wrapper
-  Functor chi2(chisquared, 4);
+  // // function wrapper
+  // Functor chi2(chisquared, 4);
 
-  min->SetFunction(chi2);
+  // min->SetFunction(chi2);
 
-  // set free variables to be minimized
-  if (config["variables"]["astau"]["fixed"]) {
-    min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
-  } else {
-    min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
-  }
-  if (config["variables"]["aGGInv"]["fixed"]) {
-    min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
-  } else {
-    min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
-  }
-  if (config["variables"]["rhoVpA"]["fixed"]) {
-    min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
-  } else {
-    min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
-  }
-  if (config["variables"]["c8VpA"]["fixed"]) {
-    min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
-  } else {
-    min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
-  }
+  // // set free variables to be minimized
+  // if (config["variables"]["astau"]["fixed"]) {
+  //   min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
+  // } else {
+  //   min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
+  // }
+  // if (config["variables"]["aGGInv"]["fixed"]) {
+  //   min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
+  // } else {
+  //   min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
+  // }
+  // if (config["variables"]["rhoVpA"]["fixed"]) {
+  //   min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
+  // } else {
+  //   min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
+  // }
+  // if (config["variables"]["c8VpA"]["fixed"]) {
+  //   min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
+  // } else {
+  //   min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
+  // }
 
-  // minimize!
-  min->Minimize();
+  // // minimize!
+  // min->Minimize();
 
   // min->PrintResults();
   return 0;

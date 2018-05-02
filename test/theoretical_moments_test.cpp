@@ -29,7 +29,7 @@ protected:
     configFile >> config;
     const_ = new Constants(config);
     weight_ = new Weight(1);
-    thMom_ = new TheoreticalMoments(order_, s0Set, *weight_, config, *const_);
+    thMom_ = new TheoreticalMoments(s0Set, *weight_, config, *const_);
   }
 
   virtual void TearDown() {

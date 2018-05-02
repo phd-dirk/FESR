@@ -8,9 +8,9 @@ using json = nlohmann::json;
 
 class TheoreticalMoments: public AdlerFunction {
  public:
-  TheoreticalMoments(const int &order, const vector<double> &s0s, const Weight &weight,
+  TheoreticalMoments(const vector<double> &s0s, const Weight &weight,
                      const json &config, const Constants &constants) :
-    AdlerFunction(order, config["parameters"]["alphaLoops"], constants), const_(constants), config_(config),
+    AdlerFunction(config["parameters"]["order"], config["parameters"]["alphaLoops"], constants), const_(constants), config_(config),
     s0s(s0s), weight_(weight) {}
 
   double operator ()(const int &i, const double &astau, const double &aGGinv,

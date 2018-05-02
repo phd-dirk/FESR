@@ -10,7 +10,40 @@
 #include <iostream>
 #include <boost/numeric/ublas/matrix.hpp>
 
+
+// test invCovMat
+#include <boost/numeric/ublas/io.hpp>
+using ublas::matrix;
+using ublas::prod;
+
+using std::ifstream;
+
 namespace ublas = boost::numeric::ublas;
+
+matrix<double> readMatrixFromFile(const int &size, const string filePath) {
+  matrix<double> m(size, size);
+  ifstream file;
+  file.open(filePath);
+  if(!file) {
+    std::cerr << "Unable to open file expMom.dat";
+    exit(1);
+  }
+
+  double row = 0;
+  double col = 0;
+  double x;
+  while (file >> x) {
+    m(row, col) = x;
+    if (col == size-1) {
+      col = 0;
+      row++;
+    } else {
+      col++;
+    }
+  }
+  file.close();
+  return m;
+}
 
 using json = nlohmann::json;
 using std::vector;
@@ -25,7 +58,7 @@ class Chisquared {
     expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
                                config["parameters"]["RVANormalization"],
                                 s0s_, Weight(config["parameters"]["weight"].get<int>()), constants)),
-    thMom_(TheoreticalMoments(order_, s0s_, Weight(config["parameters"]["weight"].get<int>()), config, constants)) {}
+    thMom_(TheoreticalMoments(s0s_, Weight(config["parameters"]["weight"].get<int>()), config, constants)) {}
 
   double operator ()(const double *xx) {
     // init fit parameters
@@ -37,7 +70,7 @@ class Chisquared {
     double chi = 0;
 
     ublas::matrix<double> covMat = expMom_.covarianceMatrix;
-    ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix;
+    ublas::matrix<double> invCovMat = readMatrixFromFile(9, "./data/invCovMat.dat");  //expMom_.inverseCovarianceMatrix; 
 
     vector<double> momDiff(s0s_.size());
     for(uint i = 0; i < s0s_.size(); i++) {
