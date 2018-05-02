@@ -8,14 +8,13 @@ using json = nlohmann::json;
 
 class TheoreticalMoments: public AdlerFunction {
  public:
-  TheoreticalMoments(const vector<double> &s0s, const Weight &weight,
-                     const json &config, const Constants &constants) :
-    AdlerFunction(config["parameters"]["order"], config["parameters"]["alphaLoops"], constants), const_(constants), config_(config),
-    s0s(s0s), weight_(weight) {}
+  TheoreticalMoments(const json &config) :
+    config_(config), const_(Constants(config)), AdlerFunction(config["parameters"]["order"], config["parameters"]["alphaLoops"], const_),
+    s0s_(config["parameters"]["s0Set"].get<vector<double>>()), weight_(Weight(config["parameters"]["weight"].get<int>())) {}
 
   double operator ()(const int &i, const double &astau, const double &aGGinv,
                      const double &rhoVpA, const double &c8VpA, const double &order) {
-    double s0 = s0s[i];
+    double s0 = s0s_[i];
 
     double rTauTh = 0.;
     // D0
@@ -79,18 +78,18 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) {
-    cout << "Delta^(0): \t" << del0(s0s[0], weight_, astau, order) << endl;
-    cout << "Delta^(4): \t" << del4(s0s[0], weight_, astau, aGGinv, order) << endl;
-    cout << "Delta^(6): \t" << del6(s0s[0], weight_, rhoVpA) << endl;
-    cout << "Delta^(8): \t" << del8(s0s[0], weight_, c8VpA) << endl;
-    cout << "Delta_P+S: \t" << deltaP(s0s[0], weight_) << endl;
+    cout << "Delta^(0): \t" << del0(s0s_[0], weight_, astau, order) << endl;
+    cout << "Delta^(4): \t" << del4(s0s_[0], weight_, astau, aGGinv, order) << endl;
+    cout << "Delta^(6): \t" << del6(s0s_[0], weight_, rhoVpA) << endl;
+    cout << "Delta^(8): \t" << del8(s0s_[0], weight_, c8VpA) << endl;
+    cout << "Delta_P+S: \t" << deltaP(s0s_[0], weight_) << endl;
   }
 
 
  private:
-  Constants const_;
   json config_;
-  vector<double> s0s;
+  Constants const_;
+  vector<double> s0s_;
   Weight weight_;
 };
 

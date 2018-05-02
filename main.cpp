@@ -111,7 +111,7 @@ int main () {
 
   // cout << "invInvCovMat: " << prod(chisquared.expMom_.covarianceMatrix, chisquared.expMom_.inverseCovarianceMatrix) << endl;
 
-  chisquared.log(0.32307175541329564, 2.1e-2, -0.309486307083497, -3.0869411117237483e-2);
+  // chisquared.log(0.32307175541329564, 2.1e-2, -0.309486307083497, -3.0869411117237483e-2);
 
   // beta 4th order
   // cout << "Matthias CHI2: " << chisquared(0.32307175541329564, 2.1e-2, -0.309486307083497, -3.0869411117237483e-2) << endl;

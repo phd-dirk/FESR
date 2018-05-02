@@ -58,7 +58,7 @@ class Chisquared {
     expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
                                config["parameters"]["RVANormalization"],
                                 s0s_, Weight(config["parameters"]["weight"].get<int>()), constants)),
-    thMom_(TheoreticalMoments(s0s_, Weight(config["parameters"]["weight"].get<int>()), config, constants)) {}
+    thMom_(TheoreticalMoments(config)) {}
 
   double operator ()(const double *xx) {
     // init fit parameters
@@ -93,6 +93,7 @@ class Chisquared {
     xx[3] = c8VpA;
     return operator()(xx);
   }
+  
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) {
     cout << "Theoretical Moments:" << endl;
