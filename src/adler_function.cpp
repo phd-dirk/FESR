@@ -5,13 +5,14 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
   complex<double> L = log(-s/mu2);
 
   complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
-
-  // cout << "amu_, mu2, sTau, atau" << amu << "\t" << mu2 << "\t" << const_.kSTau << "\t" <<  astau/const_.kPi << endl;
+  // cout << amu << L << s << mu2 << endl;
 
   complex<double> sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
+      // cout << "c(" << n << ", " << k << ") \t" << const_.c_[n][k] << endl;
       sum += pow(amu, n)*(double)k*const_.c_[n][k]*pow(L,k-1);
+      // cout << sum << endl;
     }
   }
 
@@ -22,6 +23,7 @@ double AdlerFunction::D0CInt(const double &s0, const Weight weight,
                              const double &astau, const double &order) {
   function<complex<double>(complex<double>)> f =
     [&](complex<double> s) -> complex<double> {
+    // cout << "s, s0, astau, order" << s << "\t" << s0 << "\t" << astau << "\t" << order << endl;
     complex<double> mu2(s0, 0.);
     return weight.wD(s)*D0(s0*s, mu2, astau, order);
   };

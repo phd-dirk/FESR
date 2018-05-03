@@ -27,10 +27,8 @@ using namespace std::complex_literals;
 
 class AdlerFunction : Numerics {
 public:
-  AdlerFunction(const int &order, const int &alphaLoops, const Constants &constants) :
-    Numerics(constants), const_(constants), order_(order), amu_(constants, alphaLoops), mq_(constants, order) {
-    if (order > 5) { throw invalid_argument("order cannot be higher than 5");
-    };
+  AdlerFunction(const int &alphaLoops, const Constants &constants) :
+    Numerics(constants), const_(constants), amu_(constants, alphaLoops), mq_(constants, alphaLoops) {
   }
 
   complex<double> D0(const complex<double> &s, const complex<double> &mu2,
@@ -93,7 +91,6 @@ public:
 
  private:
   Constants const_;
-  int order_;
   AlphaS amu_;
   MQRun mq_;
 }; // end AdlerFunction

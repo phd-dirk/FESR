@@ -95,6 +95,10 @@ bool compareSquareMatrix(const matrix<double> &m1, const matrix<double> &m2) {
   return true;
 }
 
+complex<double> testFunction(complex<double> z) {
+  return 1.0/z;
+}
+
 int main () {
   cout.precision(17);
 
@@ -103,6 +107,20 @@ int main () {
   configFile >> config;
 
   const Constants constants(config);
+  const Chisquared chisquared(config, constants);
+
+  // Numerics num(constants);
+  // cout << num.complexContourIntegral(testFunction) << endl;
+
+  // AdlerFunction adler(4, constants);
+  // cout << adler.D0(3.0, 3.0, 0.32307, 5) << endl;
+  // cout << 2.0*adler.D0CInt(3.0, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
+  // cout << 2.0*adler.D0CInt(3.1572314596, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
+
+
+  // cout << "th" << endl;
+  // TheoreticalMoments thMom(config);
+  // cout << thMom.cIntVpAD0FO(3.1572314596, Weight(1), 0.32307, 5) << endl;
 
   // cout << "Are ExpMom same: " << compareVectors(readExpMomentsFromFile(), chisquared.expMom_.getExpPlusPionPoleMoments()) << endl;
   // cout << "Is CovMat same: " << compareSquareMatrix(readMatrixFromFile(9, "./data/covMat.dat"), chisquared.expMom_.covarianceMatrix) << endl;
@@ -122,44 +140,44 @@ int main () {
 
 
   // MINUIT
-  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // // set tolerances
-  // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1e-15);
-  // min->SetPrintLevel(1); // activate logging
-  // min->SetStrategy( 2 );
+  // set tolerances
+  min->SetMaxFunctionCalls(10000000); // for Minuit2
+  min->SetMaxIterations(10000000); // for GSL
+  min->SetTolerance(1e-15);
+  min->SetPrintLevel(1); // activate logging
+  min->SetStrategy( 2 );
 
-  // // function wrapper
-  // Functor chi2(chisquared, 4);
+  // function wrapper
+  Functor chi2(chisquared, 4);
 
-  // min->SetFunction(chi2);
+  min->SetFunction(chi2);
 
-  // // set free variables to be minimized
-  // if (config["variables"]["astau"]["fixed"]) {
-  //   min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
-  // } else {
-  //   min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
-  // }
-  // if (config["variables"]["aGGInv"]["fixed"]) {
-  //   min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
-  // } else {
-  //   min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
-  // }
-  // if (config["variables"]["rhoVpA"]["fixed"]) {
-  //   min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
-  // } else {
-  //   min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
-  // }
-  // if (config["variables"]["c8VpA"]["fixed"]) {
-  //   min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
-  // } else {
-  //   min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
-  // }
+  // set free variables to be minimized
+  if (config["variables"]["astau"]["fixed"]) {
+    min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
+  } else {
+    min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
+  }
+  if (config["variables"]["aGGInv"]["fixed"]) {
+    min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
+  } else {
+    min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
+  }
+  if (config["variables"]["rhoVpA"]["fixed"]) {
+    min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
+  } else {
+    min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
+  }
+  if (config["variables"]["c8VpA"]["fixed"]) {
+    min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
+  } else {
+    min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
+  }
 
-  // // minimize!
-  // min->Minimize();
+  // minimize!
+  min->Minimize();
 
   // min->PrintResults();
   return 0;

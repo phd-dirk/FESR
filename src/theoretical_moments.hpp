@@ -9,8 +9,10 @@ using json = nlohmann::json;
 class TheoreticalMoments: public AdlerFunction {
  public:
   TheoreticalMoments(const json &config) :
-    config_(config), const_(Constants(config)), AdlerFunction(config["parameters"]["order"], config["parameters"]["alphaLoops"], const_),
-    s0s_(config["parameters"]["s0Set"].get<vector<double>>()), weight_(Weight(config["parameters"]["weight"].get<int>())) {}
+    AdlerFunction(config["parameters"]["alphaLoops"], Constants(config)), config_(config), const_(Constants(config)),
+    s0s_(config["parameters"]["s0Set"].get<vector<double>>()), weight_(Weight(config["parameters"]["weight"].get<int>())) {
+    cout << "init" << endl;
+  }
 
   double operator ()(const int &i, const double &astau, const double &aGGinv,
                      const double &rhoVpA, const double &c8VpA, const double &order) {
@@ -35,6 +37,7 @@ class TheoreticalMoments: public AdlerFunction {
 
   double cIntVpAD0FO(const double &s0, const Weight &weight,
                      const double &astau, const int &order) {
+    cout << s0  << "\t"<< astau << "\t" << order << endl;
     return 2.*D0CInt(s0, weight, astau, order);
   }
 
