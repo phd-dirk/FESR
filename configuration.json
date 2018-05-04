@@ -15,7 +15,7 @@
     },
     "variables": {
         "astau": {
-            "fixed": true,
+            "fixed": false,
             "value": 0.32307,
             "stepSize": 0.002
         },

@@ -181,7 +181,8 @@ int main () {
   const double *xs = min->X();
   chisquared.log(xs[0], xs[1], xs[2], xs[3]);
   cout << "chi2 \t" << chisquared(xs[0], xs[1], xs[2], xs[3]) << endl;
-
+  cout << "chi2Mat \t" << chisquared(0.3237956760922734, 2.1e-2, -0.30430835761184832, -5.5408466831601687e-2) << endl;
+  chisquared.log(0.3237956760922734, 2.1e-2, -0.30430835761184832, -5.5408466831601687e-2);
   // min->PrintResults();
   return 0;
 }
