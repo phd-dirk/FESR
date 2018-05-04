@@ -15,7 +15,7 @@
     },
     "variables": {
         "astau": {
-            "fixed": false,
+            "fixed": true,
             "value": 0.32307,
             "stepSize": 0.002
         },
@@ -38,8 +38,8 @@
     "adler": {
         "D0": true,
         "D2": false,
-        "D4": false,
-        "D68": false,
-        "PionPole": false
+        "D4": true,
+        "D68": true,
+        "PionPole": true
     }
 }

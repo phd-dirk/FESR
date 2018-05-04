@@ -60,7 +60,7 @@ class Chisquared {
                                 s0s_, Weight(config["parameters"]["weight"].get<int>()), constants)),
     thMom_(TheoreticalMoments(config)) {}
 
-  double operator ()(const double *xx) {
+  double operator ()(const double *xx) const {
     // init fit parameters
     double astau = xx[0];
     double aGGinv = xx[1];
@@ -85,7 +85,7 @@ class Chisquared {
 
     return chi;
   }
-  double operator ()(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA) {
+  double operator ()(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA) const {
     double xx [4];
     xx[0] = astau;
     xx[1] = aGGinv;
@@ -93,7 +93,7 @@ class Chisquared {
     xx[3] = c8VpA;
     return operator()(xx);
   }
-  double operator ()(const json &config) {
+  double operator ()(const json &config) const {
     double xx[4];
     xx[0] = config["variables"]["astau"]["value"];
     xx[1] = config["variables"]["aGGInv"]["value"];
@@ -103,7 +103,7 @@ class Chisquared {
     return operator()(xx);
   }
 
-  void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) {
+  void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) const {
     cout << "Theoretical Moments:" << endl;
     thMom_.log(astau, aGGinv, rhoVpa, c8Vpa, order_);
     cout << endl;
@@ -114,8 +114,8 @@ class Chisquared {
 
   const int order_;
   const vector<double> s0s_;
-  ExperimentalMoments expMom_;
-  TheoreticalMoments thMom_;
+  const ExperimentalMoments expMom_;
+  const TheoreticalMoments thMom_;
 };
 
 #endif

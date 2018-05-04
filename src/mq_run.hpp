@@ -12,7 +12,8 @@ using std::function;
 class MQRun {
  public:
   MQRun(const Constants &constants, const int &alphaLoops) : const_(constants), amu_(constants, alphaLoops) {}
-  complex<double> operator ()(const complex<double> &q2, const complex<double> &p2, const double &atau) {
+
+  complex<double> operator ()(const complex<double> &q2, const complex<double> &p2, const double &atau) const {
     return runMassRatio(q2, p2, atau);
   }
 
@@ -21,7 +22,7 @@ class MQRun {
     q^2 plane from a given a(p^2) at p(^2)
   */
   complex<double> runMassRatio(const complex<double> &q2,
-                               const complex<double> &p2, const double &atau) {
+                               const complex<double> &p2, const double &atau) const {
     complex<double> I(0.0, 1.0);
     complex<double> ap = amu_(p2, const_.kSTau, atau);
     complex<double> aq = amu_(q2, const_.kSTau, atau);

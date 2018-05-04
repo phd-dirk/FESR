@@ -1,7 +1,7 @@
 #include "./adler_function.hpp"
 
 complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double> &mu2,
-                                  const double &astau, const double &order) {
+                                  const double &astau, const double &order) const {
   complex<double> L = log(-s/mu2);
 
   complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
@@ -20,7 +20,7 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
 }
 
 double AdlerFunction::D0CInt(const double &s0, const Weight weight,
-                             const double &astau, const double &order) {
+                             const double &astau, const double &order) const {
   function<complex<double>(complex<double>)> f =
     [&](complex<double> s) -> complex<double> {
     // cout << "s, s0, astau, order" << s << "\t" << s0 << "\t" << astau << "\t" << order << endl;
@@ -33,7 +33,7 @@ double AdlerFunction::D0CInt(const double &s0, const Weight weight,
 
 complex<double> AdlerFunction::D2(const complex<double> &s,
                                   const complex<double> mu2, const double &astau,
-                                  const int &order, const int &r) {
+                                  const int &order, const int &r) const {
   // double ePLT3 = 1.e2; // guesstimate
   const int i = 0, j = 1;
 
@@ -70,7 +70,7 @@ complex<double> AdlerFunction::D2(const complex<double> &s,
 
 complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double> &mu2,
                                   const double &astau, const double &aGGinv,
-                                  const int &order, const int &r) {
+                                  const int &order, const int &r) const {
 
   const int i = 0, j = 1;
   complex<double> L = log(-s/mu2);
@@ -133,9 +133,9 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
   return gluonCondensate + quarkCondensate + m4;
 }
 double AdlerFunction::D4CInt(const double &s0, const Weight &weight, const double &astau,
-                             const double &aGGinv, const int &order, const int &r) {
+                             const double &aGGinv, const int &order, const int &r) const {
   function<complex<double>(complex<double>)> fTest =
-    [&](complex<double> s) -> complex<double> {
+    [&](complex<double> s) -> complex<double> const {
     return weight.wD(s)/pow(s, 2);
   };
 

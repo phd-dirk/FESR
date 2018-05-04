@@ -21,16 +21,16 @@ class AlphaS: public Numerics {
  public:
   AlphaS(const Constants &constants, const int &alphaLoops) : Numerics(constants), alphaLoops_(alphaLoops), const_(constants) {}
 
-  complex<double> operator ()(const complex<double> &q2, const double &p2, const double &ap) {
+  complex<double> operator ()(const complex<double> &q2, const double &p2, const double &ap) const {
     return zarg(q2, p2, ap);
   }
 
-  complex<double> operator ()(const complex<double> &q2,const complex<double> &p2, const complex<double> &ap) {
+  complex<double> operator ()(const complex<double> &q2,const complex<double> &p2, const complex<double> &ap) const {
     return zarg(q2, p2, ap);
   }
 
   // Calculates a(q^2) from integrating the RG-equation in the complex q^2 plane from a given a(p^2) at p^2
-  complex<double> zarg(const complex<double> &q2, const complex<double> &p2, const complex<double> &ap) {
+  complex<double> zarg(const complex<double> &q2, const complex<double> &p2, const complex<double> &ap) const {
     // integrate beta function and find root
     // from mathematica coefficients.nb
     function<complex<double>(complex<double>)> f, df;

@@ -11,11 +11,10 @@ class TheoreticalMoments: public AdlerFunction {
   TheoreticalMoments(const json &config) :
     AdlerFunction(config["parameters"]["alphaLoops"], Constants(config)), config_(config), const_(Constants(config)),
     s0s_(config["parameters"]["s0Set"].get<vector<double>>()), weight_(Weight(config["parameters"]["weight"].get<int>())) {
-    cout << "init" << endl;
   }
 
   double operator ()(const int &i, const double &astau, const double &aGGinv,
-                     const double &rhoVpA, const double &c8VpA, const double &order) {
+                     const double &rhoVpA, const double &c8VpA, const double &order) const {
     double s0 = s0s_[i];
 
     double rTauTh = 0.;
@@ -36,42 +35,41 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   double cIntVpAD0FO(const double &s0, const Weight &weight,
-                     const double &astau, const int &order) {
-    cout << s0  << "\t"<< astau << "\t" << order << endl;
+                     const double &astau, const int &order) const {
     return 2.*D0CInt(s0, weight, astau, order);
   }
 
   double cIntVpAD4FO(const double &s0, const Weight &weight,
-                     const double &astau, const double &aGGinv, const int &order) {
+                     const double &astau, const double &aGGinv, const int &order) const {
     return  D4CInt(s0, weight, astau, aGGinv, order, 1) + D4CInt(s0, weight, astau, aGGinv, order, -1);
   }
 
   double del0(const double &s0, const Weight &weight,
-              const double &astau, const int &order) {
+              const double &astau, const int &order) const {
     return (cIntVpAD0FO(s0, weight, astau, order)
             - cIntVpAD0FO(s0, weight, astau, 0)
             )/3.0;
   }
 
   double del2(const double &s0, const Weight &weight,
-              const double &astau, const int &order) {
+              const double &astau, const int &order) const {
     return (D2CInt(s0, weight, astau, order, 1)
             + D2CInt(s0, weight, astau, order, -1)
             )/3.;
   }
 
   double del4(const double &s0, const Weight &weight,
-              const double &astau, const double &aGGinv, const int &order) {
+              const double &astau, const double &aGGinv, const int &order) const {
     return cIntVpAD4FO(s0, weight, astau, aGGinv, order)/3.;
   }
 
   double del6(const double &s0, const Weight &weight,
-               const double &rhoVpA) {
+               const double &rhoVpA) const {
     return D68CInt(s0, weight, rhoVpA, 0.0)/3.;
   }
 
   double del8(const double &s0, const Weight &weight,
-              const double &c8VpA) {
+              const double &c8VpA) const {
     return D68CInt(s0, weight, 0.0, c8VpA)/3.;
   }
 
@@ -80,7 +78,7 @@ class TheoreticalMoments: public AdlerFunction {
     return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
   }
 
-  void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) {
+  void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) const {
     cout << "Delta^(0): \t" << del0(s0s_[0], weight_, astau, order) << endl;
     cout << "Delta^(4): \t" << del4(s0s_[0], weight_, astau, aGGinv, order) << endl;
     cout << "Delta^(6): \t" << del6(s0s_[0], weight_, rhoVpA) << endl;

@@ -32,11 +32,10 @@ class Numerics {
   }
 
   // find root of function
-  complex<double> newtonRaphson(
-                                function<complex<double>(complex<double>)> f,
+  complex<double> newtonRaphson(function<complex<double>(complex<double>)> f,
                                 function<complex<double>(complex<double>)> df,
                                 complex<double> x0,
-                                double acc ) {
+                                double acc ) const {
     complex<double> xNext = x0;
     while( abs(f(xNext)) > acc ) {
       xNext = xNext - f(xNext)/df(xNext);
@@ -74,7 +73,7 @@ class Numerics {
     }
   }
 
-  complex<double> gaussIntegration(function<complex<double>(complex<double>)> func) {
+  complex<double> gaussIntegration(function<complex<double>(complex<double>)> func) const {
     complex<double> I(0., 1.);
     complex<double> sum(0.0, 0.0);
     for( int i = 0; i < 1201; i++) {
@@ -104,7 +103,7 @@ class Numerics {
     return result;
   }
 
-  double adaptiveIntegrate(function<double(double)> func, double from, double to) {
+  double adaptiveIntegrate(function<double(double)> func, double from, double to) const {
     double result, error;
     gsl_function F;
     F = {
@@ -119,7 +118,7 @@ class Numerics {
     return result;
   }
 
-  complex<double> integrateComplex(function<complex<double>(double)> func, double from, double to) {
+  complex<double> integrateComplex(function<complex<double>(double)> func, double from, double to) const {
     auto funcReal = [func](double t) {
       return func(t).real();
     };
@@ -133,7 +132,7 @@ class Numerics {
     return complex<double>(cintReal, cintImag);
   }
 
-  complex<double> complexContourIntegral(function<complex<double>(complex<double>)> f) {
+  complex<double> complexContourIntegral(function<complex<double>(complex<double>)> f) const {
     auto gamma = [](double t) {
       complex<double> I(0., 1.);
       return exp(I*t);

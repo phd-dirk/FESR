@@ -32,13 +32,13 @@ public:
   }
 
   complex<double> D0(const complex<double> &s, const complex<double> &mu2,
-                     const double &astau, const double &order);
-  double D0CInt(const double &s0, const Weight weight, const double &astau, const double &order);
+                     const double &astau, const double &order) const;
+  double D0CInt(const double &s0, const Weight weight, const double &astau, const double &order) const;
 
   complex<double> D2(const complex<double> &s,
                      const complex<double> mu2, const double &astau,
-                     const int &order, const int &r);
-  double D2CInt(const double &s0, const Weight &weight, const double &astau, const int &order, const int &r) {
+                     const int &order, const int &r) const;
+  double D2CInt(const double &s0, const Weight &weight, const double &astau, const int &order, const int &r) const {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
       complex<double> mu2 = s0;
@@ -50,14 +50,14 @@ public:
 
   complex<double> D4(const complex<double> &s, const complex<double> &mu2,
                      const double &astau, const double &aGGinv,
-                     const int &order, const int &r);
+                     const int &order, const int &r) const;
   double D4CInt(const double &s0, const Weight &weight, const double &astau,
-                const double &aGGinv, const int &order, const int &r);
+                const double &aGGinv, const int &order, const int &r) const;
 
-  complex<double> D68(const complex<double> &s, const double &rhoVpA, const double &c8VpA) {
+  complex<double> D68(const complex<double> &s, const double &rhoVpA, const double &c8VpA) const {
     return 3.e-2*rhoVpA/pow(s, 3) + 4.e-2*c8VpA/pow(s, 4);
   }
-  double D68CInt(const double &s0, const Weight &weight, const double &rhoVpA, const double &c8VpA) {
+  double D68CInt(const double &s0, const Weight &weight, const double &rhoVpA, const double &c8VpA) const {
     function<complex<double>(complex<double>)> f =
       [&](complex<double> s) -> complex<double> {
       return weight.wD(s)*D68(s0*s, rhoVpA, c8VpA);
@@ -67,7 +67,7 @@ public:
   };
 
   // Pseudoscalar contribution from pion pion pole and excited resonances
-  double deltaP(const double &s0, const Weight &weight) {
+  double deltaP(const double &s0, const Weight &weight) const {
     double spi = pow(const_.kPionMinusMass, 2);
     double pionPole = -4.*pow(const_.kFPi, 2)/s0*spi/(const_.kSTau + 2.*spi)
       *weight.wR(spi/s0).real();
@@ -85,7 +85,7 @@ public:
     return 4.*pow(const_.kPi, 2)*( pionPole - adaptiveIntegrate(f, xth, 1.));
   }
 
-  double breitwigner(const double &s, const double &mbw, const double &gbw) {
+  double breitwigner(const double &s, const double &mbw, const double &gbw) const {
     return mbw*gbw/const_.kPi/(pow(s - pow(mbw, 2), 2)+ pow(mbw, 2)*pow(gbw, 2));
   }
 

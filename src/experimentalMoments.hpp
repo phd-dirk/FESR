@@ -48,18 +48,18 @@ class ExperimentalMoments : public Numerics {
     // init inverse covariance matrix
     invertMatrix(covarianceMatrix, inverseCovarianceMatrix);
   }
-  double operator ()(int i) {
+  double operator ()(int i) const {
     return getExpPlusPionMoment(i);
   }
 
-  void log() {
-    cout << "s0 \t" << s0s[1] << endl;
-    cout << "ExpMom = \t" << getExpPlusPionMoment(1) << endl;
+  void log() const {
+    cout << "s0 \t" << s0s[0] << endl;
+    cout << "ExpMom = \t" << getExpPlusPionMoment(0) << endl;
     cout << "CovMom = \t" << covarianceMatrix << endl;
     cout << "InvCov = \t" << inverseCovarianceMatrix << endl;
   }
 
-  vector<double> getExpPlusPionPoleMoments() {
+  vector<double> getExpPlusPionPoleMoments() const {
     vector<double> expPlusPionMoments(s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       expPlusPionMoments[i] = experimentalMoments[i]
@@ -67,7 +67,7 @@ class ExperimentalMoments : public Numerics {
     }
     return expPlusPionMoments;
   }
-  double getExpPlusPionMoment(int i) {
+  double getExpPlusPionMoment(int i) const {
     return experimentalMoments[i] + pionPoleMoment(s0s[i]);
   }
 
@@ -91,10 +91,10 @@ class ExperimentalMoments : public Numerics {
     return i;
   }
 
-  double kPiFac() {
+  double kPiFac() const {
     return 24.*pow(const_.kPi*const_.kVud*const_.kFPi, 2)*const_.kSEW;
   }
-  double kDPiFac() {
+  double kDPiFac() const {
     return kPiFac()*sqrt(4.*pow(const_.kDVud/const_.kVud, 2)
                          + pow(const_.kDSEW/const_.kSEW, 2)
                          + 4.*pow(const_.kDFPi/const_.kFPi, 2));
@@ -178,7 +178,7 @@ class ExperimentalMoments : public Numerics {
     }
   }
 
-  double pionPoleMoment(const double &s0) {
+  double pionPoleMoment(const double &s0) const {
     double axialMoment = 0;
     double pseudoMoment = 0;
     axialMoment += kPiFac()/s0*weight_.wR(pow(const_.kPionMinusMass, 2)/s0).real();

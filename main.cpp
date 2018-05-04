@@ -128,7 +128,6 @@ int main () {
 
   // cout << "invInvCovMat: " << prod(chisquared.expMom_.covarianceMatrix, chisquared.expMom_.inverseCovarianceMatrix) << endl;
 
-  // chisquared.log(0.32307175541329564, 2.1e-2, -0.309486307083497, -3.0869411117237483e-2);
 
   // beta 4th order
   // cout << "Matthias CHI2: " << chisquared(0.32307175541329564, 2.1e-2, -0.309486307083497, -3.0869411117237483e-2) << endl;
@@ -147,7 +146,7 @@ int main () {
   min->SetMaxIterations(10000000); // for GSL
   min->SetTolerance(1e-15);
   min->SetPrintLevel(1); // activate logging
-  min->SetStrategy( 2 );
+  min->SetStrategy(2);
 
   // function wrapper
   Functor chi2(chisquared, 4);
@@ -166,6 +165,7 @@ int main () {
     min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
   }
   if (config["variables"]["rhoVpA"]["fixed"]) {
+    cout << "fixed" << endl;
     min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
   } else {
     min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
@@ -178,6 +178,9 @@ int main () {
 
   // minimize!
   min->Minimize();
+  const double *xs = min->X();
+  chisquared.log(xs[0], xs[1], xs[2], xs[3]);
+  cout << "chi2 \t" << chisquared(xs[0], xs[1], xs[2], xs[3]) << endl;
 
   // min->PrintResults();
   return 0;
