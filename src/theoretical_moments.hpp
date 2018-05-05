@@ -79,12 +79,13 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) const {
+    double s0 = config_["constants"]["sTau"];
     cout << "thMom: \t" << operator() (0, astau, aGGinv, rhoVpA, c8VpA, order) << endl;
-    cout << "Delta^(0): \t" << del0(s0s_[0], weight_, astau, order) << endl;
-    cout << "Delta^(4): \t" << del4(s0s_[0], weight_, astau, aGGinv, order) << endl;
-    cout << "Delta^(6): \t" << del6(s0s_[0], weight_, rhoVpA) << endl;
-    cout << "Delta^(8): \t" << del8(s0s_[0], weight_, c8VpA) << endl;
-    cout << "Delta_P+S: \t" << deltaP(s0s_[0], weight_) << endl;
+    cout << "Delta^(0): \t" << del0(s0, weight_, astau, order) << endl;
+    cout << "Delta^(4): \t" << del4(s0, weight_, astau, aGGinv, order) << endl;
+    cout << "Delta^(6): \t" << del6(s0, weight_, rhoVpA) << endl;
+    cout << "Delta^(8): \t" << del8(s0, weight_, c8VpA) << endl;
+    cout << "Delta_P+S: \t" << deltaP(s0, weight_) << endl;
   }
 
 

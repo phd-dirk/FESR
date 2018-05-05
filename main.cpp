@@ -138,16 +138,21 @@ int main () {
   // cout << "MY CHI2: " << chisquared(0.31541087265066009, 2.1e-2, 0.81120226780379001, 5.2853783566688879)  << endl;
 
 
+  // compare with matthias
+  cout << "chi2Mat \t" << chisquared(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2) << endl;
+  chisquared.log(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2);
+
+
   // MINUIT
   Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
   // set tolerances
   // min->SetMaxFunctionCalls(10000000); // for Minuit2
   // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1e-15);
-  // min->SetStrategy(1);
+  // min->SetTolerance(1.0);
 
-  min->SetPrintLevel(1); // activate logging
+  min->SetStrategy(2);
+  min->SetPrintLevel(3); // activate logging
 
   // function wrapper
   Functor chi2(chisquared, 4);
@@ -184,7 +189,5 @@ int main () {
   cout << "chi2 \t" << chisquared(xs[0], xs[1], xs[2], xs[3]) << endl;
   // min->PrintResults();
 
-  cout << "chi2Mat \t" << chisquared(0.32379536760922734, 2.1e-2, -0.30430835761184832, -5.5408466831601687e-2) << endl;
-  chisquared.log(0.32379536760922734, 2.1e-2, -0.30430835761184832, -5.5408466831601687e-2);
   return 0;
 }
