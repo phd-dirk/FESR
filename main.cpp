@@ -44,6 +44,7 @@ using ublas::matrix;
 using ublas::prod;
 
 using std::ifstream;
+using std::ofstream;
 
 vector<double> readExpMomentsFromFile() {
   vector<double> expMoms;
@@ -100,6 +101,16 @@ complex<double> testFunction(complex<double> z) {
   return 1.0/z;
 }
 
+void writeOutput(const double *variables, const double *errors) {
+  ofstream file;
+  file.open("./output/fits.dat", std::ios::app);
+  file << std::setprecision(15);
+  for(int i = 0; i < 4; i++) {
+    file << variables[i] << "\t" << errors[i] << "\t";
+  }
+  file << endl;
+  file.close();
+}
 
 int main () {
   cout.precision(17);
@@ -187,10 +198,12 @@ int main () {
   // minimize!
   min->Minimize();
   const double *xs = min->X();
-  const double errors = min->Errors();
+  const double *errors = min->Errors();
   chisquared.log(xs[0], xs[1], xs[2], xs[3]);
   cout << "chi2 \t" << chisquared(xs[0], xs[1], xs[2], xs[3]) << endl;
   // min->PrintResults();
+
+  writeOutput(xs, errors);
 
   return 0;
 }
