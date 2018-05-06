@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <complex>
 #include <string>
@@ -99,6 +100,7 @@ complex<double> testFunction(complex<double> z) {
   return 1.0/z;
 }
 
+
 int main () {
   cout.precision(17);
 
@@ -185,6 +187,7 @@ int main () {
   // minimize!
   min->Minimize();
   const double *xs = min->X();
+  const double errors = min->Errors();
   chisquared.log(xs[0], xs[1], xs[2], xs[3]);
   cout << "chi2 \t" << chisquared(xs[0], xs[1], xs[2], xs[3]) << endl;
   // min->PrintResults();
