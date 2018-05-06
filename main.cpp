@@ -101,7 +101,7 @@ complex<double> testFunction(complex<double> z) {
   return 1.0/z;
 }
 
-void writeOutput(const double *variables, const double *errors) {
+v  oid writeOutput(const double *variables, const double *errors) {
   ofstream file;
   file.open("./output/fits.dat", std::ios::app);
   file << std::setprecision(15);
