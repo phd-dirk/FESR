@@ -35,11 +35,45 @@ class Weight {
   static dComplex wTau(dComplex x) {
     return wD00(x);
   }
+  // Polunomial weights
   static dComplex wR00(dComplex x) {
     return pow((1. - x), 2)*(1. + 2.*x);
   }
   static dComplex wD00(dComplex x) {
     return pow((1. - x), 3)*(1. + x);
+  }
+  static dComplex wR01(dComplex x) {
+    return pow(1.0 - x, 2)*(1.0 + 2.0*x)*x;
+  }
+  static dComplex wR02(dComplex x) {
+    return pow(1.0 - x, 2)*(1.0 + 2.0*x)*pow(x, 2);
+  }
+  static dComplex wR03(dComplex x) {
+    return pow(1.0 - x, 2)*(1.0 + 2.0*x)*pow(x, 3);
+  }
+  static dComplex wR10(dComplex x) {
+    return pow(1.0 - x, 3)*(1.0 + 2.0*x);
+  }
+  static dComplex wR11(dComplex x) {
+    return pow(1.0 - x, 3)*(1.0 + 2.0*x)*x;
+  }
+  static dComplex wR12(dComplex x) {
+    return pow(1.0 - x, 3)*(1.0 + 2.0*x)*pow(x, 2);
+  }
+  static dComplex wR13(dComplex x) {
+    return pow(1.0 - x, 3)*(1.0 + 2.0*x)*pow(x, 3);
+  }
+  static dComplex wR20(dComplex x) {
+    return pow(1.0 - x, 4)*(1.0 + 2.0*x);
+  }
+  static dComplex wR21(dComplex x) {
+    return pow(1.0 - x, 4)*(1.0 + 2.0*x)*x;
+  }
+  static dComplex wR22(dComplex x) {
+    return pow(1.0 - x, 4)*(1.0 + 2.0*x)*pow(x, 2);
+  }
+  static dComplex wR23(dComplex x) {
+    return pow(1.0 - x, 4)*(1.0 + 2.0*x)*pow(x, 3);
   }
 
  private:
