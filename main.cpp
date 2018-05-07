@@ -108,7 +108,7 @@ void writeOutput(const double *variables, const double *errors, const double &ch
   for(int i = 0; i < 4; i++) {
     file << variables[i] << "\t" << errors[i] << "\t";
   }
-  file << "\t" << chi2 << "\t" << edm << endl;
+  file << chi2 << "\t" << edm << endl;
   file.close();
 }
 
