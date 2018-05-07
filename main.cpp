@@ -101,14 +101,14 @@ complex<double> testFunction(complex<double> z) {
   return 1.0/z;
 }
 
-v  oid writeOutput(const double *variables, const double *errors) {
+void writeOutput(const double *variables, const double *errors, const double &chi2, const double &edm) {
   ofstream file;
   file.open("./output/fits.dat", std::ios::app);
   file << std::setprecision(15);
   for(int i = 0; i < 4; i++) {
     file << variables[i] << "\t" << errors[i] << "\t";
   }
-  file << endl;
+  file << "\t" << chi2 << "\t" << edm << endl;
   file.close();
 }
 
@@ -152,8 +152,8 @@ int main () {
 
 
   // compare with matthias
-  cout << "chi2Mat \t" << chisquared(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2) << endl;
-  chisquared.log(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2);
+  // cout << "chi2Mat \t" << chisquared(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2) << endl;
+  // chisquared.log(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2);
 
 
   // MINUIT
@@ -199,11 +199,12 @@ int main () {
   min->Minimize();
   const double *xs = min->X();
   const double *errors = min->Errors();
+  const double edm = min->Edm();
   chisquared.log(xs[0], xs[1], xs[2], xs[3]);
-  cout << "chi2 \t" << chisquared(xs[0], xs[1], xs[2], xs[3]) << endl;
+  const double chi2AtMin = chisquared(xs[0], xs[1], xs[2], xs[3]);
   // min->PrintResults();
 
-  writeOutput(xs, errors);
+  writeOutput(xs, errors, chi2AtMin, edm);
 
   return 0;
 }
