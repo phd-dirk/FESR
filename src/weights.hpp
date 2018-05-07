@@ -18,16 +18,36 @@ class Weight {
 
   dComplex wD(dComplex x) const {
     switch(weightId_) {
-    case 1:
-      return wD00(x);
+    case 1: return wD00(x);
+    case 2: return wD01(x);
+    case 3: return wD02(x);
+    case 4: return wD03(x);
+    case 5: return wD10(x);
+    case 6: return wD11(x);
+    case 7: return wD12(x);
+    case 8: return wD13(x);
+    case 9: return wD20(x);
+    case 10: return wD21(x);
+    case 11: return wD22(x);
+    case 12: return wD23(x);
     }
     return wD00(x);
   }
 
   dComplex wR(dComplex x) const {
     switch(weightId_) {
-    case 1:
-      return wR00(x);
+    case 1: return wR00(x);
+    case 2: return wR01(x);
+    case 3: return wR02(x);
+    case 4: return wR03(x);
+    case 5: return wR10(x);
+    case 6: return wR11(x);
+    case 7: return wR12(x);
+    case 8: return wR13(x);
+    case 9: return wR20(x);
+    case 10: return wR21(x);
+    case 11: return wR22(x);
+    case 12: return wR23(x);
     }
     return wR00(x);
   }
