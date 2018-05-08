@@ -101,9 +101,9 @@ complex<double> testFunction(complex<double> z) {
   return 1.0/z;
 }
 
-void writeOutput(const double *variables, const double *errors, const double &chi2, const double &edm) {
+void writeOutput(const string filePath, const double *variables, const double *errors, const double &chi2, const double &edm) {
   ofstream file;
-  file.open("./output/fits.dat", std::ios::app);
+  file.open(filePath, std::ios::app);
   file << std::setprecision(15);
   for(int i = 0; i < 4; i++) {
     file << variables[i] << "\t" << errors[i] << "\t";
@@ -112,8 +112,9 @@ void writeOutput(const double *variables, const double *errors, const double &ch
   file.close();
 }
 
-int main () {
+int main (int argc, char* argv[]) {
   cout.precision(17);
+  const string outputFilePath = argv[1];
 
   std::ifstream configFile("./configuration.json");
   json config;
@@ -121,7 +122,6 @@ int main () {
 
   const Constants constants(config);
   const Chisquared chisquared(config, constants);
-
   // Numerics num(constants);
   // cout << num.complexContourIntegral(testFunction) << endl;
 
@@ -204,7 +204,7 @@ int main () {
   const double chi2AtMin = chisquared(xs[0], xs[1], xs[2], xs[3]);
   // min->PrintResults();
 
-  writeOutput(xs, errors, chi2AtMin, edm);
+  writeOutput(outputFilePath, xs, errors, chi2AtMin, edm);
 
   return 0;
 }
