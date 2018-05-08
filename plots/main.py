@@ -5,9 +5,15 @@ import numpy as np
 # plt.ylabel('some numbers')
 
 data = np.genfromtxt('../output/fits.dat', delimiter='\t', skip_header=1)
-alphas = data[:,0]
-print(alphas)
+alpha = data[:,0]
+aGGInv = data[:,2]
+rhoVpA = data[:,4]
+c8VpA = data[:, 6]
+print(alpha)
 
-plt.plot(alphas)
+plt.plot(alpha)
+plt.plot(aGGInv)
+plt.plot(rhoVpA)
+plt.plot(c8VpA)
 
 plt.show()
