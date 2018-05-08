@@ -114,7 +114,12 @@ void writeOutput(const string filePath, const double *variables, const double *e
 
 int main (int argc, char* argv[]) {
   cout.precision(17);
+  if (argc < 2) {
+    printf("Error no outputfile argument. Try ./build/FESR ./output/folder/fits.dat");
+    exit(1);
+  }
   const string outputFilePath = argv[1];
+
 
   std::ifstream configFile("./configuration.json");
   json config;
