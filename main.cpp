@@ -101,14 +101,37 @@ complex<double> testFunction(complex<double> z) {
   return 1.0/z;
 }
 
-void writeOutput(const string filePath, const double *variables, const double *errors, const double &chi2, const double &edm) {
+void writeOutput(const string filePath, const double *variables, const double *errors, const double &chi2, const double &edm, const json config) {
   ofstream file;
   file.open(filePath, std::ios::app);
   file << std::setprecision(15);
+
+  // add variables and errors
   for(int i = 0; i < 4; i++) {
-    file << variables[i] << "\t" << errors[i] << "\t";
+    file << variables[i] << "\t" << errors[i];
   }
-  file << chi2 << "\t" << edm << endl;
+
+  // add chi2 and emd
+  file << "\t" << chi2 << "\t" << edm;
+
+  // add used s0s
+  vector<double> s0s = config["parameters"]["s0Set"];
+  std::stringstream ss;
+  ss << std::setprecision(15);
+  for(size_t i = 0; i < s0s.size(); ++i) {
+    if(i != 0)
+      ss << ", ";
+    ss << s0s[i];
+  }
+  std::string s0sStr = ss.str();
+  cout << s0sStr << endl;
+  file << "\t[" << ss.str() << "]";
+
+  cout << "weight: " << config["parameters"]["weight"] << endl;
+  // add used weight
+  file << "\t" << config["parameters"]["weight"];
+
+  file << endl;
   file.close();
 }
 
@@ -208,7 +231,7 @@ int main (int argc, char* argv[]) {
   const double chi2AtMin = chisquared(xs[0], xs[1], xs[2], xs[3]);
   // min->PrintResults();
 
-  writeOutput(outputFilePath, xs, errors, chi2AtMin, edm);
+  writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);
 
   return 0;
 }
