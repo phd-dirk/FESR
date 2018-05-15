@@ -114,12 +114,11 @@ void writeOutput(const string filePath, const double *variables, const double *e
 
 int main (int argc, char* argv[]) {
   cout.precision(17);
-  if (argc < 2) {
+  string outputFilePath = "./output/fits.dat";
+  if (argc > 1) {
     printf("Error no outputfile argument. Try ./build/FESR ./output/folder/fits.dat");
-    exit(1);
+    outputFilePath = argv[1];
   }
-  const string outputFilePath = argv[1];
-
 
   std::ifstream configFile("./configuration.json");
   json config;
@@ -167,7 +166,7 @@ int main (int argc, char* argv[]) {
   // set tolerances
   // min->SetMaxFunctionCalls(10000000); // for Minuit2
   // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1.0);
+  min->SetTolerance(1.0);
 
   min->SetStrategy(2);
   min->SetPrintLevel(3); // activate logging

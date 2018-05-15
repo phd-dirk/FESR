@@ -2,6 +2,8 @@
 QCD analysis of e+e- annihilation into Hadrons.
 
 ## Usage
+1. Edit the `./configuration.json`
+2.
 ```
 mkdir ./build
 cd ./build
@@ -9,6 +11,7 @@ cmake ..
 make
 ./FESR
 ```
+
 
 ## Testing
 `cmake Dtest=ON` tells cmake to include testing sourcefiles and generate `runUnitTests` executable. 
