@@ -90,3 +90,6 @@ cp .clang_complete ../.clang_complete
 ## Dependencies 
 * [json](https://github.com/nlohmann/json)
 * [gtest](https://github.com/google/googletest)
+* [ROOT](https://root.cern.ch/)
+* [BOOST](https://www.boost.org/)
+* [GSL](https://www.gnu.org/software/gsl/doc/html/index.html)
