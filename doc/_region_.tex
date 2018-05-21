@@ -1,0 +1,18 @@
+\message{ !name(fits.tex)}\documentclass[12pt]{article}
+
+\usepackage{csvsimple}
+
+\begin{document}
+
+\message{ !name(fits.tex) !offset(-3) }
+
+
+\csvstyle{myTableStyle}{tabular=|r|l|c|,
+  table head=\hline & Person & Matr.~No.\\\hline\hline,
+  late after line=\\\hline,
+  head to column names}
+\csvreader[myTableStyle]{grade.csv}{}{\thecsvrow & \givenname~\name & \matriculation}
+
+
+\end{document}
+\message{ !name(fits.tex) !offset(-18) }

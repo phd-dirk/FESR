@@ -1,0 +1,19 @@
+\documentclass[12pt]{article}
+
+\usepackage{csvsimple}
+\usepackage{booktabs} % \toprule, \midrule
+\usepackage{bm} % bold math
+\usepackage{numprint} % truncate numbers in fit tables
+\npdecimalsign{.}
+\nprounddigits{5}
+
+\begin{document}
+\csvstyle{fitStyle}{tabular=ln{5}{5}n{5}{5}n{5}{5}n{5}{5},
+  table head=\toprule  $\bm{\#s_0}$ & $\bm{\alpha_s}$ & $\bm{\rho_{V+A}}$ &
+  $\bm{C_{8, V+A}}$ & $\bm{\chi^2/dof}$ \\\midrule,
+  table foot=\bottomrule,
+  head to column names}
+\csvreader[fitStyle]{s0sFits.csv}{}{\numS & \alpha & \rhoVpA & \cVpA & \chiDof}
+
+
+\end{document}

@@ -123,7 +123,7 @@ void writeOutput(const string filePath, const double *variables, const double *e
   ofstream file;
   file.open(filePath, std::ios::app);
   file << std::setprecision(15);
-  file << json.config["parameters"]["s0Set"].size();
+  file << config["parameters"]["s0Set"].size();
 
   // add variables and errors
   for(int i = 0; i < 4; i++) {

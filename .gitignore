@@ -1,3 +1,9 @@
 build
 output
 configurations
+.DS_Store
+_region_.log
+_region._.tex
+*.aux
+fits.log
+ftis.syncex.gz
