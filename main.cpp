@@ -101,18 +101,37 @@ complex<double> testFunction(complex<double> z) {
   return 1.0/z;
 }
 
+int dof(const json config) {
+  int numS0s = config["parameters"]["s0Set"].size();
+  int numVar = 0;
+  if (!config["variables"]["astau"]["fixed"]) {
+    numVar++;
+  }
+  if (!config["variables"]["aGGInv"]["fixed"]) {
+    numVar++;
+  }
+  if (!config["variables"]["rhoVpA"]["fixed"]) {
+    numVar++;
+  }
+  if (!config["variables"]["c8VpA"]["fixed"]) {
+    numVar++;
+  }
+  return numS0s-numVar;
+}
+
 void writeOutput(const string filePath, const double *variables, const double *errors, const double &chi2, const double &edm, const json config) {
   ofstream file;
   file.open(filePath, std::ios::app);
   file << std::setprecision(15);
+  file << json.config["parameters"]["s0Set"].size();
 
   // add variables and errors
   for(int i = 0; i < 4; i++) {
-    file << variables[i] << "\t" << errors[i];
+    file << "," << variables[i] << "," << errors[i];
   }
 
   // add chi2 and emd
-  file << "\t" << chi2 << "\t" << edm;
+  file << "," << chi2 << "," << chi2/dof(config) << "," << edm;
 
   // add used s0s
   vector<double> s0s = config["parameters"]["s0Set"];
@@ -120,16 +139,16 @@ void writeOutput(const string filePath, const double *variables, const double *e
   ss << std::setprecision(15);
   for(size_t i = 0; i < s0s.size(); ++i) {
     if(i != 0)
-      ss << ", ";
+      ss << ",";
     ss << s0s[i];
   }
   std::string s0sStr = ss.str();
   cout << s0sStr << endl;
-  file << "\t[" << ss.str() << "]";
+  file << ",[" << ss.str() << "]";
 
   cout << "weight: " << config["parameters"]["weight"] << endl;
   // add used weight
-  file << "\t" << config["parameters"]["weight"];
+  file << "," << config["parameters"]["weight"];
 
   file << endl;
   file.close();
@@ -137,7 +156,7 @@ void writeOutput(const string filePath, const double *variables, const double *e
 
 int main (int argc, char* argv[]) {
   cout.precision(17);
-  string outputFilePath = "./output/fits.dat";
+  string outputFilePath = "./output/fits.csv";
   if (argc > 1) {
     printf("Error no outputfile argument. Try ./build/FESR ./output/folder/fits.dat");
     outputFilePath = argv[1];

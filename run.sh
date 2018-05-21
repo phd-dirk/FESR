@@ -2,11 +2,11 @@
 DATE=`date '+%Y-%m-%d_%H:%M:%S'`
 
 mkdir ./output/$DATE
- echo -e 'alpha \t alpha_error \t aGGInv \t aGGinv_error \t rhoVpA \t rhoVpA_error \t c8VpA \t c8VpA_error \t chi2 \t edm \t s0s \t weight' > ./output/$DATE/fits.dat
+ echo -e '#s0,alpha,alpha_error,aGGInv,aGGinv_error,rhoVpA,rhoVpA_error,c8VpA,c8VpA_error,chi2,chi2/dos,edm,s0s,weight' > ./output/$DATE/fits.csv
  for i in $( ls ./configurations/ ); do
      # run fit
      cp ./configurations/$i ./configuration.json
-     ./build/FESR ./output/$DATE/fits.dat
+     ./build/FESR ./output/$DATE/fits.csv
      # output
      cp ./configurations/$i ./output/$DATE/$i
  done
