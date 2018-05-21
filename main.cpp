@@ -139,7 +139,7 @@ void writeOutput(const string filePath, const double *variables, const double *e
   ss << std::setprecision(15);
   for(size_t i = 0; i < s0s.size(); ++i) {
     if(i != 0)
-      ss << ",";
+      ss << " ";
     ss << s0s[i];
   }
   std::string s0sStr = ss.str();

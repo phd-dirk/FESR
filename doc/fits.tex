@@ -8,12 +8,15 @@
 \nprounddigits{5}
 
 \begin{document}
+Hello
+ok
+\bigskip
 \csvstyle{fitStyle}{tabular=ln{5}{5}n{5}{5}n{5}{5}n{5}{5},
   table head=\toprule  $\bm{\#s_0}$ & $\bm{\alpha_s}$ & $\bm{\rho_{V+A}}$ &
   $\bm{C_{8, V+A}}$ & $\bm{\chi^2/dof}$ \\\midrule,
   table foot=\bottomrule,
   head to column names}
-\csvreader[fitStyle]{s0sFits.csv}{}{\numS & \alpha & \rhoVpA & \cVpA & \chiDof}
+\csvreader[fitStyle]{fits.csv}{}{\numS & \alpha & \rhoVpA & \cVpA & \chiDof}
 
 
 \end{document}
