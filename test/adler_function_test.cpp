@@ -48,13 +48,13 @@ TEST_F(AdlerFunctionTest, D0) {
 
 TEST_F(AdlerFunctionTest, CIntD0) {
   double s0 = 3.;
-  EXPECT_NEAR(adler->D0CInt(s0, *weight_, const_->kAlphaTau, order_), 1.8129891021138491, 1e-14);
+  EXPECT_NEAR(adler->D0CIntFO(s0, *weight_, const_->kAlphaTau, order_), 1.8129891021138491, 1e-14);
 
   s0 = 2.6;
-  EXPECT_NEAR(adler->D0CInt(s0, *weight_, const_->kAlphaTau, order_), 1.8396044152966260, 1e-14);
+  EXPECT_NEAR(adler->D0CIntFO(s0, *weight_, const_->kAlphaTau, order_), 1.8396044152966260, 1e-14);
 
   s0 = 2.;
-  EXPECT_NEAR(adler->D0CInt(s0, *weight_, const_->kAlphaTau, order_), 1.9023472322728381, 1e-13);
+  EXPECT_NEAR(adler->D0CIntFO(s0, *weight_, const_->kAlphaTau, order_), 1.9023472322728381, 1e-13);
 }
 
 TEST_F(AdlerFunctionTest, D2) {

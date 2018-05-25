@@ -19,13 +19,22 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
   return 1/4./pow(const_.kPi, 2)*(const_.c_[0][1] + sum);
 }
 
-double AdlerFunction::D0CInt(const double &s0, const Weight weight,
+double AdlerFunction::D0CIntFO(const double &s0, const Weight weight,
                              const double &astau, const double &order) const {
   function<complex<double>(complex<double>)> f =
     [&](complex<double> s) -> complex<double> {
-    // cout << "s, s0, astau, order" << s << "\t" << s0 << "\t" << astau << "\t" << order << endl;
     complex<double> mu2(s0, 0.);
     return weight.wD(s)*D0(s0*s, mu2, astau, order);
+  };
+
+  return (3*const_.kPi*complexContourIntegral(f)).real();
+};
+double AdlerFunction::D0CIntCI(const double &s0, const Weight weight,
+                               const double &astau, const double &order) const {
+  function<complex<double>(complex<double>)> f =
+    [&](complex<double> x) -> complex<double> {
+    complex<double> xmu2 = -x*s0;
+    return weight.wD(x)*D0(s0*x, xmu2, astau, order);
   };
 
   return (3*const_.kPi*complexContourIntegral(f)).real();

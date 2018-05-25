@@ -3,8 +3,8 @@ output
 configurations
 .DS_Store
 _region_.log
-_region._.tex
+_region_.tex
 *.aux
 fits.log
-ftis.syncex.gz
+ftis.synctex.gz
 auto

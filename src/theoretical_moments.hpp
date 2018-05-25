@@ -19,8 +19,13 @@ class TheoreticalMoments: public AdlerFunction {
 
     double rTauTh = 0.;
     // D0
-    if ( config_["adler"]["D0"] )
-      rTauTh += cIntVpAD0FO(s0, weight_, astau, order);
+    if ( config_["adler"]["D0"] ) {
+      // check if FOPT or CIPT
+      if ( config_["scheme"] == "FO" )
+        rTauTh += cIntVpAD0FO(s0, weight_, astau, order);
+      if ( config_["scheme"] == "CI")
+        rTauTh += cIntVpAD0CI(s0, weight_, astau, order);
+    }
     // D4
     if ( config_["adler"]["D4"] )
       rTauTh += cIntVpAD4FO(s0, weight_, astau, aGGinv, order);
@@ -36,8 +41,13 @@ class TheoreticalMoments: public AdlerFunction {
 
   double cIntVpAD0FO(const double &s0, const Weight &weight,
                      const double &astau, const int &order) const {
-    return 2.*D0CInt(s0, weight, astau, order);
+    return 2.*D0CIntFO(s0, weight, astau, order);
   }
+  double cIntVpAD0CI(const double &s0, const Weight &weight,
+                     const double &astau, const int &order) const {
+    return 2.*D0CIntCI(s0, weight, astau, order);
+  }
+
 
   double cIntVpAD4FO(const double &s0, const Weight &weight,
                      const double &astau, const double &aGGinv, const int &order) const {

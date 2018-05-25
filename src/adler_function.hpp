@@ -33,7 +33,9 @@ public:
 
   complex<double> D0(const complex<double> &s, const complex<double> &mu2,
                      const double &astau, const double &order) const;
-  double D0CInt(const double &s0, const Weight weight, const double &astau, const double &order) const;
+  // Contour integral for D_V+A(D=0) in FOPT
+  double D0CIntFO(const double &s0, const Weight weight, const double &astau, const double &order) const;
+  double D0CIntCI(const double &s0, const Weight weight, const double &astau, const double &order) const;
 
   complex<double> D2(const complex<double> &s,
                      const complex<double> mu2, const double &astau,
