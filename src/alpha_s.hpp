@@ -65,7 +65,7 @@ class AlphaS: public Numerics {
       };
     }
 
-    return newtonRaphson(f, df, complex<double>(0.01, 0.01), 1e-15);
+    return newtonRaphson(f, df, complex<double>(0.3179, 0.3179), 1e-15);
   }
 
  private:

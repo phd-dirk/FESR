@@ -30,6 +30,11 @@ using std::runtime_error;
 #include "TRandom2.h"
 #include "TError.h"
 
+// Mutlidimensional Root-finding
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_multiroots.h>
+
 // Config
 using json = nlohmann::json;
 
@@ -154,33 +159,128 @@ void writeOutput(const string filePath, const double *variables, const double *e
   file.close();
 }
 
+
+// test multidimensional root-finding
+struct rparams {
+  double a;
+  double b;
+};
+int rosenbrock_f(const gsl_vector *x, void *params, gsl_vector *f) {
+  double a = ((rparams *) params)->a;
+  double b = ((rparams *) params)->b;
+
+  const double x0 = gsl_vector_get (x, 0);
+  const double x1 = gsl_vector_get (x, 1);
+
+  const double y0 = a*(1 - x0);
+  const double y1 = b*(x1 - pow(x0, 2));
+
+  gsl_vector_set (f, 0, y0);
+  gsl_vector_set (f, 1, y1);
+
+  return GSL_SUCCESS;
+}
+int rosenbrock_df(const gsl_vector *x, void *params, gsl_matrix *J) {
+  double a = ((rparams *) params)->a;
+  double b = ((rparams *) params)->b;
+
+  const double x0 = gsl_vector_get (x, 0);
+
+  const double df00 = -a;
+  const double df01 = 0;
+  const double df10 = -2*b*x0;
+  const double df11 = b;
+
+  gsl_matrix_set (J, 0, 0, df00);
+  gsl_matrix_set (J, 0, 1, df01);
+  gsl_matrix_set (J, 1, 0, df10);
+  gsl_matrix_set (J, 1, 1, df11);
+
+  return GSL_SUCCESS;
+}
+int rosenbrock_fdf(const gsl_vector *x, void *params, gsl_vector *f, gsl_matrix *J) {
+  rosenbrock_f(x, params, f);
+  rosenbrock_df(x, params, J);
+
+  return GSL_SUCCESS;
+}
+
+void print_state(size_t iter, gsl_multiroot_fdfsolver *s) {
+  printf ("iter = %3u x = % .3f % .3f "
+          "f(x) = % .3e % .3e\n",
+          iter,
+          gsl_vector_get (s->x, 0),
+          gsl_vector_get (s->x, 1),
+          gsl_vector_get (s->f, 0),
+          gsl_vector_get (s->f, 1));
+}
+
 int main (int argc, char* argv[]) {
-  cout.precision(17);
-  string outputFilePath = "./output/fits.csv";
-  if (argc > 1) {
-    printf("Error no outputfile argument. Try ./build/FESR ./output/folder/fits.dat");
-    outputFilePath = argv[1];
-  }
+  // test multidimensional roots-finding
+  const gsl_multiroot_fdfsolver_type *T;
+  gsl_multiroot_fdfsolver *s;
 
-  std::ifstream configFile("./configuration.json");
-  json config;
-  configFile >> config;
+  int status;
+  size_t i, iter = 0;
 
-  const Constants constants(config);
-  const Chisquared chisquared(config, constants);
+  const size_t n = 2;
+  struct rparams p = {1.0, 10.0};
+  gsl_multiroot_function_fdf f = {&rosenbrock_f, &rosenbrock_df, &rosenbrock_fdf, n, &p};
 
-  // Numerics num(constants);
-  // cout << num.complexContourIntegral(testFunction) << endl;
+  double x_init[2] = { -10.0, -5.0 };
+  gsl_vector *x = gsl_vector_alloc(n);
+  gsl_vector_set(x, 0, x_init[0]);
+  gsl_vector_set(x, 1, x_init[1]);
 
-  // AdlerFunction adler(4, constants);
-  // cout << adler.D0(3.0, 3.0, 0.32307, 5) << endl;
-  // cout << 2.0*adler.D0CInt(3.0, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
-  // cout << 2.0*adler.D0CInt(3.1572314596, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
+  T = gsl_multiroot_fdfsolver_gnewton;
+  s = gsl_multiroot_fdfsolver_alloc(T, n);
+  gsl_multiroot_fdfsolver_set(s, &f, x);
 
-  AlphaS amu(constants, 5);
-  complex<double> s(3.1355190333342473,-0.3696361468885539);
-  complex<double> mu2(-3.1355190333342473,0.3696361468885539);
-  cout << amu(mu2, constants.kSTau, 0.3179/constants.kPi) << endl;
+  print_state(iter, s);
+
+  do {
+    iter++;
+    status = gsl_multiroot_fdfsolver_iterate(s);
+    print_state(iter, s);
+
+    if(status)
+      break;
+
+    status = gsl_multiroot_test_residual (s->f, 1e-7);
+  } while( status == GSL_CONTINUE && iter < 1000);
+
+  printf ("status = %s\n", gsl_strerror(status));
+
+  gsl_multiroot_fdfsolver_free(s);
+  gsl_vector_free(x);
+
+
+  // cout.precision(17);
+  // string outputFilePath = "./output/fits.csv";
+  // if (argc > 1) {
+  //   printf("Error no outputfile argument. Try ./build/FESR ./output/folder/fits.dat");
+  //   outputFilePath = argv[1];
+  // }
+
+  // std::ifstream configFile("./configuration.json");
+  // json config;
+  // configFile >> config;
+
+  // const Constants constants(config);
+  // const Chisquared chisquared(config, constants);
+
+  // // Numerics num(constants);
+  // // cout << num.complexContourIntegral(testFunction) << endl;
+
+  // // AdlerFunction adler(4, constants);
+  // // cout << adler.D0(3.0, 3.0, 0.32307, 5) << endl;
+  // // cout << 2.0*adler.D0CInt(3.0, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
+  // // cout << 2.0*adler.D0CInt(3.1572314596, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
+
+  // AlphaS amu(constants, 5);
+  // complex<double> s(3.1355190333342473,-0.3696361468885539);
+  // complex<double> mu2(-3.1355190333342473,0.3696361468885539);
+  // cout << amu(mu2, constants.kSTau, 0.3179/constants.kPi) << endl;
 
 
 
