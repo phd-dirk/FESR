@@ -21,10 +21,15 @@ class TheoreticalMoments: public AdlerFunction {
     // D0
     if ( config_["adler"]["D0"] ) {
       // check if FOPT or CIPT
-      if ( config_["scheme"] == "FO" )
+      if ( config_["scheme"] == "FO" ) {
+        cout << "FO start" << endl;
         rTauTh += cIntVpAD0FO(s0, weight_, astau, order);
-      if ( config_["scheme"] == "CI")
+      }
+      if ( config_["scheme"] == "CI") {
+        cout << "CI start" << endl;
         rTauTh += cIntVpAD0CI(s0, weight_, astau, order);
+        cout << "after int" << endl;
+      }
     }
     // D4
     if ( config_["adler"]["D4"] )

@@ -1,6 +1,7 @@
 #ifndef SRC_NUMERICS_H
 #define SRC_NUMERICS_H
 
+#include "types.hpp"
 #include "constants.hpp"
 #include <gsl/gsl_integration.h>
 #include <boost/numeric/ublas/vector.hpp>
@@ -39,8 +40,31 @@ class Numerics {
     complex<double> xNext = x0;
     while( abs(f(xNext)) > acc ) {
       xNext = xNext - f(xNext)/df(xNext);
+      cout << "N \t" << xNext << endl;
     }
     return xNext;
+  }
+
+  cmplx saveNewtonRaphson(cmplxFunc &f, cmplxFunc &df, const cmplx &x1, const cmplx &x2, const double &xacc) const {
+    // Using a combination of Netwon-Raphson and bisection, return the root of a function bracketed between x1 and x2.
+    // The root will be refined until its accuracy is known within +-xacc. f is the function which has a root, df is
+    // the first derivative of f, x1 and x2 boundaries of the interval which will be searched for a root
+
+    const int MAXIT = 100;
+    cmplx xh, xl;
+    cmplx fl = f(x1);
+    cmplx fh = f(x2);
+    if ((fl > 0.0 && fh > 0.0) || ( fl < 0.0 && fh < 0.0))
+      throw("Root must be bracketed.");
+    if (fl == 0.0) return x1;
+    if (fh == 0.0) return x2;
+    if (fl < 0.0) {
+      xl = x1;
+      xh = x2;
+    }
+
+
+    return 0.;
   }
 
 
@@ -113,7 +137,9 @@ class Numerics {
       },
       &func
     };
-    gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1200, 6, w_, &result, &error);
+    // gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1200, 6, w_, &result, &error);
+    size_t fCalls = 1100;
+    gsl_integration_qng(&F, from, to, epsabs_, epsrel_, &result, &error, &fCalls);
     // cout << "error \t" << error << endl;
     return result;
   }
@@ -174,7 +200,7 @@ class Numerics {
   Constants const_;
   gsl_integration_workspace * w_;
   const double epsrel_ = 0.; // relative error
-  const double epsabs_ = 1e-10; // absolute error
+  const double epsabs_ = 1e-5; // absolute error
   vector<double> gaulegX;
   vector<double> gaulegW;
 };

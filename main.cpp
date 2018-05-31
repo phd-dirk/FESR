@@ -168,6 +168,7 @@ int main (int argc, char* argv[]) {
 
   const Constants constants(config);
   const Chisquared chisquared(config, constants);
+
   // Numerics num(constants);
   // cout << num.complexContourIntegral(testFunction) << endl;
 
@@ -175,6 +176,12 @@ int main (int argc, char* argv[]) {
   // cout << adler.D0(3.0, 3.0, 0.32307, 5) << endl;
   // cout << 2.0*adler.D0CInt(3.0, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
   // cout << 2.0*adler.D0CInt(3.1572314596, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
+
+  AlphaS amu(constants, 5);
+  complex<double> s(3.1355190333342473,-0.3696361468885539);
+  complex<double> mu2(-3.1355190333342473,0.3696361468885539);
+  cout << amu(mu2, constants.kSTau, 0.3179/constants.kPi) << endl;
+
 
 
   // cout << "th" << endl;
@@ -203,54 +210,54 @@ int main (int argc, char* argv[]) {
 
 
   // MINUIT
-  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // set tolerances
-  // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // min->SetMaxIterations(10000000); // for GSL
-  min->SetTolerance(1.0);
+  // // set tolerances
+  // // min->SetMaxFunctionCalls(10000000); // for Minuit2
+  // // min->SetMaxIterations(10000000); // for GSL
+  // min->SetTolerance(1.0);
 
-  min->SetStrategy(2);
-  min->SetPrintLevel(3); // activate logging
+  // min->SetStrategy(2);
+  // min->SetPrintLevel(3); // activate logging
 
-  // function wrapper
-  Functor chi2(chisquared, 4);
+  // // function wrapper
+  // Functor chi2(chisquared, 4);
 
-  min->SetFunction(chi2);
+  // min->SetFunction(chi2);
 
-  // set free variables to be minimized
-  if (config["variables"]["astau"]["fixed"]) {
-    min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
-  } else {
-    min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
-  }
-  if (config["variables"]["aGGInv"]["fixed"]) {
-    min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
-  } else {
-    min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
-  }
-  if (config["variables"]["rhoVpA"]["fixed"]) {
-    cout << "fixed" << endl;
-    min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
-  } else {
-    min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
-  }
-  if (config["variables"]["c8VpA"]["fixed"]) {
-    min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
-  } else {
-    min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
-  }
+  // // set free variables to be minimized
+  // if (config["variables"]["astau"]["fixed"]) {
+  //   min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
+  // } else {
+  //   min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
+  // }
+  // if (config["variables"]["aGGInv"]["fixed"]) {
+  //   min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
+  // } else {
+  //   min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
+  // }
+  // if (config["variables"]["rhoVpA"]["fixed"]) {
+  //   cout << "fixed" << endl;
+  //   min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
+  // } else {
+  //   min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
+  // }
+  // if (config["variables"]["c8VpA"]["fixed"]) {
+  //   min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
+  // } else {
+  //   min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
+  // }
 
-  // minimize!
-  min->Minimize();
-  const double *xs = min->X();
-  const double *errors = min->Errors();
-  const double edm = min->Edm();
-  chisquared.log(xs[0], xs[1], xs[2], xs[3]);
-  const double chi2AtMin = chisquared(xs[0], xs[1], xs[2], xs[3]);
-  // min->PrintResults();
+  // // minimize!
+  // min->Minimize();
+  // const double *xs = min->X();
+  // const double *errors = min->Errors();
+  // const double edm = min->Edm();
+  // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
+  // const double chi2AtMin = chisquared(xs[0], xs[1], xs[2], xs[3]);
+  // // min->PrintResults();
 
-  writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);
+  // writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);
 
   return 0;
 }

@@ -5,15 +5,31 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
   complex<double> L = log(-s/mu2);
 
   complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
-  // cout << amu << L << s << mu2 << endl;
+  // cout << amu << "\t" << L << "\t" << s << "\t" << mu2 << endl;
 
   complex<double> sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
       // cout << "c(" << n << ", " << k << ") \t" << const_.c_[n][k] << endl;
       sum += pow(amu, n)*(double)k*const_.c_[n][k]*pow(L,k-1);
-      // cout << sum << endl;
+      // cout << sum  << "\t" << pow(L,k-1) << endl;
     }
+  }
+
+  return 1/4./pow(const_.kPi, 2)*(const_.c_[0][1] + sum);
+}
+
+complex<double> AdlerFunction::D0CI(const complex<double> &s, const complex<double> &mu2,
+                                  const double &astau, const double &order) const {
+  complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
+  cout << amu << "\t"  << s << "\t" << mu2 << endl;
+
+  complex<double> sum(0., 0.);
+  for (int n = 1; n <= order; n++) {
+    // cout << "c(" << n << ", " << k << ") \t" << const_.c_[n][k] << endl;
+    int k = 1;
+    sum += pow(amu, n)*(double)k*const_.c_[n][k];
+    cout << sum << pow(amu, n) << endl;
   }
 
   return 1/4./pow(const_.kPi, 2)*(const_.c_[0][1] + sum);
@@ -21,6 +37,7 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
 
 double AdlerFunction::D0CIntFO(const double &s0, const Weight weight,
                              const double &astau, const double &order) const {
+  cout << "cint d0 FO" << endl;
   function<complex<double>(complex<double>)> f =
     [&](complex<double> s) -> complex<double> {
     complex<double> mu2(s0, 0.);
@@ -31,12 +48,14 @@ double AdlerFunction::D0CIntFO(const double &s0, const Weight weight,
 };
 double AdlerFunction::D0CIntCI(const double &s0, const Weight weight,
                                const double &astau, const double &order) const {
+  cout << "d0cint CIIII" << endl;
   function<complex<double>(complex<double>)> f =
     [&](complex<double> x) -> complex<double> {
     complex<double> xmu2 = -x*s0;
-    return weight.wD(x)*D0(s0*x, xmu2, astau, order);
+    return weight.wD(x)*D0CI(s0*x, xmu2, astau, order);
   };
 
+  cout << "before integral" << endl;
   return (3*const_.kPi*complexContourIntegral(f)).real();
 };
 
