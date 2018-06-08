@@ -4,6 +4,7 @@
 #include <complex>
 #include <string>
 #include <stdexcept>
+#include "./src/types.hpp"
 
 using std::vector;
 using std::cout;
@@ -30,10 +31,6 @@ using std::runtime_error;
 #include "TRandom2.h"
 #include "TError.h"
 
-// Mutlidimensional Root-finding
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_multiroots.h>
 
 // Config
 using json = nlohmann::json;
@@ -160,176 +157,19 @@ void writeOutput(const string filePath, const double *variables, const double *e
 }
 
 
-// test multidimensional root-finding
-struct rparams {
-  double mup;
-  double muq;
-  double aq;
-};
-int alpha_f(const gsl_vector *x, void *params, gsl_vector *f) {
-  double mup = ((rparams *) params)->mup;
-  double muq = ((rparams *) params)->muq;
-  double aq = ((rparams *) params)->aq;
-
-  const double x0 = gsl_vector_get (x, 0);
-  const double x1 = gsl_vector_get (x, 1);
-
-  using std::arg;
-
-  const double y0 = 0.22222222222222224/aq - (0.22222222222222224*x0)/(pow(x0,2) + pow(x1,2)) + 
-   0.16227475612833714*arg(complex<double>(-0.14395661700847226,-0.30687590223497346) + aq) - 
-   0.16227475612833714*arg(complex<double>(-0.14395661700847226,0.30687590223497346) + aq) + 
-   0.03722833922971071*arg(complex<double>(0.329423287332271,-0.21280498219449714) + aq) - 
-   0.03722833922971071*arg(complex<double>(0.329423287332271,0.21280498219449714) + aq) - 
-   0.16227475612833714*arg(complex<double>(-0.14395661700847226,-0.30687590223497346) + x0 + complex<double>(0,1)*x1) + 
-   0.16227475612833714*arg(complex<double>(-0.14395661700847226,0.30687590223497346) + x0 + complex<double>(0,1)*x1) - 
-   0.03722833922971071*arg(complex<double>(0.329423287332271,-0.21280498219449714) + x0 + complex<double>(0,1)*x1) + 
-   0.03722833922971071*arg(complex<double>(0.329423287332271,0.21280498219449714) + x0 + complex<double>(0,1)*x1) - 
-   0.024675199937868517*log(0.09417281937252898 + pow(-0.14395661700847226 + aq,2)) + 
-   0.19753086419753088*log(pow(aq,2)) - 0.17285566425966234*
-    log(0.04528596044680025 + pow(0.329423287332271 + aq,2)) - log(sqrt(pow(muq,2))/sqrt(pow(mup,2))) + 
-   0.012337599968934259*log(pow(-0.14395661700847226 + x0,2) + pow(-0.30687590223497346 + x1,2)) + 
-   0.08642783212983117*log(pow(0.329423287332271 + x0,2) + pow(-0.21280498219449714 + x1,2)) - 
-   0.19753086419753088*log(pow(x0,2) + pow(x1,2)) + 
-   0.08642783212983117*log(pow(0.329423287332271 + x0,2) + pow(0.21280498219449714 + x1,2)) + 
-    0.012337599968934259*log(pow(-0.14395661700847226 + x0,2) + pow(0.30687590223497346 + x1,2));
-  const double y1 = 0. + (0.22222222222222224*x1)/(pow(x0,2) + pow(x1,2)) - 
-    0.024675199937868517*arg(complex<double>(-0.14395661700847226,-0.30687590223497346) + aq) - 
-    0.024675199937868517*arg(complex<double>(-0.14395661700847226,0.30687590223497346) + aq) + 0.39506172839506176*arg(aq) - 
-    0.17285566425966234*arg(complex<double>(0.329423287332271,-0.21280498219449714) + aq) - 
-    0.17285566425966234*arg(complex<double>(0.329423287332271,0.21280498219449714) + aq) - arg(muq/mup) + 
-    0.024675199937868517*arg(complex<double>(-0.14395661700847226,-0.30687590223497346) + x0 + complex<double>(0,1)*x1) + 
-    0.024675199937868517*arg(complex<double>(-0.14395661700847226,0.30687590223497346) + x0 + complex<double>(0,1)*x1) - 
-    0.39506172839506176*arg(x0 + complex<double>(0,1)*x1) + 
-    0.17285566425966234*arg(complex<double>(0.329423287332271,-0.21280498219449714) + x0 + complex<double>(0,1)*x1) + 
-    0.17285566425966234*arg(complex<double>(0.329423287332271,0.21280498219449714) + x0 + complex<double>(0,1)*x1) + 
-    0.08113737806416857*log(pow(-0.14395661700847226 + x0,2) + pow(-0.30687590223497346 + x1,2)) + 
-    0.018614169614855354*log(pow(0.329423287332271 + x0,2) + pow(-0.21280498219449714 + x1,2)) - 
-    0.018614169614855354*log(pow(0.329423287332271 + x0,2) + pow(0.21280498219449714 + x1,2)) - 
-    0.08113737806416857*log(pow(-0.14395661700847226 + x0,2) + pow(0.30687590223497346 + x1,2)); 
-
-  gsl_vector_set (f, 0, y0);
-  gsl_vector_set (f, 1, y1);
-
-  return GSL_SUCCESS;
-}
-int alpha_df(const gsl_vector *x, void *params, gsl_matrix *J) {
-  double mup = ((rparams *) params)->mup;
-  double muq = ((rparams *) params)->muq;
-  double aq = ((rparams *) params)->aq;
-
-  const double x0 = gsl_vector_get (x, 0);
-  const double x1 = gsl_vector_get (x, 1);
-
-  const double df00 = -0.053350370503906966/(pow(-0.14395661700847226 + x0,2) + pow(-0.30687590223497346 + x1,2)) + 
-    (0.024675199937868517*x0)/(pow(-0.14395661700847226 + x0,2) + pow(-0.30687590223497346 + x1,2)) + 
-    0.049020305087512026/(pow(0.329423287332271 + x0,2) + pow(-0.21280498219449714 + x1,2)) + 
-    (0.17285566425966234*x0)/(pow(0.329423287332271 + x0,2) + pow(-0.21280498219449714 + x1,2)) + 
-    (0.16227475612833714*x1)/(pow(-0.14395661700847226 + x0,2) + pow(-0.30687590223497346 + x1,2)) + 
-    (0.03722833922971071*x1)/(pow(0.329423287332271 + x0,2) + pow(-0.21280498219449714 + x1,2)) + 
-    (0.22222222222222224*pow(x0,2))/pow(pow(x0,2) + pow(x1,2),2) - 
-    (0.22222222222222224*pow(x1,2))/pow(pow(x0,2) + pow(x1,2),2) - 
-    (0.39506172839506176*x0)/(pow(x0,2) + pow(x1,2)) + 
-    0.049020305087512026/(pow(0.329423287332271 + x0,2) + pow(0.21280498219449714 + x1,2)) + 
-    (0.17285566425966234*x0)/(pow(0.329423287332271 + x0,2) + pow(0.21280498219449714 + x1,2)) - 
-    (0.03722833922971071*x1)/(pow(0.329423287332271 + x0,2) + pow(0.21280498219449714 + x1,2)) - 
-    0.053350370503906966/(pow(-0.14395661700847226 + x0,2) + pow(0.30687590223497346 + x1,2)) + 
-    (0.024675199937868517*x0)/(pow(-0.14395661700847226 + x0,2) + pow(0.30687590223497346 + x1,2)) - 
-    (0.16227475612833714*x1)/(pow(-0.14395661700847226 + x0,2) + pow(0.30687590223497346 + x1,2));
-  const double df01 = -0.015788300674348502/(pow(-0.14395661700847226 + x0,2) + pow(-0.30687590223497346 + x1,2)) + 
-    (0.16227475612833714*x0)/(pow(-0.14395661700847226 + x0,2) + pow(-0.30687590223497346 + x1,2)) + 
-    0.049048428445967664/(pow(0.329423287332271 + x0,2) + pow(-0.21280498219449714 + x1,2)) + 
-    (0.03722833922971071*x0)/(pow(0.329423287332271 + x0,2) + pow(-0.21280498219449714 + x1,2)) - 
-    (0.024675199937868517*x1)/(pow(-0.14395661700847226 + x0,2) + pow(-0.30687590223497346 + x1,2)) - 
-    (0.17285566425966234*x1)/(pow(0.329423287332271 + x0,2) + pow(-0.21280498219449714 + x1,2)) - 
-    (0.4444444444444445*x0*x1)/pow(pow(x0,2) + pow(x1,2),2) + (0.39506172839506176*x1)/(pow(x0,2) + pow(x1,2)) - 
-    0.049048428445967664/(pow(0.329423287332271 + x0,2) + pow(0.21280498219449714 + x1,2)) - 
-    (0.03722833922971071*x0)/(pow(0.329423287332271 + x0,2) + pow(0.21280498219449714 + x1,2)) - 
-    (0.17285566425966234*x1)/(pow(0.329423287332271 + x0,2) + pow(0.21280498219449714 + x1,2)) + 
-    0.015788300674348502/(pow(-0.14395661700847226 + x0,2) + pow(0.30687590223497346 + x1,2)) - 
-    (0.16227475612833714*x0)/(pow(-0.14395661700847226 + x0,2) + pow(0.30687590223497346 + x1,2)) - 
-    (0.024675199937868517*x1)/(pow(-0.14395661700847226 + x0,2) + pow(0.30687590223497346 + x1,2));
-
-  const double df10 = -df01;
-  const double df11 = df00;
-
-  gsl_matrix_set (J, 0, 0, df00);
-  gsl_matrix_set (J, 0, 1, df01);
-  gsl_matrix_set (J, 1, 0, df10);
-  gsl_matrix_set (J, 1, 1, df11);
-
-  return GSL_SUCCESS;
-}
-int alpha_fdf(const gsl_vector *x, void *params, gsl_vector *f, gsl_matrix *J) {
-  alpha_f(x, params, f);
-  alpha_df(x, params, J);
-
-  return GSL_SUCCESS;
-}
-
-
-void print_state(size_t iter, gsl_multiroot_fdfsolver *s) {
-  printf ("iter = %3u x = % .10f % .10f "
-          "f(x) = % .3e % .3e\n",
-          iter,
-          gsl_vector_get (s->x, 0),
-          gsl_vector_get (s->x, 1),
-          gsl_vector_get (s->f, 0),
-          gsl_vector_get (s->f, 1));
-}
-
 int main (int argc, char* argv[]) {
-  // test multidimensional roots-finding
-  const gsl_multiroot_fdfsolver_type *T;
-  gsl_multiroot_fdfsolver *s;
+  cout.precision(17);
+  string outputFilePath = "./output/fits.csv";
+  if (argc > 1) {
+    printf("Error no outputfile argument. Try ./build/FESR ./output/folder/fits.dat");
+    outputFilePath = argv[1];
+  }
 
-  int status;
-  size_t i, iter = 0;
+  std::ifstream configFile("./configuration.json");
+  json config;
+  configFile >> config;
 
-  const size_t n = 2;
-  struct rparams p = {3.0, 3.1572314596, 0.10283637492939726};
-  gsl_multiroot_function_fdf f = {&alpha_f, &alpha_df, &alpha_fdf, n, &p};
-
-  double x_init[2] = { 0.07, -0.02 };
-  gsl_vector *x = gsl_vector_alloc(n);
-  gsl_vector_set(x, 0, x_init[0]);
-  gsl_vector_set(x, 1, x_init[1]);
-
-  T = gsl_multiroot_fdfsolver_hybridsj;
-  s = gsl_multiroot_fdfsolver_alloc(T, n);
-  gsl_multiroot_fdfsolver_set(s, &f, x);
-
-  print_state(iter, s);
-
-  do {
-    iter++;
-    status = gsl_multiroot_fdfsolver_iterate(s);
-    print_state(iter, s);
-
-    if(status)
-      break;
-
-    status = gsl_multiroot_test_residual (s->f, 1e-15);
-  } while( status == GSL_CONTINUE && iter < 1000);
-
-  printf ("status = %s\n", gsl_strerror(status));
-
-  gsl_multiroot_fdfsolver_free(s);
-  gsl_vector_free(x);
-
-
-  // cout.precision(17);
-  // string outputFilePath = "./output/fits.csv";
-  // if (argc > 1) {
-  //   printf("Error no outputfile argument. Try ./build/FESR ./output/folder/fits.dat");
-  //   outputFilePath = argv[1];
-  // }
-
-  // std::ifstream configFile("./configuration.json");
-  // json config;
-  // configFile >> config;
-
-  // const Constants constants(config);
+  const Constants constants(config);
   // const Chisquared chisquared(config, constants);
 
   // // Numerics num(constants);
@@ -340,12 +180,11 @@ int main (int argc, char* argv[]) {
   // // cout << 2.0*adler.D0CInt(3.0, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
   // // cout << 2.0*adler.D0CInt(3.1572314596, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
 
-  // AlphaS amu(constants, 5);
-  // complex<double> s(3.1355190333342473,-0.3696361468885539);
-  // complex<double> mu2(-3.1355190333342473,0.3696361468885539);
-  // cout << amu(mu2, constants.kSTau, 0.3179/constants.kPi) << endl;
-
-
+  AlphaS amu(constants);
+  cmplx mup(3.0, 0.0);
+  cmplx muq(3.1572314596,0.0);
+  cmplx aq(0.10283637492939726);
+  cout << amu(mup, muq, aq) << endl;
 
   // cout << "th" << endl;
   // TheoreticalMoments thMom(config);

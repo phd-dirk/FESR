@@ -27,8 +27,8 @@ protected:
     configFile >> config;
     const_ = new Constants(config);
 
-    adler = new AdlerFunction(config["parameters"]["alphaLoops"], *const_);
-    weight_ = new Weight(1);
+    adler = new AdlerFunction(*const_);
+    weight_ = new Weight(1); 
     thMom_ = new TheoreticalMoments(config);
   }
 };

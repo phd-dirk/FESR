@@ -17,7 +17,7 @@ protected:
     configFile >> config;
     const_ = new Constants(config);
     int order = config["parameters"]["order"];
-    mq_ = new MQRun(*const_, order);
+    mq_ = new MQRun(*const_);
     atau_ = astau_/const_->kPi;
   }
 };

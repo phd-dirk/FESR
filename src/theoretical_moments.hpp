@@ -9,7 +9,7 @@ using json = nlohmann::json;
 class TheoreticalMoments: public AdlerFunction {
  public:
   TheoreticalMoments(const json &config) :
-    AdlerFunction(config["parameters"]["alphaLoops"], Constants(config)), config_(config), const_(Constants(config)),
+    AdlerFunction(Constants(config)), config_(config), const_(Constants(config)),
     s0s_(config["parameters"]["s0Set"].get<vector<double>>()), weight_(Weight(config["parameters"]["weight"].get<int>())) {
   }
 

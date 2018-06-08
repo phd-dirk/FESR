@@ -24,8 +24,8 @@ class AlphaSTest : public ::testing::Test {
     configFile >> config;
     const_ = new Constants(config);
     int order = config["parameters"]["order"];
-    amu_ = new AlphaS(*const_, order);
-    amu5_ = new AlphaS(*const_, 5);
+    amu_ = new AlphaS(*const_);
+    amu5_ = new AlphaS(*const_);
   }
 };
 

@@ -27,8 +27,8 @@ using namespace std::complex_literals;
 
 class AdlerFunction : Numerics {
 public:
-  AdlerFunction(const int &alphaLoops, const Constants &constants) :
-    Numerics(constants), const_(constants), amu_(constants, alphaLoops), mq_(constants, alphaLoops) {
+  AdlerFunction(const Constants &constants) :
+    Numerics(constants), const_(constants), amu_(constants), mq_(constants) {
   }
 
   complex<double> D0(const complex<double> &s, const complex<double> &mu2,

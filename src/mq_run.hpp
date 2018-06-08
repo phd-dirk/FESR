@@ -11,7 +11,7 @@ using std::function;
 
 class MQRun {
  public:
-  MQRun(const Constants &constants, const int &alphaLoops) : const_(constants), amu_(constants, alphaLoops) {}
+  MQRun(const Constants &constants) : const_(constants), amu_(constants) {}
 
   complex<double> operator ()(const complex<double> &q2, const complex<double> &p2, const double &atau) const {
     return runMassRatio(q2, p2, atau);
