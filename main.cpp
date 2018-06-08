@@ -165,6 +165,53 @@ struct rparams {
   double a;
   double b;
 };
+int alpha_f(const gsl_vector *x, void *params, gsl_vector *f) {
+  double a = ((rparams *) params)->a;
+  double b = ((rparams *) params)->b;
+
+  const double x0 = gsl_vector_get (x, 0);
+  const double x1 = gsl_vector_get (x, 1);
+
+  const double y0 = 0.6234358730725664 - (0.2222222222222222*x0)/(pow(x0,2) + pow(x1,2)) -
+    0.19753086419753085*log(pow(x0,2) + pow(x1,2)) + 0.19753086419753085*log(pow(9. + 16.*x0,2) + 256.*pow(x1,2));
+  const double y1 = 0.7853981633974483 + (0.2222222222222222*x1)/(pow(x0,2) + pow(x1,2)) +
+    0.3950617283950617*arg(9. + 16.*(x0 + complex<double>(0,1)*x1)) - 0.3950617283950617*arg(x0 + complex<double>(0,1)*x1);
+
+  gsl_vector_set (f, 0, y0);
+  gsl_vector_set (f, 1, y1);
+
+  return GSL_SUCCESS;
+}
+int alpha_df(const gsl_vector *x, void *params, gsl_matrix *J) {
+  double a = ((rparams *) params)->a;
+  double b = ((rparams *) params)->b;
+
+  const double x0 = gsl_vector_get (x, 0);
+  const double x1 = gsl_vector_get (x, 1);
+
+  const double df00 = 0. + (0.2222222222222222*pow(x0,2))/pow(pow(x0,2) + pow(x1,2),2) - 
+    (0.2222222222222222*pow(x1,2))/pow(pow(x0,2) + pow(x1,2),2) - 
+    (0.3950617283950617*x0)/(pow(x0,2) + pow(x1,2)) + 56.888888888888886/(pow(9. + 16.*x0,2) + 256.*pow(x1,2)) + 
+    (101.1358024691358*x0)/(pow(9. + 16.*x0,2) + 256.*pow(x1,2));
+  const double df01 = (-0.4444444444444444*x0*x1)/pow(pow(x0,2) + pow(x1,2),2) + (0.3950617283950617*x1)/(pow(x0,2) + pow(x1,2)) - 
+    (101.1358024691358*x1)/(pow(9. + 16.*x0,2) + 256.*pow(x1,2));
+  const double df10 = -df01;
+  const double df11 = df00;
+
+  gsl_matrix_set (J, 0, 0, df00);
+  gsl_matrix_set (J, 0, 1, df01);
+  gsl_matrix_set (J, 1, 0, df10);
+  gsl_matrix_set (J, 1, 1, df11);
+
+  return GSL_SUCCESS;
+}
+int alpha_fdf(const gsl_vector *x, void *params, gsl_vector *f, gsl_matrix *J) {
+  alpha_f(x, params, f);
+  alpha_df(x, params, J);
+
+  return GSL_SUCCESS;
+}
+
 int rosenbrock_f(const gsl_vector *x, void *params, gsl_vector *f) {
   double a = ((rparams *) params)->a;
   double b = ((rparams *) params)->b;
@@ -206,7 +253,7 @@ int rosenbrock_fdf(const gsl_vector *x, void *params, gsl_vector *f, gsl_matrix 
 }
 
 void print_state(size_t iter, gsl_multiroot_fdfsolver *s) {
-  printf ("iter = %3u x = % .3f % .3f "
+  printf ("iter = %3u x = % .10f % .3f "
           "f(x) = % .3e % .3e\n",
           iter,
           gsl_vector_get (s->x, 0),
@@ -225,14 +272,14 @@ int main (int argc, char* argv[]) {
 
   const size_t n = 2;
   struct rparams p = {1.0, 10.0};
-  gsl_multiroot_function_fdf f = {&rosenbrock_f, &rosenbrock_df, &rosenbrock_fdf, n, &p};
+  gsl_multiroot_function_fdf f = {&alpha_f, &alpha_df, &alpha_fdf, n, &p};
 
-  double x_init[2] = { -10.0, -5.0 };
+  double x_init[2] = { 0.07, -0.02 };
   gsl_vector *x = gsl_vector_alloc(n);
   gsl_vector_set(x, 0, x_init[0]);
   gsl_vector_set(x, 1, x_init[1]);
 
-  T = gsl_multiroot_fdfsolver_gnewton;
+  T = gsl_multiroot_fdfsolver_hybridsj;
   s = gsl_multiroot_fdfsolver_alloc(T, n);
   gsl_multiroot_fdfsolver_set(s, &f, x);
 
