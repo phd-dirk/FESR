@@ -104,14 +104,15 @@ class ExperimentalMoments : public Numerics {
   // returns weightRatios
   void initWeightRatios() {
     matrix<double> wRatios(s0s.size(), data.binCount);
+    double sTau = pow(const_.kMTau, 2);
 
     for (uint i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount; j++) {
         double s0UpperLimit = data.sbins[j]+data.dsbins[j]/2.;
         double s0LowerLimit = data.sbins[j]-data.dsbins[j]/2.;
-        wRatios(i, j) = (s0s[i]/const_.kSTau*(
+        wRatios(i, j) = (s0s[i]/sTau*(
             (weight_.wD(s0LowerLimit/s0s[i]) - weight_.wD(s0UpperLimit/s0s[i]))/
-            (weight_.wTau(s0LowerLimit/const_.kSTau) - weight_.wTau(s0UpperLimit/const_.kSTau)))).real();
+            (weight_.wTau(s0LowerLimit/sTau) - weight_.wTau(s0UpperLimit/sTau)))).real();
       }
     }
 
@@ -121,10 +122,11 @@ class ExperimentalMoments : public Numerics {
 
   // return the experimental spectral moment
   void initExperimentalMoments() {
+    double sTau = pow(const_.kMTau, 2);
     vector<double> moments(s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
-        moments[i] += const_.kSTau/s0s[i]/const_.kBe*data.sfm2s[j]*weightRatios(i, j);
+        moments[i] += sTau/s0s[i]/const_.kBe*data.sfm2s[j]*weightRatios(i, j);
       }
     }
     this->experimentalMoments = moments;
@@ -149,11 +151,12 @@ class ExperimentalMoments : public Numerics {
 
   // returns the Jacobian Matrix
   void initJacobianMatrix() {
+    double sTau = pow(const_.kMTau, 2);
     matrix<double> jacobi(data.binCount+2, s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount+2; j++) {
         if (j <= closestBinToS0(s0s[i])) {
-          jacobi(j, i) = const_.kSTau/s0s[i]/const_.kBe*weightRatios(i, j);
+          jacobi(j, i) = sTau/s0s[i]/const_.kBe*weightRatios(i, j);
         } else {
           jacobi(j, i) = 0.;
         }
@@ -179,10 +182,11 @@ class ExperimentalMoments : public Numerics {
   }
 
   double pionPoleMoment(const double &s0) const {
+    double sTau = pow(const_.kMTau, 2);
     double axialMoment = 0;
     double pseudoMoment = 0;
     axialMoment += kPiFac()/s0*weight_.wR(pow(const_.kPionMinusMass, 2)/s0).real();
-    pseudoMoment += axialMoment*(-2.*pow(const_.kPionMinusMass, 2)/(const_.kSTau + 2.*pow(const_.kPionMinusMass, 2)));
+    pseudoMoment += axialMoment*(-2.*pow(const_.kPionMinusMass, 2)/(sTau + 2.*pow(const_.kPionMinusMass, 2)));
     return axialMoment + pseudoMoment;
   }
 

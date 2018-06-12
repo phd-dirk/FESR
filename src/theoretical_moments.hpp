@@ -22,24 +22,22 @@ class TheoreticalMoments: public AdlerFunction {
     if ( config_["adler"]["D0"] ) {
       // check if FOPT or CIPT
       if ( config_["scheme"] == "FO" ) {
-        cout << "FO start" << endl;
         rTauTh += cIntVpAD0FO(s0, weight_, astau, order);
       }
       if ( config_["scheme"] == "CI") {
-        cout << "CI start" << endl;
         rTauTh += cIntVpAD0CI(s0, weight_, astau, order);
-        cout << "after int" << endl;
       }
     }
     // D4
     if ( config_["adler"]["D4"] )
-      rTauTh += cIntVpAD4FO(s0, weight_, astau, aGGinv, order);
+      rTauTh += cIntVpAD4FO(s0, weight_, astau, aGGinv);
     // D68
     if ( config_["adler"]["D68"] )
       rTauTh += D68CInt(s0, weight_, rhoVpA, c8VpA);
     // PionPole
     if ( config_["adler"]["PionPole"] )
       rTauTh += 3.*deltaP(s0, weight_);
+
 
     return pow(const_.kVud, 2)*const_.kSEW*rTauTh;
   }
@@ -55,8 +53,8 @@ class TheoreticalMoments: public AdlerFunction {
 
 
   double cIntVpAD4FO(const double &s0, const Weight &weight,
-                     const double &astau, const double &aGGinv, const int &order) const {
-    return  D4CInt(s0, weight, astau, aGGinv, order, 1) + D4CInt(s0, weight, astau, aGGinv, order, -1);
+                     const double &astau, const double &aGGinv) const {
+    return  D4CInt(s0, weight, astau, aGGinv, 1) + D4CInt(s0, weight, astau, aGGinv, -1);
   }
 
   double del0(const double &s0, const Weight &weight,
@@ -74,8 +72,8 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   double del4(const double &s0, const Weight &weight,
-              const double &astau, const double &aGGinv, const int &order) const {
-    return cIntVpAD4FO(s0, weight, astau, aGGinv, order)/3.;
+              const double &astau, const double &aGGinv) const {
+    return cIntVpAD4FO(s0, weight, astau, aGGinv)/3.;
   }
 
   double del6(const double &s0, const Weight &weight,
@@ -94,10 +92,10 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) const {
-    double s0 = config_["constants"]["sTau"];
+    double s0 = pow(config_["constants"]["mTau"].get<double>(), 2);
     cout << "thMom: \t" << operator() (0, astau, aGGinv, rhoVpA, c8VpA, order) << endl;
     cout << "Delta^(0): \t" << del0(s0, weight_, astau, order) << endl;
-    cout << "Delta^(4): \t" << del4(s0, weight_, astau, aGGinv, order) << endl;
+    cout << "Delta^(4): \t" << del4(s0, weight_, astau, aGGinv) << endl;
     cout << "Delta^(6): \t" << del6(s0, weight_, rhoVpA) << endl;
     cout << "Delta^(8): \t" << del8(s0, weight_, c8VpA) << endl;
     cout << "Delta_P+S: \t" << deltaP(s0, weight_) << endl;

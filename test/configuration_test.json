@@ -1,15 +1,15 @@
 {
+    "scheme": "FO",
     "parameters": {
         "nc": 3,
         "nf": 3,
-        "order": 4,
-        "alphaLoops": 4,
+        "order": 5,
         "s0Set": [3.1570893124, 3.0, 2.8, 2.6, 2.4, 2.3, 2.2, 2.1, 2.0],
         "weight": 1,
         "RVANormalization": 1
     },
     "constants": {
-        "sTau": 3.1570893124,
+        "mTau": 1.77682,
         "be": 17.827,
         "dBe": 0.04
     },

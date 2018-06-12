@@ -1,33 +1,23 @@
 #ifndef SRC_MQ_RUN_H
 #define SRC_MQ_RUN_H
 
+#include "types.hpp"
 #include "constants.hpp"
 #include "alpha_s.hpp"
-#include <complex>
-#include <functional>
-
-using std::complex;
-using std::function;
 
 class MQRun {
  public:
   MQRun(const Constants &constants) : const_(constants), amu_(constants) {}
 
-  complex<double> operator ()(const complex<double> &q2, const complex<double> &p2, const double &atau) const {
-    return runMassRatio(q2, p2, atau);
-  }
-
   /*
     Calculates the ratio m(q^2)/m(p^2) from integrating the RG-equation in the complex
     q^2 plane from a given a(p^2) at p(^2)
   */
-  complex<double> runMassRatio(const complex<double> &q2,
-                               const complex<double> &p2, const double &atau) const {
-    complex<double> I(0.0, 1.0);
-    complex<double> ap = amu_(p2, const_.kSTau, atau);
-    complex<double> aq = amu_(q2, const_.kSTau, atau);
+  cmplx operator ()(const cmplx &q2, const cmplx &p2, const double &atau) const {
+    cmplx ap = amu_(sqrt(p2), const_.kMTau, atau);
+    cmplx aq = amu_(sqrt(q2), const_.kMTau, atau);
 
-    auto f = [](complex<double> ap, complex<double> aq) {
+    auto f = [](cmplx ap, cmplx aq) {
       return 0.25000289589113*atan(0.195762247334686 - 2.77752091706421*ap)
       - 0.25000289589113*atan(0.195762247334686 - 2.77752091706421*aq)
       - 0.444444444444444*log(ap)
@@ -41,6 +31,7 @@ class MQRun {
 
     return exp(f(ap, aq));
   }
+
  private:
   Constants const_;
   AlphaS amu_;

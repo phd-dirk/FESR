@@ -11,14 +11,14 @@ using json = nlohmann::json;
 
 class Constants {
  public:
-  Constants(const json &configuration) : nc_(configuration["parameters"]["nc"]),
-                                         nf_(configuration["parameters"]["nf"]),
-                                         kSTau(configuration["constants"]["sTau"]),
-                                         kBe(configuration["constants"]["be"]),
-                                         kDBe(configuration["constants"]["dBe"])
+  Constants(const json &configuration) :
+    nc_(configuration["parameters"]["nc"]), nf_(configuration["parameters"]["nf"]),
+    kMTau(configuration["constants"]["mTau"]), kSTau(pow(kMTau, 2)), kBe(configuration["constants"]["be"]),
+    kDBe(configuration["constants"]["dBe"])
   {
     initializeBetaCoefficients();
     initializeAdlerCoefficients();
+
   };
 
   void initializeBetaCoefficients() {
@@ -78,7 +78,8 @@ class Constants {
   };
 
   // s
-  const double kSTau; // PDG
+  const double kMTau; // PDG
+  const double kSTau;
 
   // masses
   const double mumtau = 2.8e-3;

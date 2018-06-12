@@ -26,7 +26,7 @@ TEST_F (ConstantsTest, various_constants) {
   EXPECT_EQ(constants->kBe, 17.827);
   EXPECT_EQ(constants->kFPi, 92.21e-3);
   EXPECT_EQ(constants->kSEW, 1.0198);
-  EXPECT_EQ(constants->kSTau, 3.1570893124000001);
+  EXPECT_EQ(constants->kMTau, 1.77682);
   EXPECT_EQ(constants->kPionMinusMass, 0.13957018);
   EXPECT_EQ(constants->kVud, 0.97425);
 }

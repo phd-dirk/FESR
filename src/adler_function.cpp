@@ -1,13 +1,15 @@
 #include "./adler_function.hpp"
 
-complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double> &mu2,
-                                  const double &astau, const double &order) const {
-  complex<double> L = log(-s/mu2);
+cmplx AdlerFunction::D0(const cmplx &s, const cmplx &mu,
+                        const double &astau, const double &order) const {
+  cmplx mu2 = pow(mu, 2);
+  cmplx L = log(-s/mu2);
 
-  complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
-  // cout << amu << "\t" << L << "\t" << s << "\t" << mu2 << endl;
+  cmplx amu = amu_(mu, const_.kMTau, astau/const_.kPi);
+  // cout << "mu: " << mu << "\t" << "s: " << s << endl;
+  // cout << "L: " << L << "\t" << "amu: " << amu << endl;
 
-  complex<double> sum(0., 0.);
+  cmplx sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
       // cout << "c(" << n << ", " << k << ") \t" << const_.c_[n][k] << endl;
@@ -19,17 +21,14 @@ complex<double> AdlerFunction::D0(const complex<double> &s, const complex<double
   return 1/4./pow(const_.kPi, 2)*(const_.c_[0][1] + sum);
 }
 
-complex<double> AdlerFunction::D0CI(const complex<double> &s, const complex<double> &mu2,
-                                  const double &astau, const double &order) const {
-  complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
-  cout << amu << "\t"  << s << "\t" << mu2 << endl;
+cmplx AdlerFunction::D0CI(const cmplx &s, const cmplx &mu,
+                          const double &astau, const double &order) const {
+  cmplx amu = amu_(mu, const_.kMTau, astau/const_.kPi);
 
-  complex<double> sum(0., 0.);
+  cmplx sum(0., 0.);
   for (int n = 1; n <= order; n++) {
-    // cout << "c(" << n << ", " << k << ") \t" << const_.c_[n][k] << endl;
     int k = 1;
     sum += pow(amu, n)*(double)k*const_.c_[n][k];
-    cout << sum << pow(amu, n) << endl;
   }
 
   return 1/4./pow(const_.kPi, 2)*(const_.c_[0][1] + sum);
@@ -37,43 +36,42 @@ complex<double> AdlerFunction::D0CI(const complex<double> &s, const complex<doub
 
 double AdlerFunction::D0CIntFO(const double &s0, const Weight weight,
                              const double &astau, const double &order) const {
-  cout << "cint d0 FO" << endl;
-  function<complex<double>(complex<double>)> f =
-    [&](complex<double> s) -> complex<double> {
-    complex<double> mu2(s0, 0.);
-    return weight.wD(s)*D0(s0*s, mu2, astau, order);
+   cmplxFunc f =
+    [&](cmplx s) -> cmplx {
+    cmplx mu2(s0, 0.);
+    cmplx mu = sqrt(mu2);
+
+    return weight.wD(s)*D0(s0*s, mu, astau, order);
   };
 
   return (3*const_.kPi*complexContourIntegral(f)).real();
 };
 double AdlerFunction::D0CIntCI(const double &s0, const Weight weight,
                                const double &astau, const double &order) const {
-  cout << "d0cint CIIII" << endl;
   function<complex<double>(complex<double>)> f =
     [&](complex<double> x) -> complex<double> {
     complex<double> xmu2 = -x*s0;
     return weight.wD(x)*D0CI(s0*x, xmu2, astau, order);
   };
 
-  cout << "before integral" << endl;
   return (3*const_.kPi*complexContourIntegral(f)).real();
 };
 
-complex<double> AdlerFunction::D2(const complex<double> &s,
-                                  const complex<double> mu2, const double &astau,
-                                  const int &order, const int &r) const {
+cmplx AdlerFunction::D2(const cmplx &s, const cmplx mu, const double &astau,
+                        const int &order, const int &r) const {
   // double ePLT3 = 1.e2; // guesstimate
   const int i = 0, j = 1;
 
-  complex<double> L = log(-s/mu2);
-  complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
-  complex<double> rmq = mq_(mu2, const_.kSTau, astau/const_.kPi);
+  cmplx mu2 = pow(mu, 2);
+  cmplx L = log(-s/mu2);
+  cmplx amu = amu_(mu, const_.kMTau, astau/const_.kPi);
+  cmplx rmq = mq_(mu, const_.kMTau, astau/const_.kPi);
 
-  complex<double> m2a = (pow(const_.mq[i], 2) + pow(const_.mq[j], 2))*pow(rmq, 2);
-  complex<double> m2b = r*const_.mq[i]*const_.mq[j]*pow(rmq, 2);
-  complex<double> m2c = (pow(const_.mq[0], 2) + pow(const_.mq[1], 2) + pow(const_.mq[2], 2))*pow(rmq, 2);
+  cmplx m2a = (pow(const_.mq[i], 2) + pow(const_.mq[j], 2))*pow(rmq, 2);
+  cmplx m2b = r*const_.mq[i]*const_.mq[j]*pow(rmq, 2);
+  cmplx m2c = (pow(const_.mq[0], 2) + pow(const_.mq[1], 2) + pow(const_.mq[2], 2))*pow(rmq, 2);
 
-  complex<double> sum = 0.;
+  cmplx sum = 0.;
 
   if ( order > -1 )
     sum += m2a;
@@ -96,16 +94,17 @@ complex<double> AdlerFunction::D2(const complex<double> &s,
   return 3.*sum/(4*pow(const_.kPi, 2)*s);
 }
 
-complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double> &mu2,
-                                  const double &astau, const double &aGGinv,
-                                  const int &order, const int &r) const {
+cmplx AdlerFunction::D4(const cmplx &s, const cmplx &mu,
+                        const double &astau, const double &aGGinv,
+                        const int &order, const int &r) const {
 
   const int i = 0, j = 1;
-  complex<double> L = log(-s/mu2);
-  complex<double> amu = amu_(mu2, const_.kSTau, astau/const_.kPi);
+  cmplx mu2 = pow(mu, 2);
+  cmplx L = log(-s/mu2);
+  cmplx amu = amu_(mu, const_.kMTau, astau/const_.kPi);
 
 
-  complex<double> gluonCondensate(0.0, 0.0);
+  cmplx gluonCondensate(0.0, 0.0);
   const double pLT3 = 0; // the coefficient is not yet known
 
   if (order > 0)
@@ -118,7 +117,7 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
   gluonCondensate *= aGGinv/pow(s, 2);
 
 
-  complex<double> quarkCondensate(0.0, 0.0);
+  cmplx quarkCondensate(0.0, 0.0);
   const double qLT3 = 0., rLT3 = 0., tLT3 = 0.;
 
   const double mqqa = const_.mq[i]*const_.qqinv[i] + const_.mq[j]*const_.qqinv[j];
@@ -142,13 +141,13 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
                         )*pow(amu, 3);
   quarkCondensate /= pow(s, 2);
 
-  complex<double> m4(0.0, 0.0);
-  complex<double> rmq = mq_(mu2, const_.kSTau, astau/const_.kPi);
+  cmplx m4(0.0, 0.0);
+  cmplx rmq = mq_(mu, const_.kMTau, astau/const_.kPi);
 
-  complex<double> m4a = (pow(const_.mq[i], 4) + pow(const_.mq[j], 4))*pow(rmq, 4);
-  complex<double> m4b = r*(const_.mq[i]*pow(const_.mq[j], 3) + const_.mq[j]*pow(const_.mq[i], 3))*pow(rmq, 4);
-  complex<double> m4c = (pow(const_.mq[i], 2)*pow(const_.mq[j], 2))*pow(rmq, 4);
-  complex<double> m4d = (pow(const_.mq[0], 4) + pow(const_.mq[1], 4) + pow(const_.mq[2], 4))*pow(rmq, 4);
+  cmplx m4a = (pow(const_.mq[i], 4) + pow(const_.mq[j], 4))*pow(rmq, 4);
+  cmplx m4b = r*(const_.mq[i]*pow(const_.mq[j], 3) + const_.mq[j]*pow(const_.mq[i], 3))*pow(rmq, 4);
+  cmplx m4c = (pow(const_.mq[i], 2)*pow(const_.mq[j], 2))*pow(rmq, 4);
+  cmplx m4d = (pow(const_.mq[0], 4) + pow(const_.mq[1], 4) + pow(const_.mq[2], 4))*pow(rmq, 4);
 
 
   if ( order > 1)
@@ -160,10 +159,11 @@ complex<double> AdlerFunction::D4(const complex<double> &s, const complex<double
 
   return gluonCondensate + quarkCondensate + m4;
 }
-double AdlerFunction::D4CInt(const double &s0, const Weight &weight, const double &astau,
-                             const double &aGGinv, const int &order, const int &r) const {
-  function<complex<double>(complex<double>)> fTest =
-    [&](complex<double> s) -> complex<double> const {
+double AdlerFunction::D4CInt(const double &s0, const Weight &weight,
+                             const double &astau, const double &aGGinv,
+                             const int &r) const {
+  cmplxFunc fTest =
+    [&](cmplx s) -> cmplx const {
     return weight.wD(s)/pow(s, 2);
   };
 
@@ -172,10 +172,11 @@ double AdlerFunction::D4CInt(const double &s0, const Weight &weight, const doubl
     norder = 3;
   }
 
-  function<complex<double>(complex<double>)> f =
-    [&](complex<double> s) -> complex<double> {
-    complex<double> mu2(s0, 0.);
-    return weight.wD(s)*D4(s0*s, mu2, astau, aGGinv, norder, r);
+  cmplxFunc f =
+    [&](cmplx s) -> cmplx {
+    cmplx mu2(s0, 0.);
+    cmplx mu = sqrt(mu2);
+    return weight.wD(s)*D4(s0*s, mu, astau, aGGinv, norder, r);
   };
 
   return (3*const_.kPi*gaussIntegration(f)).real();

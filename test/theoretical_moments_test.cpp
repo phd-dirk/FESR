@@ -61,9 +61,9 @@ TEST_F(TheoreticalMomentsTest, Delta2) {
 }
 
 TEST_F(TheoreticalMomentsTest, Delta4) {
-  EXPECT_NEAR(thMom_->del4(s0_, *weight_, astau_, aGGinv_, order_), 7.93483938348380651e-4, 1.e-11);
+  EXPECT_NEAR(thMom_->del4(s0_, *weight_, astau_, aGGinv_), 7.93483938348380651e-4, 1.e-11);
   const double s0 = 3.;
-  EXPECT_NEAR(thMom_->del4(s0, *weight_, astau_, aGGinv_, order_), 9.0756967163837078e-4 , 1.e-6);
+  EXPECT_NEAR(thMom_->del4(s0, *weight_, astau_, aGGinv_), 9.0756967163837078e-4 , 1.e-6);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta68) {

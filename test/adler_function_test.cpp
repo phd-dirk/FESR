@@ -88,13 +88,13 @@ TEST_F(AdlerFunctionTest, D4) {
 }
 TEST_F(AdlerFunctionTest, D4CInt) {
   double s0 = 3.1570893124;
-  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, order_, 1), 1.6944347548019322e-3, 1e-15);
-  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, order_, -1), 6.8601706024321041e-4, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, 1), 1.6944347548019322e-3, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, -1), 6.8601706024321041e-4, 1e-15);
   s0 = 2.6;
-  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, order_, 1), 2.8575812002800097e-3, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, 1), 2.8575812002800097e-3, 1e-15);
   s0 = 2.0;
-  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, order_, 1), 5.9016068520545409e-3, 1e-15);
-  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, order_, -1), 2.2220948788460476e-3, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, 1), 5.9016068520545409e-3, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(s0, *weight_, astau_, aGGinv_, -1), 2.2220948788460476e-3, 1e-15);
 }
 
 TEST_F(AdlerFunctionTest, D68) {

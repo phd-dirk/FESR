@@ -18,7 +18,15 @@ class AlphaS: public Numerics {
  public:
   AlphaS(const Constants &constants) : Numerics(constants), const_(constants) {}
 
-  complex<double> operator ()(const cmplx &mup, const cmplx &muq, const cmplx &aq) const {
+  // Calculates a(q^2) from integrating the RG-equation
+  //in the complex q^2 plane from a given a(p^2) at p^2
+  cmplx operator()(const cmplx &q2, const cmplx &p2, const cmplx &ap) const {
+    return runAlpha(sqrt(q2), sqrt(p2), ap);
+  }
+
+  // Computes ap(mup) from integrating the \beta function in the complex plane in
+  // Mathematica (runAlpha.nb). The initial condition a(muq)=aq is used.
+  cmplx runAlpha(const cmplx &mup, const cmplx &muq, const cmplx &aq) const {
     const gsl_multiroot_fdfsolver_type *T;
     gsl_multiroot_fdfsolver *s;
 

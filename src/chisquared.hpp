@@ -69,10 +69,12 @@ class Chisquared {
 
     double chi = 0;
 
+    cout << "s0s: " << s0s_.size() << endl;
     ublas::matrix<double> covMat = expMom_.covarianceMatrix;
     ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix; //readMatrixFromFile(9, "./data/invCovMat.dat");
     vector<double> momDiff(s0s_.size());
     for(uint i = 0; i < s0s_.size(); i++) {
+      cout << "thMom: " << i << "\t" << thMom_(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_) << endl;
       momDiff[i] = expMom_(i) - thMom_(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_);
     }
 

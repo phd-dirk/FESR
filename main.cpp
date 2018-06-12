@@ -170,21 +170,22 @@ int main (int argc, char* argv[]) {
   configFile >> config;
 
   const Constants constants(config);
-  // const Chisquared chisquared(config, constants);
+  const Chisquared chisquared(config, constants);
+
 
   // // Numerics num(constants);
   // // cout << num.complexContourIntegral(testFunction) << endl;
 
-  // // AdlerFunction adler(4, constants);
-  // // cout << adler.D0(3.0, 3.0, 0.32307, 5) << endl;
-  // // cout << 2.0*adler.D0CInt(3.0, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
+  // AdlerFunction adler(constants);
+  // cout << adler.D0(3.0, sqrt(3.0), 0.32307, 5) << endl;
+  // cout << 2.0*adler.D0CIntFO(3.0, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
   // // cout << 2.0*adler.D0CInt(3.1572314596, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
 
-  AlphaS amu(constants);
-  cmplx mup(3.0, 0.0);
-  cmplx muq(3.1572314596,0.0);
-  cmplx aq(0.10283637492939726);
-  cout << amu(mup, muq, aq) << endl;
+  // AlphaS amu(constants);
+  // cmplx mup(3.0, 0.0);
+  // cmplx muq(3.1572314596,0.0);
+  // cmplx aq(0.10283637492939726);
+  // cout << amu(mup, muq, aq) << endl;
 
   // cout << "th" << endl;
   // TheoreticalMoments thMom(config);
@@ -207,7 +208,7 @@ int main (int argc, char* argv[]) {
 
 
   // compare with matthias
-  // cout << "chi2Mat \t" << chisquared(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2) << endl;
+  cout << "chi2Mat \t" << chisquared(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2) << endl;
   // chisquared.log(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2);
 
 
