@@ -14,8 +14,8 @@ class MQRun {
     q^2 plane from a given a(p^2) at p(^2)
   */
   cmplx operator ()(const cmplx &q2, const cmplx &p2, const double &atau) const {
-    cmplx ap = amu_(sqrt(p2), const_.kMTau, atau);
-    cmplx aq = amu_(sqrt(q2), const_.kMTau, atau);
+    cmplx ap = amu_(p2, const_.kSTau, atau);
+    cmplx aq = amu_(q2, const_.kSTau, atau);
 
     auto f = [](cmplx ap, cmplx aq) {
       return 0.25000289589113*atan(0.195762247334686 - 2.77752091706421*ap)
