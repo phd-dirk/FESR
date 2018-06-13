@@ -1,7 +1,6 @@
 #ifndef SRC_DATA_H
 #define SRC_DATA_H
 
-#include "./constants.hpp"
 #include "./weights.hpp"
 #include "json.hpp"
 #include <boost/numeric/ublas/matrix.hpp>

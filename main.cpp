@@ -14,7 +14,6 @@ using std::string;
 using std::runtime_error;
 
 #include "./src/configuration.hpp"
-#include "./src/constants.hpp"
 // Theoretical Moments
 #include "./src/adler_function.hpp"
 #include "./src/alpha_s.hpp"
@@ -22,7 +21,6 @@ using std::runtime_error;
 
 // Chisquared
 #include "./src/chisquared.hpp"
-#include "./src/s0_sets.hpp"
 #include "./src/weights.hpp"
 
 // MINUIT

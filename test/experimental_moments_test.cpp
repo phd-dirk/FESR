@@ -10,17 +10,15 @@ using std::vector;
 
 class ExperimentalMomentsTest : public ::testing::Test {
  protected:
-  ExperimentalMoments * expMom;
+  ExperimentalMoments *expMom;
   virtual void SetUp() {
-
     Weight weight(1);
     std::ifstream configFile("./test/configuration_test.json");
     json config;
     configFile >> config;
 
     Constants constants(config);
-    expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                                     config);
+    expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config);
   }
 
   virtual void TearDown() {
