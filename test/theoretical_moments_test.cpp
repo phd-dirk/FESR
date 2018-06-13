@@ -1,6 +1,5 @@
 #include "../src/theoretical_moments.hpp"
 #include "../src/weights.hpp"
-#include "../src/s0_sets.hpp"
 #include <gtest/gtest.h>
 #include <cmath>
 #include <complex>
@@ -12,7 +11,6 @@ using json = nlohmann::json;
 class TheoreticalMomentsTest : public ::testing::Test {
 protected:
   TheoreticalMoments *thMom_;
-  Constants *const_;
   Weight *weight_;
   const uint order_ = 4;
   const double sTau_ = 3.1570893124;
@@ -31,7 +29,6 @@ protected:
 
   virtual void TearDown() {
     delete thMom_;
-    delete const_;
   }
 };
 

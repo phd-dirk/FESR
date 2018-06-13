@@ -2,7 +2,6 @@
 #include "../src/configuration.hpp"
 #include "../src/theoretical_moments.hpp"
 #include "../src/weights.hpp"
-#include "../src/s0_sets.hpp"
 #include <gtest/gtest.h>
 #include <cmath>
 #include <complex>

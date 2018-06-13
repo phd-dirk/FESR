@@ -1,28 +1,13 @@
 #include "../src/types.hpp"
 #include <gtest/gtest.h>
-#include "../src/constants.hpp"
 #include "../src/alpha_s.hpp"
 #include <cmath>
-#include "json.hpp"
-#include <fstream>
-using json = nlohmann::json;
-
-using std::complex;
-using std::sqrt;
-
 
 class AlphaSTest : public ::testing::Test {
  protected:
-  Constants *const_;
   AlphaS *amu_;
-  const double astau_ = 0.31927;
 
   virtual void SetUp() {
-    std::ifstream configFile("./test/configuration_test.json");
-    json config;
-    configFile >> config;
-    const_ = new Constants(config);
-    int order = config["parameters"]["order"];
     amu_ = new AlphaS();
   }
 };

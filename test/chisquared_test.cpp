@@ -2,7 +2,6 @@
 #include "../src/configuration.hpp"
 #include "../src/weights.hpp"
 #include "../src/chisquared.hpp"
-#include "../src/s0_sets.hpp"
 #include "json.hpp"
 #include <gtest/gtest.h>
 #include <fstream>

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "../src/experimentalMoments.hpp"
 #include "../src/weights.hpp"
-#include "../src/constants.hpp"
 #include "json.hpp"
 using json = nlohmann::json;
 #include <fstream>
@@ -17,7 +16,6 @@ class ExperimentalMomentsTest : public ::testing::Test {
     json config;
     configFile >> config;
 
-    Constants constants(config);
     expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config);
   }
 
