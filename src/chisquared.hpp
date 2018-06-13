@@ -1,6 +1,7 @@
 #ifndef SRC_CHISQUARED_H
 #define SRC_CHISQUARED_H
 
+#include "./configuration.hpp"
 #include "./experimentalMoments.hpp"
 #include "./theoretical_moments.hpp"
 #include "./weights.hpp"
@@ -53,11 +54,9 @@ using std::endl;
 
 class Chisquared {
  public:
-  Chisquared(const json &config, const Constants &constants) :
-    order_(config["parameters"]["order"]), s0s_(config["parameters"]["s0Set"].get<vector<double>>()),
-    expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                               config["parameters"]["RVANormalization"],
-                                s0s_, Weight(config["parameters"]["weight"].get<int>()), constants)),
+  Chisquared(Configuration config) :
+    s0Set_(config.s0Set), order_(config.order),
+    expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)),
     thMom_(TheoreticalMoments(config)) {}
 
   double operator ()(const double *xx) const {
@@ -69,17 +68,16 @@ class Chisquared {
 
     double chi = 0;
 
-    cout << "s0s: " << s0s_.size() << endl;
     ublas::matrix<double> covMat = expMom_.covarianceMatrix;
     ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix; //readMatrixFromFile(9, "./data/invCovMat.dat");
-    vector<double> momDiff(s0s_.size());
-    for(uint i = 0; i < s0s_.size(); i++) {
+    vec momDiff(s0Set_.size());
+    for(uint i = 0; i < s0Set_.size(); i++) {
       cout << "thMom: " << i << "\t" << thMom_(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_) << endl;
       momDiff[i] = expMom_(i) - thMom_(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_);
     }
 
-    for(uint k = 0; k < s0s_.size(); k++) {
-      for(uint l = 0; l < s0s_.size(); l++) {
+    for(uint k = 0; k < s0Set_.size(); k++) {
+      for(uint l = 0; l < s0Set_.size(); l++) {
         chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
       }
     }
@@ -113,10 +111,11 @@ class Chisquared {
     cout << endl;
   }
 
-  const int order_;
-  const vector<double> s0s_;
   const ExperimentalMoments expMom_;
   const TheoreticalMoments thMom_;
+ private:
+  const vec s0Set_;
+  const int order_;
 };
 
 #endif

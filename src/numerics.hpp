@@ -2,7 +2,6 @@
 #define SRC_NUMERICS_H
 
 #include "types.hpp"
-#include "constants.hpp"
 #include <gsl/gsl_integration.h>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
@@ -27,11 +26,10 @@ using std::abs;
 
 class Numerics {
  public:
-  Numerics(Constants constants)
-    : const_(constants), w_(gsl_integration_workspace_alloc(1200)),
+  Numerics() : w_(gsl_integration_workspace_alloc(1200)),
       gaulegX(1201), gaulegW(1201) {
     // init Gaussian quadratures from Numerical recepies
-    gauleg(-const_.kPi, const_.kPi, gaulegX, gaulegW, 1201);
+    gauleg(-M_PI, M_PI, gaulegX, gaulegW, 1201);
   }
 
   // find root of function
@@ -70,15 +68,14 @@ class Numerics {
   // }
 
 
-  void gauleg(const double &x1, const double &x2, vector<double> &x,
-                vector<double> &w, const int &n) {
+  void gauleg(const double &x1, const double &x2, vec &x, vec &w, const int &n) {
     double z1, z, pp, p3, p2, p1;
     int m = (n + 1)/2;
     double xm = 0.5*(x2+x1);
     double xl = 0.5*(x2-x1);
 
     for(int i = 0; i < m; i++) {
-      z = cos(const_.kPi*(i + 0.75)/(n + 0.5));
+      z = cos(M_PI*(i + 0.75)/(n + 0.5));
 
       do {
         p1 = 1.;
@@ -170,7 +167,7 @@ class Numerics {
       return f(gamma(t));
     };
 
-    return integrateComplex(func, -const_.kPi, const_.kPi);
+    return integrateComplex(func, -M_PI, M_PI);
   }
 
   // from https://gist.github.com/lilac/2464434
@@ -199,12 +196,11 @@ class Numerics {
 
 
  private:
-  Constants const_;
   gsl_integration_workspace * w_;
   const double epsrel_ = 0.; // relative error
   const double epsabs_ = 1e-5; // absolute error
-  vector<double> gaulegX;
-  vector<double> gaulegW;
+  vec gaulegX;
+  vec gaulegW;
 };
 
 #endif

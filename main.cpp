@@ -13,6 +13,7 @@ using std::complex;
 using std::string;
 using std::runtime_error;
 
+#include "./src/configuration.hpp"
 #include "./src/constants.hpp"
 // Theoretical Moments
 #include "./src/adler_function.hpp"
@@ -30,10 +31,6 @@ using std::runtime_error;
 #include "Math/Functor.h"
 #include "TRandom2.h"
 #include "TError.h"
-
-
-// Config
-using json = nlohmann::json;
 
 using ROOT::Math::Minimizer;
 using ROOT::Math::Factory;
@@ -165,12 +162,11 @@ int main (int argc, char* argv[]) {
     outputFilePath = argv[1];
   }
 
-  std::ifstream configFile("./configuration.json");
-  json config;
-  configFile >> config;
-
-  const Constants constants(config);
-  const Chisquared chisquared(config, constants);
+  ifstream configFile("./configuration.json");
+  json jsonConfig;
+  configFile >> jsonConfig;
+  const Configuration config(jsonConfig);
+  const Chisquared chisquared(config);
 
 
   // // Numerics num(constants);

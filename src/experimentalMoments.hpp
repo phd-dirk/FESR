@@ -1,9 +1,10 @@
 #ifndef SRC_EXPERIMENTALMOMENTS_HPP
 #define SRC_EXPERIMENTALMOMENTS_HPP
 
+#include "./types.hpp"
+#include "./configuration.hpp"
 #include "./data.hpp"
 #include "./numerics.hpp"
-#include "./constants.hpp"
 #include <boost/numeric/ublas/matrix.hpp>
 
 
@@ -16,10 +17,9 @@ class ExperimentalMoments : public Numerics {
   //
   // The Spectral Moments and Covariance matrix can then bet exported via the
   // public getter functions
-  ExperimentalMoments(const string &filename, const double &normalizationFactor,
-                      const vector<double> &s0s, const Weight &weight, Constants constants) :
-    Numerics(constants), const_(constants), data(Data(filename, normalizationFactor)),
-    s0s(s0s), weight_(weight), covarianceMatrix(s0s.size(), s0s.size()),
+  ExperimentalMoments(const string &filename, const Configuration &config) :
+    Numerics(), config_(config), data(Data(filename, config.RVANormalization)),
+    s0s(config.s0Set), weight_(config.weight), covarianceMatrix(s0s.size(), s0s.size()),
     inverseCovarianceMatrix(s0s.size(), s0s.size()) {
 
     // init weightRatios
@@ -92,27 +92,26 @@ class ExperimentalMoments : public Numerics {
   }
 
   double kPiFac() const {
-    return 24.*pow(const_.kPi*const_.kVud*const_.kFPi, 2)*const_.kSEW;
+    return 24.*pow(M_PI*config_.kVud*config_.kFPi, 2)*config_.kSEW;
   }
   double kDPiFac() const {
-    return kPiFac()*sqrt(4.*pow(const_.kDVud/const_.kVud, 2)
-                         + pow(const_.kDSEW/const_.kSEW, 2)
-                         + 4.*pow(const_.kDFPi/const_.kFPi, 2));
+    return kPiFac()*sqrt(4.*pow(config_.kDVud/config_.kVud, 2)
+                         + pow(config_.kDSEW/config_.kSEW, 2)
+                         + 4.*pow(config_.kDFPi/config_.kFPi, 2));
   }
 
 
   // returns weightRatios
   void initWeightRatios() {
     matrix<double> wRatios(s0s.size(), data.binCount);
-    double sTau = pow(const_.kMTau, 2);
 
     for (uint i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount; j++) {
         double s0UpperLimit = data.sbins[j]+data.dsbins[j]/2.;
         double s0LowerLimit = data.sbins[j]-data.dsbins[j]/2.;
-        wRatios(i, j) = (s0s[i]/sTau*(
+        wRatios(i, j) = (s0s[i]/config_.sTau*(
             (weight_.wD(s0LowerLimit/s0s[i]) - weight_.wD(s0UpperLimit/s0s[i]))/
-            (weight_.wTau(s0LowerLimit/sTau) - weight_.wTau(s0UpperLimit/sTau)))).real();
+            (weight_.wTau(s0LowerLimit/config_.sTau) - weight_.wTau(s0UpperLimit/config_.sTau)))).real();
       }
     }
 
@@ -122,11 +121,10 @@ class ExperimentalMoments : public Numerics {
 
   // return the experimental spectral moment
   void initExperimentalMoments() {
-    double sTau = pow(const_.kMTau, 2);
     vector<double> moments(s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
-        moments[i] += sTau/s0s[i]/const_.kBe*data.sfm2s[j]*weightRatios(i, j);
+        moments[i] += config_.sTau/s0s[i]/config_.be*data.sfm2s[j]*weightRatios(i, j);
       }
     }
     this->experimentalMoments = moments;
@@ -144,24 +142,23 @@ class ExperimentalMoments : public Numerics {
         }
       }
     }
-    errMat(data.binCount, data.binCount) = pow(const_.kDBe, 2);
+    errMat(data.binCount, data.binCount) = pow(config_.dBe, 2);
     errMat(data.binCount+1, data.binCount+1) = pow(kDPiFac(), 2);
     this->errorMatrix = errMat;
   }
 
   // returns the Jacobian Matrix
   void initJacobianMatrix() {
-    double sTau = pow(const_.kMTau, 2);
     matrix<double> jacobi(data.binCount+2, s0s.size());
     for (uint i = 0; i < s0s.size(); i++) {
       for (int j = 0; j < data.binCount+2; j++) {
         if (j <= closestBinToS0(s0s[i])) {
-          jacobi(j, i) = sTau/s0s[i]/const_.kBe*weightRatios(i, j);
+          jacobi(j, i) = config_.sTau/s0s[i]/config_.be*weightRatios(i, j);
         } else {
           jacobi(j, i) = 0.;
         }
       }
-      jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/const_.kBe;
+      jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/config_.be;
       jacobi(data.binCount+1, i) = pionPoleMoment(s0s[i])/kPiFac();
     }
     this->jacobianMatrix = jacobi;
@@ -182,15 +179,14 @@ class ExperimentalMoments : public Numerics {
   }
 
   double pionPoleMoment(const double &s0) const {
-    double sTau = pow(const_.kMTau, 2);
     double axialMoment = 0;
     double pseudoMoment = 0;
-    axialMoment += kPiFac()/s0*weight_.wR(pow(const_.kPionMinusMass, 2)/s0).real();
-    pseudoMoment += axialMoment*(-2.*pow(const_.kPionMinusMass, 2)/(sTau + 2.*pow(const_.kPionMinusMass, 2)));
+    axialMoment += kPiFac()/s0*weight_.wR(pow(config_.kPionMinusMass, 2)/s0).real();
+    pseudoMoment += axialMoment*(-2.*pow(config_.kPionMinusMass, 2)/(config_.sTau + 2.*pow(config_.kPionMinusMass, 2)));
     return axialMoment + pseudoMoment;
   }
 
-  Constants const_;
+  Configuration config_;
   Data data;
   vector<double> s0s, experimentalMoments;
   Weight weight_;

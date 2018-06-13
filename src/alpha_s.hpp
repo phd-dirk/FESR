@@ -1,8 +1,8 @@
 #ifndef SRC_ALPHAS_H
 #define SRC_ALPHAS_H
 
-#include "./constants.hpp"
 #include "./types.hpp"
+#include "./configuration.hpp"
 #include "numerics.hpp"
 #include <iostream>
 #include <cmath>
@@ -16,7 +16,7 @@
 
 class AlphaS: public Numerics {
  public:
-  AlphaS(const Constants &constants) : Numerics(constants), const_(constants) {}
+  AlphaS() : Numerics() {}
 
   // Calculates a(q^2) from integrating the RG-equation
   //in the complex q^2 plane from a given a(p^2) at p^2
@@ -31,7 +31,7 @@ class AlphaS: public Numerics {
     gsl_multiroot_fdfsolver *s;
 
     int status;
-    size_t i, iter = 0;
+    size_t iter = 0;
 
     const size_t n = 2;
     struct rparams p = {mup, muq, aq};
@@ -138,6 +138,7 @@ class AlphaS: public Numerics {
     return GSL_SUCCESS;
   }
   static int alpha_df(const gsl_vector *x, void *params, gsl_matrix *J) {
+    (void)params;
     const double ap1 = gsl_vector_get (x, 0);
     const double ap2 = gsl_vector_get (x, 1);
 
@@ -199,9 +200,6 @@ class AlphaS: public Numerics {
   // complex<double> operator ()(const complex<double> &q2,const complex<double> &p2, const complex<double> &ap) const {
   //   return 0.);
   // }
-
-private:
-  Constants const_;
 };
 
 #endif

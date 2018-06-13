@@ -1,66 +1,64 @@
 #ifndef SRC_THEORETICAL_MOMENTS_H
 #define SRC_THEORETICAL_MOMENTS_H
 
+#include "./types.hpp"
+#include "./configuration.hpp"
 #include "./adler_function.hpp"
-#include "json.hpp"
 
-using json = nlohmann::json;
 
 class TheoreticalMoments: public AdlerFunction {
  public:
-  TheoreticalMoments(const json &config) :
-    AdlerFunction(Constants(config)), config_(config), const_(Constants(config)),
-    s0s_(config["parameters"]["s0Set"].get<vector<double>>()), weight_(Weight(config["parameters"]["weight"].get<int>())) {
-  }
+  TheoreticalMoments(const Configuration &config) :
+    AdlerFunction(config), config_(config) {}
 
   double operator ()(const int &i, const double &astau, const double &aGGinv,
                      const double &rhoVpA, const double &c8VpA, const double &order) const {
-    double s0 = s0s_[i];
+    double s0 = config_.s0Set[i];
 
     double rTauTh = 0.;
     // D0
-    if ( config_["adler"]["D0"] ) {
+    if ( config_.OPE.D0 ) {
       // check if FOPT or CIPT
-      if ( config_["scheme"] == "FO" ) {
-        rTauTh += cIntVpAD0FO(s0, weight_, astau, order);
+      if ( config_.OPE.scheme == "FO" ) {
+        rTauTh += cIntVpAD0FO(s0, config_.weight, config_.sTau, astau, order);
       }
-      if ( config_["scheme"] == "CI") {
-        rTauTh += cIntVpAD0CI(s0, weight_, astau, order);
+      if ( config_.OPE.scheme == "CI") {
+        rTauTh += cIntVpAD0CI(s0, config_.weight, config_.sTau, astau, order);
       }
     }
     // D4
-    if ( config_["adler"]["D4"] )
-      rTauTh += cIntVpAD4FO(s0, weight_, astau, aGGinv);
+    if ( config_.OPE.D4 )
+      rTauTh += cIntVpAD4FO(s0, config_.weight, config_.sTau, astau, aGGinv);
     // D68
-    if ( config_["adler"]["D68"] )
-      rTauTh += D68CInt(s0, weight_, rhoVpA, c8VpA);
+    if ( config_.OPE.D68 )
+      rTauTh += D68CInt(s0, config_.weight, rhoVpA, c8VpA);
     // PionPole
-    if ( config_["adler"]["PionPole"] )
-      rTauTh += 3.*deltaP(s0, weight_);
+    if ( config_.OPE.PionPole )
+      rTauTh += 3.*deltaP(s0, config_.weight);
 
 
-    return pow(const_.kVud, 2)*const_.kSEW*rTauTh;
+    return pow(config_.kVud, 2)*config_.kSEW*rTauTh;
   }
 
-  double cIntVpAD0FO(const double &s0, const Weight &weight,
+  double cIntVpAD0FO(const double &s0, const Weight &weight, const double &sTau,
                      const double &astau, const int &order) const {
-    return 2.*D0CIntFO(s0, weight, astau, order);
+    return 2.*D0CIntFO(s0, weight, sTau, astau, order);
   }
-  double cIntVpAD0CI(const double &s0, const Weight &weight,
+  double cIntVpAD0CI(const double &s0, const Weight &weight, const double &sTau,
                      const double &astau, const int &order) const {
-    return 2.*D0CIntCI(s0, weight, astau, order);
+    return 2.*D0CIntCI(s0, weight, sTau, astau, order);
   }
 
 
-  double cIntVpAD4FO(const double &s0, const Weight &weight,
+  double cIntVpAD4FO(const double &s0, const Weight &weight, const double &sTau,
                      const double &astau, const double &aGGinv) const {
-    return  D4CInt(s0, weight, astau, aGGinv, 1) + D4CInt(s0, weight, astau, aGGinv, -1);
+    return  D4CInt(s0, weight, sTau, astau, aGGinv, 1) + D4CInt(s0, weight, sTau, astau, aGGinv, -1);
   }
 
   double del0(const double &s0, const Weight &weight,
-              const double &astau, const int &order) const {
-    return (cIntVpAD0FO(s0, weight, astau, order)
-            - cIntVpAD0FO(s0, weight, astau, 0)
+              const double &sTau, const double &astau, const int &order) const {
+    return (cIntVpAD0FO(s0, weight, sTau, astau, order)
+            - cIntVpAD0FO(s0, weight, sTau, astau, 0)
             )/3.0;
   }
 
@@ -71,9 +69,9 @@ class TheoreticalMoments: public AdlerFunction {
             )/3.;
   }
 
-  double del4(const double &s0, const Weight &weight,
+  double del4(const double &s0, const Weight &weight, const double &sTau,
               const double &astau, const double &aGGinv) const {
-    return cIntVpAD4FO(s0, weight, astau, aGGinv)/3.;
+    return cIntVpAD4FO(s0, weight, sTau, astau, aGGinv)/3.;
   }
 
   double del6(const double &s0, const Weight &weight,
@@ -92,21 +90,17 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) const {
-    double s0 = pow(config_["constants"]["mTau"].get<double>(), 2);
     cout << "thMom: \t" << operator() (0, astau, aGGinv, rhoVpA, c8VpA, order) << endl;
-    cout << "Delta^(0): \t" << del0(s0, weight_, astau, order) << endl;
-    cout << "Delta^(4): \t" << del4(s0, weight_, astau, aGGinv) << endl;
-    cout << "Delta^(6): \t" << del6(s0, weight_, rhoVpA) << endl;
-    cout << "Delta^(8): \t" << del8(s0, weight_, c8VpA) << endl;
-    cout << "Delta_P+S: \t" << deltaP(s0, weight_) << endl;
+    cout << "Delta^(0): \t" << del0(config_.sTau, config_.weight, config_.sTau, astau, order) << endl;
+    cout << "Delta^(4): \t" << del4(config_.sTau, config_.weight, config_.sTau, astau, aGGinv) << endl;
+    cout << "Delta^(6): \t" << del6(config_.sTau, config_.weight, rhoVpA) << endl;
+    cout << "Delta^(8): \t" << del8(config_.sTau, config_.weight, c8VpA) << endl;
+    cout << "Delta_P+S: \t" << deltaP(config_.sTau, config_.weight) << endl;
   }
 
 
  private:
-  json config_;
-  Constants const_;
-  vector<double> s0s_;
-  Weight weight_;
+  Configuration config_;
 };
 
 #endif

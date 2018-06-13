@@ -16,7 +16,7 @@ class NumericsTest : public ::testing::Test {
     json config;
     configFile >> config;
     Constants const_(config);
-    numerics = new Numerics(const_);
+    numerics = new Numerics();
   }
 
   virtual void TearDown() {

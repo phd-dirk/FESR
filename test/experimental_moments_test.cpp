@@ -20,7 +20,7 @@ class ExperimentalMomentsTest : public ::testing::Test {
 
     Constants constants(config);
     expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json",
-                                     1, config["parameters"]["s0Set"], weight, constants);
+                                     config);
   }
 
   virtual void TearDown() {

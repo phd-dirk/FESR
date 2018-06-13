@@ -1,4 +1,3 @@
-#include "../src/constants.hpp"
 #include "../src/theoretical_moments.hpp"
 #include "../src/weights.hpp"
 #include "../src/s0_sets.hpp"
@@ -9,8 +8,6 @@
 #include <fstream>
 
 using json = nlohmann::json;
-using std::pow;
-using std::complex;
 
 class TheoreticalMomentsTest : public ::testing::Test {
 protected:
@@ -18,16 +15,16 @@ protected:
   Constants *const_;
   Weight *weight_;
   const uint order_ = 4;
-  const double s0_ = 3.1570893124;
+  const double sTau_ = 3.1570893124;
   const double astau_ = 0.31927;
   const double aGGinv_ = 2.1e-2;
   const double rhoVpA_ = -0.1894;
   const double c8VpA_ = 0.16315;
   virtual void SetUp() {
     std::ifstream configFile("./test/configuration_test.json");
-    json config;
-    configFile >> config;
-    const_ = new Constants(config);
+    json jsonConfig;
+    configFile >> jsonConfig;
+    Configuration config(jsonConfig);
     weight_ = new Weight(1);
     thMom_ = new TheoreticalMoments(config);
   }
@@ -47,36 +44,33 @@ TEST_F(TheoreticalMomentsTest, IntegralMoment) {
 }
 
 TEST_F(TheoreticalMomentsTest, Delta0) {
-  const double s0 = const_->kSTau;
   const double astau = 0.31927;
   const int order = 5;
-  EXPECT_NEAR(thMom_->del0(s0, *weight_, astau, order), 0.20298958142552484, 1e-13);
+  EXPECT_NEAR(thMom_->del0(sTau_, *weight_, sTau_, astau, order), 0.20298958142552484, 1e-13);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta2) {
-  const double s0 = const_->kSTau;
   const double astau = 0.31927;
   const int order = 2;
   // EXPECT_NEAR(thMom_->del2(s0, *weight_, astau, order), 3.90335378985309371e-5, 1e-13);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta4) {
-  EXPECT_NEAR(thMom_->del4(s0_, *weight_, astau_, aGGinv_), 7.93483938348380651e-4, 1.e-11);
+  EXPECT_NEAR(thMom_->del4(sTau_, *weight_, sTau_, astau_, aGGinv_), 7.93483938348380651e-4, 1.e-11);
   const double s0 = 3.;
-  EXPECT_NEAR(thMom_->del4(s0, *weight_, astau_, aGGinv_), 9.0756967163837078e-4 , 1.e-6);
+  EXPECT_NEAR(thMom_->del4(sTau_, *weight_, sTau_, astau_, aGGinv_), 9.0756967163837078e-4 , 1.e-6);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta68) {
-  const double s0 = const_->kSTau;
   const double rho = -0.1893979224795759;
   const double c8 = 0.16314594513667133;
   // Test delta_V+A^(8)
-  EXPECT_NEAR(thMom_->del68(s0, *weight_, 0., c8), -1.2966374009228992e-3, 1e-13);
+  EXPECT_NEAR(thMom_->del68(sTau_, *weight_, 0., c8), -1.2966374009228992e-3, 1e-13);
   // Test delta_V+A^(6)
-  EXPECT_NEAR(thMom_->del68(s0, *weight_, rho, 0.), -7.1284580508113966e-3, 1e-13);
+  EXPECT_NEAR(thMom_->del68(sTau_, *weight_, rho, 0.), -7.1284580508113966e-3, 1e-13);
 }
 
 TEST_F(TheoreticalMomentsTest, DeltaP) {
-  EXPECT_NEAR(thMom_->deltaP(s0_, *weight_), -2.63897241291510083e-3, 1e-13);
+  EXPECT_NEAR(thMom_->deltaP(sTau_, *weight_), -2.63897241291510083e-3, 1e-13);
 }
 

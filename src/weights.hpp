@@ -1,22 +1,17 @@
 #ifndef SRC_WEIGHTS_H
 #define SRC_WEIGHTS_H
 
+#include "./types.hpp"
 #include <cmath>
 #include <complex>
 #include <functional>
 
-using std::pow;
-using std::complex;
-using std::function;
-
-typedef function<complex<double>(complex<double>)> complexFunction;
-typedef complex<double> dComplex;
 
 class Weight {
  public:
   Weight(int i) : weightId_(i) {}
 
-  dComplex wD(dComplex x) const {
+  cmplx wD(cmplx x) const {
     switch(weightId_) {
     case 1: return wD00(x);
     case 2: return wD01(x);
@@ -34,7 +29,7 @@ class Weight {
     return wD00(x);
   }
 
-  dComplex wR(dComplex x) const {
+  cmplx wR(cmplx x) const {
     switch(weightId_) {
     case 1: return wR00(x);
     case 2: return wR01(x);
@@ -52,80 +47,80 @@ class Weight {
     return wR00(x);
   }
 
-  static dComplex wTau(dComplex x) {
+  static cmplx wTau(cmplx x) {
     return wD00(x);
   }
   // Polunomial weights
-  static dComplex wR00(dComplex x) {
+  static cmplx wR00(cmplx x) {
     return pow((1. - x), 2)*(1. + 2.*x);
   }
-  static dComplex wD00(dComplex x) {
+  static cmplx wD00(cmplx x) {
     return pow((1. - x), 3)*(1. + x);
   }
-  static dComplex wR01(dComplex x) {
+  static cmplx wR01(cmplx x) {
     return pow(1.0 - x, 2)*(1.0 + 2.0*x)*x;
   }
-  static dComplex wD01(dComplex x) {
+  static cmplx wD01(cmplx x) {
     return pow(1.0 - x, 3)*(3.0 + 9.0*x + 8.0*pow(x, 2))/10.0;
   }
-  static dComplex wR02(dComplex x) {
+  static cmplx wR02(cmplx x) {
     return pow(1.0 - x, 2)*(1.0 + 2.0*x)*pow(x, 2);
   }
-  static dComplex wD02(dComplex x) {
+  static cmplx wD02(cmplx x) {
     return 2.0*pow(1.0 - x, 3)*(1.0 + 3.0*x + 6.0*pow(x, 2) + 5.0*pow(x, 3))/15.0;
   }
-  static dComplex wR03(dComplex x) {
+  static cmplx wR03(cmplx x) {
     return pow(1.0 - x, 2)*(1.0 + 2.0*x)*pow(x, 3);
   }
-  static dComplex wD03(dComplex x) {
+  static cmplx wD03(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 3.0*x + 6.0*pow(x, 2) + 10.0*pow(x, 3) + 8.0*pow(x, 4))/14.0;
   }
-  static dComplex wR10(dComplex x) {
+  static cmplx wR10(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x);
   }
-  static dComplex wD10(dComplex x) {
+  static cmplx wD10(cmplx x) {
     return pow(1.0 - x, 4)*(7.0 + 8.0*x)/10.0;
   }
-  static dComplex wR11(dComplex x) {
+  static cmplx wR11(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x)*x;
   }
-  static dComplex wD11(dComplex x) {
+  static cmplx wD11(cmplx x) {
     return pow(1.0 - x, 4)*pow(1.0 + 2.0*x, 2)/6.0;
   }
-  static dComplex wR12(dComplex x) {
+  static cmplx wR12(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x)*pow(x, 2);
   }
-  static dComplex wD12(dComplex x) {
+  static cmplx wD12(cmplx x) {
     return pow(1.0 - x, 4)*(13.0 + 52.0*x + 130.0*pow(x, 2) + 120.0*pow(x, 3))/210.0;
   }
-  static dComplex wR13(dComplex x) {
+  static cmplx wR13(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x)*pow(x, 3);
   }
-  static dComplex wD13(dComplex x) {
+  static cmplx wD13(cmplx x) {
     return pow(1.0 - x, 4)*(2.0 + 8.0*x + 20.0*pow(x, 2) + 40.0*pow(x, 3) + 35.0*pow(x, 4))/70.0;
   }
-  static dComplex wR20(dComplex x) {
+  static cmplx wR20(cmplx x) {
     return pow(1.0 - x, 4)*(1.0 + 2.0*x);
   }
-  static dComplex wD20(dComplex x) {
+  static cmplx wD20(cmplx x) {
     return 2.0*pow(1.0 - x, 5)*(4.0 + 5.0*x)/15.0;
   }
-  static dComplex wR21(dComplex x) {
+  static cmplx wR21(cmplx x) {
     return pow(1.0 - x, 4)*(1.0 + 2.0*x)*x;
   }
-  static dComplex wD21(dComplex x) {
+  static cmplx wD21(cmplx x) {
     return pow(1.0 - x, 5)*(11.0 + 55.0*x + 60.0*pow(x, 2))/105.0;
   }
-  static dComplex wR22(dComplex x) {
+  static cmplx wR22(cmplx x) {
     return pow(1.0 - x, 4)*(1.0 + 2.0*x)*pow(x, 2);
   }
-  static dComplex wD22(dComplex x) {
+  static cmplx wD22(cmplx x) {
     return pow(1.0 - x, 5)*(1.0 + 5.0*x + 15.0*pow(x, 2) + 15.0*pow(x, 3))/30.0;
   }
-  static dComplex wR23(dComplex x) {
+  static cmplx wR23(cmplx x) {
     return pow(1.0 - x, 4)*(1.0 + 2.0*x)*pow(x, 3);
   }
-  static dComplex wD23(dComplex x) {
+  static cmplx wD23(cmplx x) {
     return pow(1.0 - x, 5)*(17.0 + 85.0*x + 255.0*pow(x, 2) + 595.0*pow(x, 3) + 560.0*pow(x, 4))/1260.0;
   }
 
