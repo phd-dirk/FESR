@@ -45,10 +45,11 @@ public:
   double D4CInt(const double &s0, const Weight &weight, const double &sTau,
                 const double &astau, const double &aGGinv, const int &r) const;
 
-  cmplx D68(const cmplx &s, const double &rhoVpA, const double &c8VpA) const {
-    return 3.e-2*rhoVpA/pow(s, 3) + 4.e-2*c8VpA/pow(s, 4);
+  cmplx D68(const cmplx &s, const double &rho, const double &c8) const {
+    return 0.03*rho/pow(s, 3) + 0.04*c8/pow(s, 4);
   }
-  double D68CInt(const double &s0, const Weight &weight, const double &rhoVpA, const double &c8VpA) const {
+  double D68CInt(const double &s0, const Weight &weight, const double &rhoVpA,
+                 const double &c8VpA) const {
     cmplxFunc f =
       [&](cmplx s) -> cmplx {
       return weight.wD(s)*D68(s0*s, rhoVpA, c8VpA);

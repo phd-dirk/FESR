@@ -67,13 +67,13 @@ TEST_F(AdlerFunctionTest, D4CInt) {
   EXPECT_NEAR(adler->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.28, 2.1e-2, 1), -1.8945624330502554e-2, 1e-15);
 }
 
-// TEST_F(AdlerFunctionTest, D68) {
-//   const complex<double> s(-1.7585656673884618, 1.9150579086499120);
-//   const double rho = -0.1894;
-//   const double c8 = 0.16315;
-//   EXPECT_NEAR(adler->D68(s, rho, c8).real(), -3.9659215963967076e-4, 1e-13);
-//   EXPECT_NEAR(adler->D68(s, rho, c8).imag(), 1.7341429761413442e-4, 1e-13);
-// }
+TEST_F(AdlerFunctionTest, D68) {
+  // D68(s, rho, c8)
+   EXPECT_NEAR(adler->D68(3.0, -0.1894, 0.16315).real(), -1.2987654320987656e-4, 1e-15);
+   EXPECT_NEAR(adler->D68(2.0, -0.1894, 0.16315).real(), -3.02375e-4, 1e-15);
+   EXPECT_NEAR(adler->D68(2.0, -0.5, 0.16315).real(), -1.467124999999999999e-3, 1e-15);
+   EXPECT_NEAR(adler->D68(2.0, -0.5, 0.1).real(), -1.6249999999999999999999e-3, 1e-15);
+}
 
 // TEST_F(AdlerFunctionTest, D68CInt) {
 //   const double s0 = 2.4;
