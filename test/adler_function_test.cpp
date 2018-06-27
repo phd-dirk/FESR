@@ -62,7 +62,9 @@ TEST_F(AdlerFunctionTest, D4) {
 
 TEST_F(AdlerFunctionTest, D4CInt) {
   // D4CInt(s0, weight, sTau, astau, aGGinv, r)
-  // EXPECT_NEAR(adler->D4CInt(3.0, Weight(1), 3.1570893124000001, 0.31927, 2.1e-2, 1), 1.942350658196885e-3, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(3.0, Weight(1), 3.1570893124000001, 0.31927, 2.1e-2, 1), 1.942350658196885e-3, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.31927, 2.1e-2, 1), -1.8595234733280692e-2 , 1e-15);
+  EXPECT_NEAR(adler->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.28, 2.1e-2, 1), -1.8945624330502554e-2, 1e-15);
 }
 
 // TEST_F(AdlerFunctionTest, D68) {
