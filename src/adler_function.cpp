@@ -6,8 +6,8 @@ cmplx AdlerFunction::D0(const cmplx &s, const cmplx &mu2, const double &sTau,
 
   cmplx amu = amu_(mu2, sTau, astau/M_PI);
   // cout << "mu: " << mu << "\t" << "s: " << s << endl;
-  cout << "astau: " << astau/M_PI << endl;
-  cout << "L: " << L << "\t" << "amu: " << amu << endl;
+  // cout << "astau: " << astau/M_PI << endl;
+  // cout << "L: " << L << "\t" << "amu: " << amu << endl;
 
   cmplx sum(0., 0.);
   for (int n = 1; n <= order; n++) {
@@ -39,9 +39,8 @@ double AdlerFunction::D0CIntFO(const double &s0, const Weight weight,
    cmplxFunc f =
     [&](cmplx s) -> cmplx {
     cmplx mu2(s0, 0.);
-    cmplx mu = sqrt(mu2);
 
-    return weight.wD(s)*D0(s0*s, mu, sTau, astau, order);
+    return weight.wD(s)*D0(s0*s, mu2, sTau, astau, order);
   };
 
   return (3*M_PI*complexContourIntegral(f)).real();

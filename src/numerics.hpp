@@ -136,9 +136,9 @@ class Numerics {
       },
       &func
     };
-    // gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1200, 6, w_, &result, &error);
-    size_t fCalls = 1100;
-    gsl_integration_qng(&F, from, to, epsabs_, epsrel_, &result, &error, &fCalls);
+    gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1200, 6, w_, &result, &error);
+    // size_t fCalls = 1100;
+    // gsl_integration_qng(&F, from, to, epsabs_, epsrel_, &result, &error, &fCalls);
     // cout << "error \t" << error << endl;
     return result;
   }
@@ -198,7 +198,7 @@ class Numerics {
  private:
   gsl_integration_workspace * w_;
   const double epsrel_ = 0.; // relative error
-  const double epsabs_ = 1e-5; // absolute error
+  const double epsabs_ = 1e-10; // absolute error
   vec gaulegX;
   vec gaulegW;
 };
