@@ -58,15 +58,14 @@ double AdlerFunction::D0CIntCI(const double &s0, const Weight weight,
   return (3*M_PI*complexContourIntegral(f)).real();
 };
 
-cmplx AdlerFunction::D2(const cmplx &s, const cmplx mu, const double &astau,
+cmplx AdlerFunction::D2(const cmplx &s, const cmplx mu2, const double &astau,
                         const int &order, const int &r) const {
   // double ePLT3 = 1.e2; // guesstimate
   const int i = 0, j = 1;
 
-  cmplx mu2 = pow(mu, 2);
   cmplx L = log(-s/mu2);
-  cmplx amu = amu_(mu, config_.sTau, astau/M_PI);
-  cmplx rmq = mq_(mu, config_.sTau, astau/M_PI);
+  cmplx amu = amu_(mu2, config_.sTau, astau/M_PI);
+  cmplx rmq = mq_(mu2, config_.sTau, astau/M_PI);
 
   cmplx m2a = (pow(config_.mq[i], 2) + pow(config_.mq[j], 2))*pow(rmq, 2);
   cmplx m2b = r*config_.mq[i]*config_.mq[j]*pow(rmq, 2);
@@ -95,14 +94,13 @@ cmplx AdlerFunction::D2(const cmplx &s, const cmplx mu, const double &astau,
   return 3.*sum/(4*pow(M_PI, 2)*s);
 }
 
-cmplx AdlerFunction::D4(const cmplx &s, const cmplx &mu,
+cmplx AdlerFunction::D4(const cmplx &s, const cmplx &mu2, const double &sTau,
                         const double &astau, const double &aGGinv,
                         const int &order, const int &r) const {
 
   const int i = 0, j = 1;
-  cmplx mu2 = pow(mu, 2);
   cmplx L = log(-s/mu2);
-  cmplx amu = amu_(mu, config_.sTau, astau/M_PI);
+  cmplx amu = amu_(mu2, sTau, astau/M_PI);
 
 
   cmplx gluonCondensate(0.0, 0.0);
@@ -142,8 +140,9 @@ cmplx AdlerFunction::D4(const cmplx &s, const cmplx &mu,
                         )*pow(amu, 3);
   quarkCondensate /= pow(s, 2);
 
+  // m4
   cmplx m4(0.0, 0.0);
-  cmplx rmq = mq_(mu, config_.sTau, astau/M_PI);
+  cmplx rmq = mq_(mu2, config_.sTau, astau/M_PI);
 
   cmplx m4a = (pow(config_.mq[i], 4) + pow(config_.mq[j], 4))*pow(rmq, 4);
   cmplx m4b = r*(config_.mq[i]*pow(config_.mq[j], 3) + config_.mq[j]*pow(config_.mq[i], 3))*pow(rmq, 4);
@@ -175,8 +174,7 @@ double AdlerFunction::D4CInt(const double &s0, const Weight &weight, const doubl
   cmplxFunc f =
     [&](cmplx s) -> cmplx {
     cmplx mu2(s0, 0.);
-    cmplx mu = sqrt(mu2);
-    return weight.wD(s)*D4(s0*s, mu, astau, aGGinv, norder, r);
+    return weight.wD(s)*D4(s0*s, mu2, sTau, astau, aGGinv, norder, r);
   };
 
   return (3*M_PI*gaussIntegration(f)).real();

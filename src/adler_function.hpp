@@ -39,7 +39,7 @@ public:
     return (3*M_PI*complexContourIntegral(f)).real();
   };
 
-  cmplx D4(const cmplx &s, const cmplx &mu2,
+  cmplx D4(const cmplx &s, const cmplx &mu2, const double &sTau,
            const double &astau, const double &aGGinv,
            const int &order, const int &r) const;
   double D4CInt(const double &s0, const Weight &weight, const double &sTau,
