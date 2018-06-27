@@ -75,9 +75,11 @@ TEST_F(AdlerFunctionTest, D68) {
    EXPECT_NEAR(adler->D68(2.0, -0.5, 0.1).real(), -1.6249999999999999999999e-3, 1e-15);
 }
 
-// TEST_F(AdlerFunctionTest, D68CInt) {
-//   const double s0 = 2.4;
-//   const double rho = -0.1894;
-//   const double c8 = 0.16315;
-//   EXPECT_NEAR(adler->D68CInt(s0, *weight_, rho, c8), -6.0327814112243174e-2, 1e-13);
-// }
+TEST_F(AdlerFunctionTest, D68CInt) {
+  // D68CInt(s0, weight, rho, c8)
+  EXPECT_NEAR(adler->D68CInt(3.0, Weight(1), -0.1894, 0.16315), -2.9695080856551679e-2, 1e-15);
+  EXPECT_NEAR(adler->D68CInt(2.0, Weight(1), -0.1894, 0.16315), -0.10827202768105049, 1e-15);
+  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.1894, 0.16315), 8.1905379523540371e-3, 1e-15);
+  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.7, 0.16315), -6.7400762155589364e-2, 1e-15);
+  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.7, 0.9), 9.6228642910621415e-2, 1e-15);
+}
