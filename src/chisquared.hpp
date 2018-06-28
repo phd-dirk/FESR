@@ -110,11 +110,11 @@ class Chisquared {
     cout << endl;
   }
 
+  const vec s0Set_;
+  const int order_;
   const ExperimentalMoments expMom_;
   const TheoreticalMoments thMom_;
  private:
-  const vec s0Set_;
-  const int order_;
 };
 
 #endif

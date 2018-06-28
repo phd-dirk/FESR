@@ -83,3 +83,10 @@ TEST_F(AdlerFunctionTest, D68CInt) {
   EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.7, 0.16315), -6.7400762155589364e-2, 1e-15);
   EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.7, 0.9), 9.6228642910621415e-2, 1e-15);
 }
+
+TEST_F(AdlerFunctionTest, deltaP) {
+  // deltaP(s0, weight)
+  EXPECT_NEAR(adler->deltaP(3.0, Weight(1)), -2.7752063630383842e-3, 1e-15);
+  EXPECT_NEAR(adler->deltaP(2.0, Weight(1)), -4.138431838090359e-3, 1e-15);
+  EXPECT_NEAR(adler->deltaP(2.0, Weight(6)), -4.809780763096577e-5, 1e-15);
+}
