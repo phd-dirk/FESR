@@ -11,10 +11,8 @@ class TheoreticalMoments: public AdlerFunction {
   TheoreticalMoments(const Configuration &config) :
     AdlerFunction(config), config_(config) {}
 
-  double operator ()(const int &i, const double &astau, const double &aGGinv,
+  double operator ()(const double &s0, const double &astau, const double &aGGinv,
                      const double &rhoVpA, const double &c8VpA, const double &order) const {
-    double s0 = config_.s0Set[i];
-
     double rTauTh = 0.;
     // D0
     if ( config_.OPE.D0 ) {
