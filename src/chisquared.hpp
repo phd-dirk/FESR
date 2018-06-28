@@ -66,14 +66,32 @@ class Chisquared {
     double rhoD6VpA = xx[2];
     double c8D8VpA = xx[3];
 
+    return chi2(s0Set_, astau, aGGinv, rhoD6VpA, c8D8VpA);
+  }
+
+  double operator ()(const vec s0Set, const double &astau, const double &aGGinv, const double &rho, const double &c8) const {
+    return chi2(s0Set, astau, aGGinv, rho, c8);
+  }
+
+  double operator ()(const json &config) const {
+    double xx[4];
+    xx[0] = config["variables"]["astau"]["value"];
+    xx[1] = config["variables"]["aGGInv"]["value"];
+    xx[2] = config["variables"]["rhoVpA"]["value"];
+    xx[3] = config["variables"]["c8VpA"]["value"];
+    return operator()(xx);
+  }
+
+  double chi2(const vec s0Set, const double &astau, const double &aGGinv,
+              const double &rho, const double &c8) const {
     double chi = 0;
 
     ublas::matrix<double> covMat = expMom_.covarianceMatrix;
     ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix; //readMatrixFromFile(9, "./data/invCovMat.dat");
-    vec momDiff(s0Set_.size());
-    for(uint i = 0; i < s0Set_.size(); i++) {
-      const double s0 = s0Set_[i];
-      momDiff[i] = expMom_(i) - thMom_(s0, astau, aGGinv, rhoD6VpA, c8D8VpA, order_);
+    vec momDiff(s0Set.size());
+    for(uint i = 0; i < s0Set.size(); i++) {
+      const double s0 = s0Set[i];
+      momDiff[i] = expMom_(i) - thMom_(s0, astau, aGGinv, rho, c8, order_);
     }
 
     for(uint k = 0; k < s0Set_.size(); k++) {
@@ -83,23 +101,6 @@ class Chisquared {
     }
 
     return chi;
-  }
-  double operator ()(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA) const {
-    double xx [4];
-    xx[0] = astau;
-    xx[1] = aGGinv;
-    xx[2] = rhoVpA;
-    xx[3] = c8VpA;
-    return operator()(xx);
-  }
-  double operator ()(const json &config) const {
-    double xx[4];
-    xx[0] = config["variables"]["astau"]["value"];
-    xx[1] = config["variables"]["aGGInv"]["value"];
-    xx[2] = config["variables"]["rhoVpA"]["value"];
-    xx[3] = config["variables"]["c8VpA"]["value"];
-
-    return operator()(xx);
   }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) const {

@@ -263,7 +263,7 @@ int main (int argc, char* argv[]) {
   const double *errors = min->Errors();
   const double edm = min->Edm();
   chisquared.log(xs[0], xs[1], xs[2], xs[3]);
-  const double chi2AtMin = chisquared(xs[0], xs[1], xs[2], xs[3]);
+  const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
   // min->PrintResults();
 
   writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);

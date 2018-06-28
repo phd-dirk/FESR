@@ -31,5 +31,5 @@ class ChisquaredTest : public ::testing::Test {
 TEST_F(ChisquaredTest, chi2) {
   double xx[4] = { 0.31921, 0.21e-1, -0.1894, 0.16315 };
   Chisquared chi = *chi_;
-  // EXPECT_NEAR(chi(xx), 9.3758915658581827, 1e-13);
+  EXPECT_NEAR(chi(xx), 9.3758915658581827, 1e-13);
 }
