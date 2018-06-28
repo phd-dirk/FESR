@@ -116,11 +116,24 @@ int dof(const json config) {
   return numS0s-numVar;
 }
 
-void writeOutput(const string filePath, const double *variables, const double *errors, const double &chi2, const double &edm, const json config) {
+int dof(const Configuration config) {
+  int dof = config.s0Set.size();
+  if(!config.astau.isFixed)
+    dof--;
+  if(!config.aGGInv.isFixed)
+    dof--;
+  if(!config.rhoVpA.isFixed)
+    dof--;
+  if(!config.c8VpA.isFixed)
+    dof--;
+  return dof;
+}
+
+void writeOutput(const string filePath, const double *variables, const double *errors, const double &chi2, const double &edm, const Configuration config) {
   ofstream file;
   file.open(filePath, std::ios::app);
   file << std::setprecision(15);
-  file << config["parameters"]["s0Set"].size();
+  file << config.s0Set.size();
 
   // add variables and errors
   for(int i = 0; i < 4; i++) {
@@ -128,10 +141,11 @@ void writeOutput(const string filePath, const double *variables, const double *e
   }
 
   // add chi2 and emd
+  // dof = number of used s0 - free parameters
   file << "," << chi2 << "," << chi2/dof(config) << "," << edm;
 
-  // add used s0s
-  vector<double> s0s = config["parameters"]["s0Set"];
+  // // add used s0s
+  vector<double> s0s = config.s0Set;
   std::stringstream ss;
   ss << std::setprecision(15);
   for(size_t i = 0; i < s0s.size(); ++i) {
@@ -143,9 +157,9 @@ void writeOutput(const string filePath, const double *variables, const double *e
   cout << s0sStr << endl;
   file << ",[" << ss.str() << "]";
 
-  cout << "weight: " << config["parameters"]["weight"] << endl;
+  cout << "weight: " << config.weight.getId() << endl;
   // add used weight
-  file << "," << config["parameters"]["weight"];
+  file << "," << config.weight.getId();
 
   file << endl;
   file.close();
@@ -202,59 +216,58 @@ int main (int argc, char* argv[]) {
 
 
   // compare with matthias
-  cout << "chi2Mat \t" << chisquared(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2) << endl;
+  // cout << "chi2Mat \t" << chisquared(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2) << endl;
   // chisquared.log(0.32136770578073276, 2.1e-2, -0.30949, -3.0869e-2);
 
 
   // MINUIT
-  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // // set tolerances
-  // // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1.0);
+  // set tolerances
+  // min->SetMaxFunctionCalls(10000000); // for Minuit2
+  // min->SetMaxIterations(10000000); // for GSL
+  min->SetTolerance(1.0);
 
-  // min->SetStrategy(2);
-  // min->SetPrintLevel(3); // activate logging
+  min->SetStrategy(2);
+  min->SetPrintLevel(3); // activate logging
 
-  // // function wrapper
-  // Functor chi2(chisquared, 4);
+  // function wrapper
+  Functor chi2(chisquared, 4);
 
-  // min->SetFunction(chi2);
+  min->SetFunction(chi2);
 
-  // // set free variables to be minimized
-  // if (config["variables"]["astau"]["fixed"]) {
-  //   min->SetFixedVariable(0, "astau", config["variables"]["astau"]["value"]);
-  // } else {
-  //   min->SetVariable(0, "astau", config["variables"]["astau"]["value"], config["variables"]["astau"]["stepSize"]);
-  // }
-  // if (config["variables"]["aGGInv"]["fixed"]) {
-  //   min->SetFixedVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"]);
-  // } else {
-  //   min->SetVariable(1, "aGGInv", config["variables"]["aGGInv"]["value"], config["variables"]["aGGInv"]["stepSize"]);
-  // }
-  // if (config["variables"]["rhoVpA"]["fixed"]) {
-  //   cout << "fixed" << endl;
-  //   min->SetFixedVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"]);
-  // } else {
-  //   min->SetVariable(2, "rhoVpA", config["variables"]["rhoVpA"]["value"], config["variables"]["rhoVpA"]["stepSize"]);
-  // }
-  // if (config["variables"]["c8VpA"]["fixed"]) {
-  //   min->SetFixedVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"]);
-  // } else {
-  //   min->SetVariable(3, "c8VpA", config["variables"]["c8VpA"]["value"], config["variables"]["c8VpA"]["stepSize"]);
-  // }
+  // set free variables to be minimized
+  if (config.astau.isFixed) {
+    min->SetFixedVariable(0, "astau", config.astau.value);
+  } else {
+    min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
+  }
+  if (config.aGGInv.isFixed) {
+    min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
+  } else {
+    min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
+  }
+  if (config.rhoVpA.isFixed) {
+    min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
+  } else {
+    min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
+  }
+  if (config.c8VpA.isFixed) {
+    min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
+  } else {
+    min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
+  }
 
-  // // minimize!
-  // min->Minimize();
-  // const double *xs = min->X();
-  // const double *errors = min->Errors();
-  // const double edm = min->Edm();
-  // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
-  // const double chi2AtMin = chisquared(xs[0], xs[1], xs[2], xs[3]);
-  // // min->PrintResults();
+  // minimize!
+  min->Minimize();
+  const double *xs = min->X();
+  const double *errors = min->Errors();
+  const double edm = min->Edm();
+  chisquared.log(xs[0], xs[1], xs[2], xs[3]);
+  const double chi2AtMin = chisquared(xs[0], xs[1], xs[2], xs[3]);
+  // min->PrintResults();
 
-  // writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);
+  writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);
 
   return 0;
 }

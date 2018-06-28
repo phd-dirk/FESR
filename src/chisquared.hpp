@@ -72,7 +72,6 @@ class Chisquared {
     ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix; //readMatrixFromFile(9, "./data/invCovMat.dat");
     vec momDiff(s0Set_.size());
     for(uint i = 0; i < s0Set_.size(); i++) {
-      cout << "thMom: " << i << "\t" << thMom_(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_) << endl;
       momDiff[i] = expMom_(i) - thMom_(i, astau, aGGinv, rhoD6VpA, c8D8VpA, order_);
     }
 

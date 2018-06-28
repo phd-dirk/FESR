@@ -30,7 +30,26 @@ class Configuration {
     nf(config["parameters"]["nf"]),
 
     OPE{ "FO", true, true, true, true },
-    astau{ false, 0.323, 0.002 },
+    astau {
+      config["variables"]["astau"]["fixed"],
+      config["variables"]["astau"]["value"],
+      config["variables"]["astau"]["stepSize"]
+        },
+    aGGInv {
+      config["variables"]["aGGInv"]["fixed"],
+        config["variables"]["aGGInv"]["value"],
+        config["variables"]["aGGInv"]["stepSize"]
+        },
+    rhoVpA {
+      config["variables"]["rhoVpA"]["fixed"],
+        config["variables"]["rhoVpA"]["value"],
+        config["variables"]["rhoVpA"]["stepSize"]
+        },
+    c8VpA {
+      config["variables"]["c8VpA"]["fixed"],
+        config["variables"]["c8VpA"]["value"],
+        config["variables"]["c8VpA"]["stepSize"]
+        },
 
     mTau(config["parameters"]["mTau"]),
     sTau(pow(mTau, 2)),
@@ -54,7 +73,7 @@ class Configuration {
 
   // OPE
   OPE OPE;
-  Variable astau;
+  Variable astau, aGGInv, rhoVpA, c8VpA;
 
   // masses
   const double mTau;

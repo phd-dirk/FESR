@@ -11,6 +11,8 @@ class Weight {
  public:
   Weight(int i) : weightId_(i) {}
 
+  int getId() const { return weightId_; }
+
   cmplx wD(cmplx x) const {
     switch(weightId_) {
     case 1: return wD00(x);
