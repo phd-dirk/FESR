@@ -94,8 +94,8 @@ class Chisquared {
       momDiff[i] = expMom_(i) - thMom_(s0, astau, aGGinv, rho, c8, order_);
     }
 
-    for(uint k = 0; k < s0Set_.size(); k++) {
-      for(uint l = 0; l < s0Set_.size(); l++) {
+    for(uint k = 0; k < s0Set.size(); k++) {
+      for(uint l = 0; l < s0Set.size(); l++) {
         chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
       }
     }

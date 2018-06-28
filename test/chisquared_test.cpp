@@ -14,7 +14,7 @@ class ChisquaredTest : public ::testing::Test {
   virtual void SetUp() {
     const uint order = 5;
     const uint nc = 3, nf = 3;
-    std::ifstream configFile("./test/configuration_test.json");
+    std::ifstream configFile("./test/configuration_test2.json");
     json jsonConfig;
     configFile >> jsonConfig;
 
@@ -29,7 +29,6 @@ class ChisquaredTest : public ::testing::Test {
 };
 
 TEST_F(ChisquaredTest, chi2) {
-  double xx[4] = { 0.31921, 0.21e-1, -0.1894, 0.16315 };
   Chisquared chi = *chi_;
-  EXPECT_NEAR(chi(xx), 9.3758915658581827, 1e-13);
+  EXPECT_NEAR(chi({ 3.0 }, 0.31927, 0.021, -0.1894, 0.16315), 0.37595084146692792 , 1e-12);
 }

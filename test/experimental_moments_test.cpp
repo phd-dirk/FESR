@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "../src/types.hpp"
 #include "../src/experimentalMoments.hpp"
 #include "../src/weights.hpp"
 #include "json.hpp"
@@ -10,6 +11,9 @@ using std::vector;
 class ExperimentalMomentsTest : public ::testing::Test {
  protected:
   ExperimentalMoments *expMom;
+  ExperimentalMoments *expMom2;
+
+
   virtual void SetUp() {
     Weight weight(1);
     std::ifstream configFile("./test/configuration_test.json");
@@ -17,6 +21,12 @@ class ExperimentalMomentsTest : public ::testing::Test {
     configFile >> config;
 
     expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config);
+
+    std::ifstream configFile2("./test/configuration_test2.json");
+    json config2;
+    configFile2 >> config2;
+
+    expMom2 = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config2);
   }
 
   virtual void TearDown() {
@@ -55,6 +65,9 @@ TEST_F(ExperimentalMomentsTest, experimentalMomentPlusPionPoleMoments) {
   EXPECT_NEAR(expPlusPionPoleMoments[1], 3.4855000824156286, 1.e-14);
   EXPECT_NEAR(expPlusPionPoleMoments[4], 3.5298822719575593, 1.e-14);
   EXPECT_NEAR(expPlusPionPoleMoments[8], 3.5694369485452664, 1.e-14);
+
+  vec expPlusPionPoleMoments2 = expMom2->getExpPlusPionPoleMoments();
+  EXPECT_NEAR(expPlusPionPoleMoments2[0], 3.4801214322769858, 1.e-14);
 }
 
 TEST_F(ExperimentalMomentsTest, kPiFac) {
