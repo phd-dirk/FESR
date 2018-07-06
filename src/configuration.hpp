@@ -29,7 +29,7 @@ class Configuration {
     nc(config["parameters"]["nc"]),
     nf(config["parameters"]["nf"]),
 
-    OPE{ "FO", true, true, true, true },
+    OPE{ config["scheme"], true, true, true, true },
     astau {
       config["variables"]["astau"]["fixed"],
       config["variables"]["astau"]["value"],

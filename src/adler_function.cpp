@@ -5,29 +5,21 @@ cmplx AdlerFunction::D0(const cmplx &s, const cmplx &mu2, const double &sTau,
   cmplx L = log(-s/mu2);
 
   cmplx amu = amu_(mu2, sTau, astau/M_PI);
-  // cout << "mu: " << mu << "\t" << "s: " << s << endl;
-  // cout << "astau: " << astau/M_PI << endl;
-  // cout << "L: " << L << "\t" << "amu: " << amu << endl;
+
+  // cout << "s: " << s << endl;
+  // cout << "mu2: " << mu2 << endl;
+  // cout << "astau: " << astau << endl;
+  // cout << "L: " << L << endl;
+  // cout << "amu: " << amu << endl;
+  // cout << "order \t" << order << endl;
 
   cmplx sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
-      // cout << "c(" << n << ", " << k << ") \t" << const_.c_[n][k] << endl;
-      sum += pow(amu, n)*(double)k*config_.c[n][k]*pow(L,k-1);
-      // cout << sum  << "\t" << pow(L,k-1) << endl;
+      // cout << "c(" << n << ", " << k << ") \t" << config_.c[n][k] << endl;
+      cmplx powL = ( k-1 == 0 ) ? 1.0 : pow(L, k-1);
+      sum += pow(amu, n)*(double)k*config_.c[n][k]*powL;
     }
-  }
-
-  return 1/4./pow(M_PI, 2)*(config_.c[0][1] + sum);
-}
-
-cmplx AdlerFunction::D0CI(const cmplx &s, const cmplx &mu, const double &sTau, const double &astau, const double &order) const {
-  cmplx amu = amu_(mu, sTau, astau/M_PI);
-
-  cmplx sum(0., 0.);
-  for (int n = 1; n <= order; n++) {
-    int k = 1;
-    sum += pow(amu, n)*(double)k*config_.c[n][k];
   }
 
   return 1/4./pow(M_PI, 2)*(config_.c[0][1] + sum);
@@ -51,11 +43,10 @@ double AdlerFunction::D0CIntCI(const double &s0, const Weight weight,
                                const double &order) const {
   function<complex<double>(complex<double>)> f =
     [&](complex<double> x) -> complex<double> {
-    complex<double> xmu2 = -x*s0;
-    return weight.wD(x)*D0CI(s0*x, xmu2, astau, sTau, order);
+    return weight.wD(x)*D0(s0*x, -x*s0, sTau, astau, order);
   };
 
-  return (3*M_PI*complexContourIntegral(f)).real();
+  return (3*M_PI*gaussIntegration(f)).real();
 };
 
 cmplx AdlerFunction::D2(const cmplx &s, const cmplx mu2, const double &astau,
@@ -159,15 +150,16 @@ cmplx AdlerFunction::D4(const cmplx &s, const cmplx &mu2, const double &sTau,
 
   return gluonCondensate + quarkCondensate + m4;
 }
-double AdlerFunction::D4CInt(const double &s0, const Weight &weight, const double &sTau,
-                             const double &astau, const double &aGGinv, const int &r) const {
+double AdlerFunction::D4CInt(const double &s0, const Weight &weight,
+                             const double &sTau, const double &astau,
+                             const double &aGGinv, const int &r) const {
   cmplxFunc fTest =
     [&](cmplx s) -> cmplx const {
     return weight.wD(s)/pow(s, 2);
   };
 
   double norder = 2;
-  if ( abs(gaussIntegration(fTest).real()) < 2.e-14) {
+  if ( abs(complexContourIntegral(fTest).real()) < 2.e-14) {
     norder = 3;
   }
 
@@ -177,5 +169,5 @@ double AdlerFunction::D4CInt(const double &s0, const Weight &weight, const doubl
     return weight.wD(s)*D4(s0*s, mu2, sTau, astau, aGGinv, norder, r);
   };
 
-  return (3*M_PI*gaussIntegration(f)).real();
+  return (3*M_PI*complexContourIntegral(f)).real();
 };

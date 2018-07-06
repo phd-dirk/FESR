@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <iostream>
+#include <exception>
 
 class AdlerFunction : Numerics {
 public:

@@ -198,7 +198,7 @@ class Numerics {
  private:
   gsl_integration_workspace * w_;
   const double epsrel_ = 0.; // relative error
-  const double epsabs_ = 1e-10; // absolute error
+  const double epsabs_ = 1e-12; // absolute error
   vec gaulegX;
   vec gaulegW;
 };

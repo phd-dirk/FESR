@@ -52,7 +52,6 @@ class TheoreticalMoments: public AdlerFunction {
                      const double &astau, const double &aGGinv) const {
     return  D4CInt(s0, weight, sTau, astau, aGGinv, 1) + D4CInt(s0, weight, sTau, astau, aGGinv, -1);
   }
-
   double del0(const double &s0, const Weight &weight,
               const double &sTau, const double &astau, const int &order) const {
     return (cIntVpAD0FO(s0, weight, sTau, astau, order)
@@ -88,7 +87,7 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) const {
-    cout << "thMom: \t" << operator() (0, astau, aGGinv, rhoVpA, c8VpA, order) << endl;
+    cout << "thMom: \t" << operator() (config_.sTau, astau, aGGinv, rhoVpA, c8VpA, order) << endl;
     cout << "Delta^(0): \t" << del0(config_.sTau, config_.weight, config_.sTau, astau, order) << endl;
     cout << "Delta^(4): \t" << del4(config_.sTau, config_.weight, config_.sTau, astau, aGGinv) << endl;
     cout << "Delta^(6): \t" << del6(config_.sTau, config_.weight, rhoVpA) << endl;
