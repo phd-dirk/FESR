@@ -18,6 +18,11 @@ struct OPE {
   bool PionPole;
 };
 
+struct Input {
+  uint weight;
+  vec s0Set;
+};
+
 class Configuration {
  public:
   Configuration(json config) :
@@ -58,6 +63,10 @@ class Configuration {
     dBe(config["parameters"]["dBe"])
 
   {
+    // add weights & s0Sets
+    for (auto& input : config["parameters"]["input"]) {
+      inputs.push_back({ input["weight"].get<uint>(), input["s0Set"].get<vec>() });
+    }
     initializeBetaCoefficients();
     initializeAdlerCoefficients();
   }
@@ -66,12 +75,14 @@ class Configuration {
   const vec s0Set;
   const double RVANormalization;
   Weight weight;
+  std::vector<Input> inputs;
 
   // QCD
   const double nc;
   const double nf;
 
-  // OPE
+ 
+ // OPE
   OPE OPE;
   Variable astau, aGGInv, rhoVpA, c8VpA;
 
