@@ -6,11 +6,19 @@
 \usepackage{numprint} % truncate numbers in fit tables
 \npdecimalsign{.}
 \nprounddigits{5}
+\usepackage{tabu}
 
 
 \begin{document}
+% Fit to Aleph V+A spectrum: (06.07.2018) \\ 
+% Different weights, FOPT \\
+% 9 s0s: [3.1570893124, 3.0, 2.8, 2.6, 2.4, 2.3, 2.2, 2.1, 2.0] \\
+% $a_s^=0.323$, $GG^*=0.021$, $\rho_{V+A}=-0.31489$,
+% $c_{8,V+A}=-0.026525$\footnote{values marked with a star ($x^*$) are fixed} \\
+% \csvreader[fitStyle]{02fits.csv}{}{\numS & \alpha & \rhoVpA & \cVpA & \chiDof}
+
 Fit to Aleph V+A spectrum: (21.05.2018) \\ 
-Single weight: $w_{tau} = (1-x)^2 (1+2x)$, FOPT \\
+single weight: $w_{tau} = (1-x)^2 (1+2x)$, FOPT \\
 1 to 9 s0s: [3.1572314596, 3.0, 2.8, 2.6, 2.4, 2.3, 2.2, 2.1, 2.0] \\
 $a_s=0.32326$, $GG^*=0.021$, $\rho_{V+A}=-0.31489$,
 $c_{8,V+A}=-0.026525$\footnote{values marked with a star ($x^*$) are fixed} \\
@@ -28,6 +36,16 @@ Single weight: $w_{tau} = (1-x)^2 (1+2x)$, FOPT \\
 $a_s^*=0.32326$, $GG^*=0.021$, $\rho_{V+A}=-0.31489$,
 $c_{8,V+A}=-0.026525$\footnote{values marked with a star ($x^*$) are fixed} \\
 \csvreader[fitStyle]{02fits.csv}{}{\numS & \alpha & \rhoVpA & \cVpA & \chiDof}
+
+
+% Weights
+\begin{center}
+\begin{tabular}{ c c }
+  cell1 & cell2 \\ 
+  cell4 & cell5 \\  
+  cell7 & cell8     
+\end{tabular}
+\end{center}
 
 
 \end{document}

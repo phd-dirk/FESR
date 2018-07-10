@@ -1,3 +1,5 @@
+#define BOOST_UBLAS_NDEBUG 1 // numerical issues with ublas matrix inverse
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -191,7 +193,7 @@ int main (int argc, char* argv[]) {
   // cout << 2.0*adler.D0CIntFO(3.0, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
   // // cout << 2.0*adler.D0CInt(3.1572314596, Weight(config["parameters"]["weight"].get<int>()), 0.32307 , 5) << endl;
   // cout << 2.0*adler.D0CIntCI(3.0, Weight(1), 0.32307 , 5) << endl;
-  cout << adler.D0CIntCI(2.6, Weight(1), 3.1570893124000001, 0.31927, 1) << endl;
+  // cout << adler.D0CIntCI(2.6, Weight(1), 3.1570893124000001, 0.31927, 1) << endl;
 
   // AlphaS amu(constants);
   // cmplx mup(3.0, 0.0);
@@ -225,52 +227,52 @@ int main (int argc, char* argv[]) {
 
 
   // MINUIT
-  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // // set tolerances
+  // set tolerances
   // min->SetMaxFunctionCalls(10000000); // for Minuit2
   // min->SetMaxIterations(10000000); // for GSL
   // min->SetTolerance(1e-6);
-  // min->SetStrategy(2);
-  // min->SetPrintLevel(3); // activate logging
+  min->SetStrategy(2);
+  min->SetPrintLevel(3); // activate logging
 
-  // // function wrapper
-  // Functor chi2(chisquared, 4);
+  // function wrapper
+  Functor chi2(chisquared, 4);
 
-  // min->SetFunction(chi2);
+  min->SetFunction(chi2);
 
-  // // set free variables to be minimized
-  // if (config.astau.isFixed) {
-  //   min->SetFixedVariable(0, "astau", config.astau.value);
-  // } else {
-  //   min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
-  // }
-  // if (config.aGGInv.isFixed) {
-  //   min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
-  // } else {
-  //   min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
-  // }
-  // if (config.rhoVpA.isFixed) {
-  //   min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
-  // } else {
-  //   min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
-  // }
-  // if (config.c8VpA.isFixed) {
-  //   min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
-  // } else {
-  //   min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
-  // }
+  // set free variables to be minimized
+  if (config.astau.isFixed) {
+    min->SetFixedVariable(0, "astau", config.astau.value);
+  } else {
+    min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
+  }
+  if (config.aGGInv.isFixed) {
+    min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
+  } else {
+    min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
+  }
+  if (config.rhoVpA.isFixed) {
+    min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
+  } else {
+    min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
+  }
+  if (config.c8VpA.isFixed) {
+    min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
+  } else {
+    min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
+  }
 
-  // // minimize!
-  // min->Minimize();
-  // const double *xs = min->X();
-  // const double *errors = min->Errors();
-  // const double edm = min->Edm();
-  // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
-  // const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
-  // // min->PrintResults();
+  // minimize!
+  min->Minimize();
+  const double *xs = min->X();
+  const double *errors = min->Errors();
+  const double edm = min->Edm();
+  chisquared.log(xs[0], xs[1], xs[2], xs[3]);
+  const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
+  // min->PrintResults();
 
-  // writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);
+  writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);
 
   // chisquared.log(0.32326096168471358, 2.1e-2, -0.31488720134123538, -2.6524803026353995e-2);
   return 0;
