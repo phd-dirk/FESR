@@ -18,77 +18,89 @@ class ExperimentalMoments : public Numerics {
   // The Spectral Moments and Covariance matrix can then bet exported via the
   // public getter functions
   ExperimentalMoments(const string &filename, const Configuration &config) :
-    Numerics(), config_(config), data(Data(filename, config.RVANormalization)),
-    s0s(config.s0Set), weight_(config.weight), covarianceMatrix(s0s.size(), s0s.size()),
-    inverseCovarianceMatrix(s0s.size(), s0s.size()) {
-
-    // init weightRatios
-    initWeightRatios(); // (s0s.size() x data.binCount) e.g. (9 x 80)
-
-    // init exp. moments
-    initExperimentalMoments();
-
-    // init error matrix
-    initErrorMatrix();
-
+    Numerics(), config_(config), data_(Data(filename, config.RVANormalization)),
+    inputs_(config_.inputs)
+  {
     // init jacobian matrix
-    initJacobianMatrix();
+    // initJacobianMatrix();
 
     // init covariance matrix
-    initCovarianceMatrix();
+    // initCovarianceMatrix();
 
     // Remove correlations with R_tau,V+A in Aleph fit
-    for (uint i = 1; i < s0s.size(); i++) {
-      covarianceMatrix(0, i) = 0.;
-      covarianceMatrix(i, 0) = 0.;
-    }
+    // for (uint i = 1; i < s0s.size(); i++) {
+    //   covarianceMatrix(0, i) = 0.;
+    //   covarianceMatrix(i, 0) = 0.;
+    // }
     // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
-    covarianceMatrix(0, 0) = pow(0.0072, 2);
+    // covarianceMatrix(0, 0) = pow(0.0072, 2);
 
     // init inverse covariance matrix
-    invertMatrix(covarianceMatrix, inverseCovarianceMatrix);
+    // invertMatrix(covarianceMatrix, inverseCovarianceMatrix);
   }
-  double operator ()(int i) const {
-    return getExpPlusPionMoment(i);
-  }
-
-  void log() const {
-    cout << "s0 \t" << s0s[0] << endl;
-    cout << "ExpMom = \t" << getExpPlusPionMoment(0) << endl;
-    cout << "CovMom = \t" << covarianceMatrix << endl;
-    cout << "InvCov = \t" << inverseCovarianceMatrix << endl;
-  }
-
-  vector<double> getExpPlusPionPoleMoments() const {
-    vector<double> expPlusPionMoments(s0s.size());
-    for (uint i = 0; i < s0s.size(); i++) {
-      expPlusPionMoments[i] = experimentalMoments[i]
-          + pionPoleMoment(s0s[i]);
+  vec operator ()() const {
+    vec expMoms;
+    for(auto const &input: inputs_) {
+      vec s0s = input.s0s;
+      Weight w = input.weight;
+      for(auto const &s0: s0s) {
+        expMoms.push_back(expMom(s0, w) + pionPoleMoment(s0, w));
+      }
     }
-    return expPlusPionMoments;
+    return expMoms;
   }
-  double getExpPlusPionMoment(int i) const {
-    return experimentalMoments[i] + pionPoleMoment(s0s[i]);
-  }
-
-  vector<double> getExperimentalMoments() {
-    return this->experimentalMoments;
-  }
-
 
   // Selects the closest bin number from s0
   // If s0 is exactly between two bins we select the smaller one
-  int closestBinToS0(const double &s0) {
-    int i = data.dsbins.size()-1;
-    if (s0 > data.sbins.back())
+  int closestBinToS0(const double &s0) const {
+    int i = data_.dsbins.size()-1;
+    if (s0 > data_.sbins.back())
       return i;
 
     // -1.e-6: if exactly between two bins choose smaller one as closest
     // e.g. s0 = 2.1; sbins[71] = 2.05; sbins[72] = 2.15 => closest bin: 71
-    while(abs(s0-data.sbins[i]-1.e-6) > data.dsbins[i]/2.)
+    while(abs(s0-data_.sbins[i]-1.e-6) > data_.dsbins[i]/2.)
       i--;
 
     return i;
+  }
+
+  // returns weight ratio
+  double wRatio(const double &s0, const Weight &w, const double &sbin,
+                const double &dsbin) const {
+    double binRight = sbin+dsbin/2.;
+    double binLeft = sbin-dsbin/2.;
+    return (s0/config_.sTau*
+            (
+             (w.wD(binLeft/s0) - w.wD(binRight/s0))/
+             (w.wTau(binLeft/config_.sTau) - w.wTau(binRight/config_.sTau))
+             )
+            ).real();
+  }
+
+  // return the experimental spectral moment
+  double expMom(const double &s0, const Weight &w) const {
+    double mom = 0;
+    for(int j = 0; j <= closestBinToS0(s0); j++) {
+      mom += config_.sTau/s0/config_.be*data_.sfm2s[j]
+        *wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
+    }
+    return mom;
+  }
+
+  double pionPoleMoment(const double &s0, const Weight &w) const {
+    double axialMoment = 0;
+    double pseudoMoment = 0;
+    axialMoment += kPiFac()/s0*w.wR(pow(config_.kPionMinusMass, 2)/s0).real();
+    pseudoMoment += axialMoment*(-2.*pow(config_.kPionMinusMass, 2)/(config_.sTau + 2.*pow(config_.kPionMinusMass, 2)));
+    return axialMoment + pseudoMoment;
+  }
+
+  void log() const {
+    // cout << "s0 \t" << s0s[0] << endl;
+    // cout << "ExpMom = \t" << getExpPlusPionMoment(0) << endl;
+    cout << "CovMom = \t" << covarianceMatrix << endl;
+    cout << "InvCov = \t" << inverseCovarianceMatrix << endl;
   }
 
   double kPiFac() const {
@@ -100,97 +112,61 @@ class ExperimentalMoments : public Numerics {
                          + 4.*pow(config_.kDFPi/config_.kFPi, 2));
   }
 
-
-  // returns weightRatios
-  void initWeightRatios() {
-    matrix<double> wRatios(s0s.size(), data.binCount);
-
-    for (uint i = 0; i < s0s.size(); i++) {
-      for (int j = 0; j < data.binCount; j++) {
-        double s0UpperLimit = data.sbins[j]+data.dsbins[j]/2.;
-        double s0LowerLimit = data.sbins[j]-data.dsbins[j]/2.;
-        wRatios(i, j) = (s0s[i]/config_.sTau*(
-            (weight_.wD(s0LowerLimit/s0s[i]) - weight_.wD(s0UpperLimit/s0s[i]))/
-            (weight_.wTau(s0LowerLimit/config_.sTau) - weight_.wTau(s0UpperLimit/config_.sTau)))).real();
-      }
-    }
-
-    this->weightRatios = wRatios;
-  }
-
-
-  // return the experimental spectral moment
-  void initExperimentalMoments() {
-    vector<double> moments(s0s.size());
-    for (uint i = 0; i < s0s.size(); i++) {
-      for(int j = 0; j <= closestBinToS0(s0s[i]); j++) {
-        moments[i] += config_.sTau/s0s[i]/config_.be*data.sfm2s[j]*weightRatios(i, j);
-      }
-    }
-    this->experimentalMoments = moments;
-  }
-
   // returns the error matrix
   void initErrorMatrix() {
-    matrix<double> errMat(data.binCount+2, data.binCount+2);
-    for (int i = 0; i < data.binCount+2; i++) {
-      for (int j = 0; j < data.binCount+2; j++) {
-        if (i < data.binCount && j < data.binCount) {
-          errMat(i, j) = data.corerrs(i, j)*data.derrs[i]*data.derrs[j]/1.e2;
+    mat errMat(data_.binCount+2, data_.binCount+2);
+    for (int i = 0; i < data_.binCount+2; i++) {
+      for (int j = 0; j < data_.binCount+2; j++) {
+        if (i < data_.binCount && j < data_.binCount) {
+          errMat(i, j) = data_.corerrs(i, j)*data_.derrs[i]*data_.derrs[j]/1.e2;
         } else {
           errMat(i, j) = 0.;
         }
       }
     }
-    errMat(data.binCount, data.binCount) = pow(config_.dBe, 2);
-    errMat(data.binCount+1, data.binCount+1) = pow(kDPiFac(), 2);
+    errMat(data_.binCount, data_.binCount) = pow(config_.dBe, 2);
+    errMat(data_.binCount+1, data_.binCount+1) = pow(kDPiFac(), 2);
     this->errorMatrix = errMat;
   }
 
   // returns the Jacobian Matrix
-  void initJacobianMatrix() {
-    matrix<double> jacobi(data.binCount+2, s0s.size());
-    for (uint i = 0; i < s0s.size(); i++) {
-      for (int j = 0; j < data.binCount+2; j++) {
-        if (j <= closestBinToS0(s0s[i])) {
-          jacobi(j, i) = config_.sTau/s0s[i]/config_.be*weightRatios(i, j);
-        } else {
-          jacobi(j, i) = 0.;
-        }
-      }
-      jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/config_.be;
-      jacobi(data.binCount+1, i) = pionPoleMoment(s0s[i])/kPiFac();
-    }
-    this->jacobianMatrix = jacobi;
-  }
+  // void initJacobianMatrix() {
+  //   mat<double> jacobi(data.binCount+2, s0s.size());
+  //   for (uint i = 0; i < s0s.size(); i++) {
+  //     for (int j = 0; j < data.binCount+2; j++) {
+  //       if (j <= closestBinToS0(s0s[i])) {
+  //         jacobi(j, i) = config_.sTau/s0s[i]/config_.be*weightRatios(i, j);
+  //       } else {
+  //         jacobi(j, i) = 0.;
+  //       }
+  //     }
+  //     jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/config_.be;
+  //     jacobi(data.binCount+1, i) = pionPoleMoment(s0s[i])/kPiFac();
+  //   }
+  //   this->jacobianMatrix = jacobi;
+  // }
 
   // returns the covariance matrix
-  void initCovarianceMatrix() {
-    for (uint i = 0; i < s0s.size(); i++) {
-      for (uint j = 0; j < s0s.size(); j++) {
-        covarianceMatrix(i, j) = 0.;
-        for (int k = 0; k < data.binCount+2; k++) {
-          for (int l = 0; l < data.binCount+2; l++) {
-            covarianceMatrix(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
-          }
-        }
-      }
-    }
-  }
+  // void initCovarianceMatrix() {
+  //   for (uint i = 0; i < s0s.size(); i++) {
+  //     for (uint j = 0; j < s0s.size(); j++) {
+  //       covarianceMatrix(i, j) = 0.;
+  //       for (int k = 0; k < data.binCount+2; k++) {
+  //         for (int l = 0; l < data.binCount+2; l++) {
+  //           covarianceMatrix(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
-  double pionPoleMoment(const double &s0) const {
-    double axialMoment = 0;
-    double pseudoMoment = 0;
-    axialMoment += kPiFac()/s0*weight_.wR(pow(config_.kPionMinusMass, 2)/s0).real();
-    pseudoMoment += axialMoment*(-2.*pow(config_.kPionMinusMass, 2)/(config_.sTau + 2.*pow(config_.kPionMinusMass, 2)));
-    return axialMoment + pseudoMoment;
-  }
 
   Configuration config_;
-  Data data;
-  vector<double> s0s, experimentalMoments;
-  Weight weight_;
-  matrix<double> weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix, inverseCovarianceMatrix;
+  const Data data_;
+  std::vector<Input> inputs_;
+  vec experimentalMoments;
+  mat weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix,
+    inverseCovarianceMatrix;
 }; // END ExperimentalMoments
 
 #endif

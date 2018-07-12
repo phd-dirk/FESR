@@ -91,7 +91,7 @@ class Chisquared {
     vec momDiff(s0Set.size());
     for(uint i = 0; i < s0Set.size(); i++) {
       const double s0 = s0Set[i];
-      momDiff[i] = expMom_(i) - thMom_(s0, astau, aGGinv, rho, c8, order_);
+      // momDiff[i] = expMom_(i) - thMom_(s0, astau, aGGinv, rho, c8, order_);
     }
 
     for(uint k = 0; k < s0Set.size(); k++) {

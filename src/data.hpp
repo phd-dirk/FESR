@@ -1,6 +1,7 @@
 #ifndef SRC_DATA_H
 #define SRC_DATA_H
 
+#include "./types.hpp"
 #include "./weights.hpp"
 #include "json.hpp"
 #include <boost/numeric/ublas/matrix.hpp>
@@ -12,11 +13,6 @@
 #include <functional>
 #include <algorithm>
 
-using json = nlohmann::json;
-using boost::numeric::ublas::matrix;
-using std::cout;
-using std::endl;
-using std::vector;
 using std::string;
 using std::abs;
 using std::complex;
@@ -35,8 +31,8 @@ using std::sqrt;
 //     "corerr02": [...]
 //   }
 // }
-inline matrix<double> getCorErr(const json &json, const int &binCount) {
-  matrix<double> m(80, 80);
+inline mat getCorErr(const json &json, const int &binCount) {
+  mat m(80, 80);
   for(int i = 0; i < binCount; i++) {
     std::string corerrRowName = "corerr";
     if (i < 9) {
@@ -44,7 +40,7 @@ inline matrix<double> getCorErr(const json &json, const int &binCount) {
     } else {
       corerrRowName += std::to_string(i+1);
     }
-    vector<double> corerrRow = json["data"][corerrRowName];
+    vec corerrRow = json["data"][corerrRowName];
     for(int j = 0; j < binCount; j++) {
       m(i, j) = corerrRow[j];
     }
@@ -78,11 +74,11 @@ struct Data {
     std::ifstream file(filename);
     json json;
     file >> json;
-    this->sbins = json["data"]["sbin"].get<vector<double>>();
+    this->sbins = json["data"]["sbin"].get<vec>();
     this->binCount = sbins.size();
-    this->dsbins = json["data"]["dsbin"].get<vector<double>>();
-    this->sfm2s = json["data"]["sfm2"].get<vector<double>>();
-    this->derrs = json["data"]["derr"].get<vector<double>>();
+    this->dsbins = json["data"]["dsbin"].get<vec>();
+    this->sfm2s = json["data"]["sfm2"].get<vec>();
+    this->derrs = json["data"]["derr"].get<vec>();
     this->corerrs = getCorErr(json, binCount);
 
     normalizeData(normalizationFactor);
@@ -99,11 +95,11 @@ struct Data {
   }
 
   int binCount;
-  vector<double> sbins;
-  vector<double> dsbins;
-  vector<double> sfm2s;
-  vector<double> derrs;
-  matrix<double> corerrs;
+  vec sbins;
+  vec dsbins;
+  vec sfm2s;
+  vec derrs;
+  mat corerrs;
 };
 
 
@@ -111,10 +107,10 @@ struct Data {
 // Return an vector with every entry multiplied by a factor
 //
 // Is used in state.hpp to mutate the state
-inline vector<double> renormalize(double renormalizationFactor, vector<double> vec) {
-  vector<double> renormalizedVector;
+inline vec renormalize(double renormalizationFactor, vec v) {
+  vec renormalizedVector;
   std::cout << "max_size: " << renormalizedVector.max_size() << std::endl;
-  for(auto const& value: vec) {
+  for(auto const& value: v) {
     renormalizedVector.push_back(value*renormalizationFactor);
   }
   return renormalizedVector;

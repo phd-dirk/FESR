@@ -10,12 +10,17 @@
 #include <fstream>
 #include <string>
 
+
+// vectors
 typedef std::vector<double> vec;
+typedef std::vector<int> intVec;
+
 typedef boost::numeric::ublas::matrix<double> mat;
 typedef std::complex<double> cmplx;
 typedef std::function<cmplx(cmplx)> cmplxFunc;
 typedef nlohmann::json json;
 typedef std::string string;
 typedef std::ifstream ifstream;
+
 
 #endif

@@ -19,9 +19,10 @@ struct OPE {
 };
 
 struct Input {
-  uint weight;
-  vec s0Set;
+  Weight weight;
+  std::vector<double> s0s;
 };
+
 
 class Configuration {
  public:
@@ -63,9 +64,9 @@ class Configuration {
     dBe(config["parameters"]["dBe"])
 
   {
-    // add weights & s0Sets
-    for (auto& input : config["parameters"]["input"]) {
-      inputs.push_back({ input["weight"].get<uint>(), input["s0Set"].get<vec>() });
+    // add weights & s0s
+    for(auto const& input : config["parameters"]["input"]) {
+      inputs.push_back({ Weight(input["weight"].get<int>()), input["s0s"].get<vec>() });
     }
     initializeBetaCoefficients();
     initializeAdlerCoefficients();
@@ -81,7 +82,6 @@ class Configuration {
   const double nc;
   const double nf;
 
- 
  // OPE
   OPE OPE;
   Variable astau, aGGInv, rhoVpA, c8VpA;
