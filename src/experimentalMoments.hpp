@@ -14,13 +14,12 @@ class ExperimentalMoments {
   // public getter functions
   ExperimentalMoments(const string &filename, const Configuration &config) :
     config_(config), data_(Data(filename, config.RVANormalization)),
-    inputs_(config_.inputs)
+    inputs_(config_.inputs), covMat(config_.momCount, config_.momCount)
   {
     // cache experimental moments
     initExpMoms();
 
     // cache covariance matrix
-    covMat.resize(config_.momCount, config_.momCount);
     initCovMat();
   }
 
@@ -153,8 +152,8 @@ class ExperimentalMoments {
   void initCovMat() {
     mat jac = jacMat();
     mat err = errMat();
-    for(int i = 0; i < config_.momCount; i++) {
-      for(int j = 0; j < config_.momCount; j++) {
+    for(uint i = 0; i < config_.momCount; i++) {
+      for(uint j = 0; j < config_.momCount; j++) {
         for (int k = 0; k < data_.binCount+2; k++) {
           for (int l = 0; l < data_.binCount+2; l++) {
             covMat(i,j) += jac(k, i)*err(k, l)*jac(l, j);

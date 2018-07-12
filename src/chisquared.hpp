@@ -5,9 +5,9 @@
 #include "./configuration.hpp"
 #include "./experimentalMoments.hpp"
 #include "./theoretical_moments.hpp"
+#include "./numerics.hpp"
 #include "./weights.hpp"
 #include "json.hpp"
-#include <vector>
 #include <functional>
 #include <iostream>
 
@@ -45,16 +45,14 @@ mat readMatrixFromFile(const int &size, const string filePath) {
   return m;
 }
 
-using json = nlohmann::json;
-using std::vector;
 using std::function;
 using std::cout;
 using std::endl;
 
-class Chisquared {
+class Chisquared: Numerics {
  public:
   Chisquared(Configuration config) :
-    s0Set_(config.s0Set), order_(config.order),
+    s0Set_(config.s0Set), order_(config.order), momCount_(config.momCount),
     expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)),
     thMom_(TheoreticalMoments(config)) {}
 
@@ -88,14 +86,15 @@ class Chisquared {
     mat covMat = expMom_.getCovMat();
 
     // Remove correlations with R_tau,V+A in Aleph fit
-    // for (uint i = 1; i < s0s.size(); i++) {
-    //   cov(0, i) = 0.;
-    //   cov(i, 0) = 0.;
-    // }
+    for (uint i = 1; i < momCount_; i++) {
+      covMat(0, i) = 0.;
+      covMat(i, 0) = 0.;
+    }
     // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
-    // cov(0, 0) = pow(0.0072, 2);
+    covMat(0, 0) = pow(0.0072, 2);
 
-    // ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix; //readMatrixFromFile(9, "./data/invCovMat.dat");
+    mat invCovMat(covMat.size1(), covMat.size2()); //readMatrixFromFile(9, "./data/invCovMat.dat");
+    Numerics::invertMatrix(covMat, invCovMat);
     // vec momDiff(s0Set.size());
     // for(uint i = 0; i < s0Set.size(); i++) {
     //   const double s0 = s0Set[i];
@@ -122,6 +121,7 @@ class Chisquared {
 
   const vec s0Set_;
   const int order_;
+  const uint momCount_;
   const ExperimentalMoments expMom_;
   const TheoreticalMoments thMom_;
  private:

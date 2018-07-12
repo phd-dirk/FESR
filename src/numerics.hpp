@@ -172,7 +172,7 @@ class Numerics {
 
   // from https://gist.github.com/lilac/2464434
   template<class T>
-  bool invertMatrix (const ublas::matrix<T>& input, ublas::matrix<T>& inverse) {
+  static bool invertMatrix (const ublas::matrix<T>& input, ublas::matrix<T>& inverse) {
     using namespace boost::numeric::ublas;
     typedef permutation_matrix<std::size_t> pmatrix;
     // create a working copy of the input
