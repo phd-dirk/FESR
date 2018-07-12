@@ -4,9 +4,8 @@
 #include "./types.hpp"
 #include "./configuration.hpp"
 #include "./data.hpp"
-#include "./numerics.hpp"
 
-class ExperimentalMoments : public Numerics {
+class ExperimentalMoments {
  public:
   // Init. data, vector of all wRatios, exp. Spectral Moments, error Matrix
   // and Covariance matrix
@@ -14,7 +13,7 @@ class ExperimentalMoments : public Numerics {
   // The Spectral Moments and Covariance matrix can then bet exported via the
   // public getter functions
   ExperimentalMoments(const string &filename, const Configuration &config) :
-    Numerics(), config_(config), data_(Data(filename, config.RVANormalization)),
+    config_(config), data_(Data(filename, config.RVANormalization)),
     inputs_(config_.inputs)
   {
     // moment count
