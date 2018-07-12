@@ -9,33 +9,52 @@
 class TheoreticalMoments: public AdlerFunction {
  public:
   TheoreticalMoments(const Configuration &config) :
-    AdlerFunction(config), config_(config) {}
+    AdlerFunction(config), config_(config), inputs_(config_.inputs) {}
 
-  double operator ()(const double &s0, const double &astau, const double &aGGinv,
-                     const double &rhoVpA, const double &c8VpA, const double &order) const {
+  double operator ()(const double &s0, const Weight &w, const double &astau,
+                     const double &aGGinv, const double &rhoVpA, const double &c8VpA,
+                     const double &order) const {
+    return thMom(s0, w, astau, aGGinv, rhoVpA, c8VpA, order);
+  }
+
+  double thMom(const double &s0, const Weight &w, const double &astau,
+        const double &aGGinv, const double &rhoVpA, const double &c8VpA,
+        const double &order) const {
     double rTauTh = 0.;
     // D0
     if ( config_.OPE.D0 ) {
       // check if FOPT or CIPT
       if ( config_.OPE.scheme == "FO" ) {
-        rTauTh += cIntVpAD0FO(s0, config_.weight, config_.sTau, astau, order);
+        rTauTh += cIntVpAD0FO(s0, w, config_.sTau, astau, order);
       }
       if ( config_.OPE.scheme == "CI") {
-        rTauTh += cIntVpAD0CI(s0, config_.weight, config_.sTau, astau, order);
+        rTauTh += cIntVpAD0CI(s0, w, config_.sTau, astau, order);
       }
     }
     // D4
     if ( config_.OPE.D4 )
-      rTauTh += cIntVpAD4FO(s0, config_.weight, config_.sTau, astau, aGGinv);
+      rTauTh += cIntVpAD4FO(s0, w, config_.sTau, astau, aGGinv);
     // D68
     if ( config_.OPE.D68 )
-      rTauTh += D68CInt(s0, config_.weight, rhoVpA, c8VpA);
+      rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
     // PionPole
     if ( config_.OPE.PionPole )
-      rTauTh += 3.*deltaP(s0, config_.weight);
-
+      rTauTh += 3.*deltaP(s0, w);
 
     return pow(config_.kVud, 2)*config_.kSEW*rTauTh;
+  }
+
+  vec thMoms(const double &astau, const double &aGGinv, const double &rhoVpA,
+              const double &c8VpA, const double &order) const {
+    vec moms;
+    for(auto const& input: inputs_) {
+      vec s0s = input.s0s;
+      Weight w = input.weight;
+      for(auto const& s0: s0s) {
+        moms.push_back(thMom(s0, w, astau, aGGinv, rhoVpA, c8VpA, order));
+      }
+    }
+    return moms;
   }
 
   double cIntVpAD0FO(const double &s0, const Weight &weight, const double &sTau,
@@ -98,6 +117,7 @@ class TheoreticalMoments: public AdlerFunction {
 
  private:
   Configuration config_;
+  std::vector<Input> inputs_;
 };
 
 #endif

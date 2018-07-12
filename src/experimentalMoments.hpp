@@ -5,10 +5,6 @@
 #include "./configuration.hpp"
 #include "./data.hpp"
 #include "./numerics.hpp"
-#include <boost/numeric/ublas/matrix.hpp>
-
-
-namespace ublas = boost::numeric::ublas;
 
 class ExperimentalMoments : public Numerics {
  public:
@@ -26,21 +22,13 @@ class ExperimentalMoments : public Numerics {
       vec s0s = input.s0s;
       momCount_ += s0s.size();
     }
-
-
-    // Remove correlations with R_tau,V+A in Aleph fit
-    // for (uint i = 1; i < s0s.size(); i++) {
-    //   covarianceMatrix(0, i) = 0.;
-    //   covarianceMatrix(i, 0) = 0.;
-    // }
-    // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
-    // covarianceMatrix(0, 0) = pow(0.0072, 2);
-
-    // init inverse covariance matrix
-    // invertMatrix(covarianceMatrix, inverseCovarianceMatrix);
   }
+
   vec operator ()() const {
-    vec expMoms;
+    return expMoms;
+  }
+
+  void initExpMoms() {
     for(auto const &input: inputs_) {
       vec s0s = input.s0s;
       Weight w = input.weight;
@@ -48,7 +36,6 @@ class ExperimentalMoments : public Numerics {
         expMoms.push_back(expPlusPionMom(s0, w));
       }
     }
-    return expMoms;
   }
 
   // Selects the closest bin number from s0
@@ -175,12 +162,11 @@ class ExperimentalMoments : public Numerics {
     return cov;
   }
 
-
   Configuration config_;
   const Data data_;
   std::vector<Input> inputs_;
+  vec expMoms;
   int momCount_ = 0;
-  mat inverseCovarianceMatrix;
 }; // END ExperimentalMoments
 
 #endif

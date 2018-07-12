@@ -87,18 +87,28 @@ class Chisquared {
     double chi = 0;
 
     ublas::matrix<double> covMat = expMom_.covMom();
-    ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix; //readMatrixFromFile(9, "./data/invCovMat.dat");
-    vec momDiff(s0Set.size());
-    for(uint i = 0; i < s0Set.size(); i++) {
-      const double s0 = s0Set[i];
-      // momDiff[i] = expMom_(i) - thMom_(s0, astau, aGGinv, rho, c8, order_);
-    }
 
-    for(uint k = 0; k < s0Set.size(); k++) {
-      for(uint l = 0; l < s0Set.size(); l++) {
-        chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
-      }
-    }
+
+    // Remove correlations with R_tau,V+A in Aleph fit
+    // for (uint i = 1; i < s0s.size(); i++) {
+    //   cov(0, i) = 0.;
+    //   cov(i, 0) = 0.;
+    // }
+    // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
+    // cov(0, 0) = pow(0.0072, 2);
+
+    // ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix; //readMatrixFromFile(9, "./data/invCovMat.dat");
+    // vec momDiff(s0Set.size());
+    // for(uint i = 0; i < s0Set.size(); i++) {
+    //   const double s0 = s0Set[i];
+    //   // momDiff[i] = expMom_(i) - thMom_(s0, astau, aGGinv, rho, c8, order_);
+    // }
+
+    // for(uint k = 0; k < s0Set.size(); k++) {
+    //   for(uint l = 0; l < s0Set.size(); l++) {
+    //     chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
+    //   }
+    // }
 
     return chi;
   }
