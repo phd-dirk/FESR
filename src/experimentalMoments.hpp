@@ -16,17 +16,11 @@ class ExperimentalMoments {
     config_(config), data_(Data(filename, config.RVANormalization)),
     inputs_(config_.inputs)
   {
-    // moment count
-    for(auto const &input: inputs_) {
-      vec s0s = input.s0s;
-      momCount_ += s0s.size();
-    }
-
     // cache experimental moments
     initExpMoms();
 
     // cache covariance matrix
-    covMat.resize(momCount_, momCount_);
+    covMat.resize(config_.momCount, config_.momCount);
     initCovMat();
   }
 
@@ -133,7 +127,7 @@ class ExperimentalMoments {
 
   // returns the Jacobian Matrix
   mat jacMat() const {
-    mat jac(data_.binCount+2, momCount_);
+    mat jac(data_.binCount+2, config_.momCount);
     int xMom = 0;
     for(auto const &input: inputs_) {
       vec s0s = input.s0s;
@@ -159,8 +153,8 @@ class ExperimentalMoments {
   void initCovMat() {
     mat jac = jacMat();
     mat err = errMat();
-    for(int i = 0; i < momCount_; i++) {
-      for(int j = 0; j < momCount_; j++) {
+    for(int i = 0; i < config_.momCount; i++) {
+      for(int j = 0; j < config_.momCount; j++) {
         for (int k = 0; k < data_.binCount+2; k++) {
           for (int l = 0; l < data_.binCount+2; l++) {
             covMat(i,j) += jac(k, i)*err(k, l)*jac(l, j);
@@ -175,7 +169,6 @@ class ExperimentalMoments {
   std::vector<Input> inputs_;
   vec expMoms;
   mat covMat;
-  int momCount_ = 0;
 }; // END ExperimentalMoments
 
 #endif

@@ -66,7 +66,10 @@ class Configuration {
   {
     // add weights & s0s
     for(auto const& input : config["parameters"]["input"]) {
-      inputs.push_back({ Weight(input["weight"].get<int>()), input["s0s"].get<vec>() });
+      Weight w(input["weight"].get<int>());
+      vec s0s = input["s0s"].get<vec>();
+      inputs.push_back({ w, s0s });
+      momCount += s0s.size();
     }
     initializeBetaCoefficients();
     initializeAdlerCoefficients();
@@ -77,6 +80,7 @@ class Configuration {
   const double RVANormalization;
   Weight weight;
   std::vector<Input> inputs;
+  uint momCount = 0;
 
   // QCD
   const double nc;
