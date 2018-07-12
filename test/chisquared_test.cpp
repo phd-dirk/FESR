@@ -14,7 +14,7 @@ class ChisquaredTest : public ::testing::Test {
   virtual void SetUp() {
     const uint order = 5;
     const uint nc = 3, nf = 3;
-    std::ifstream configFile("./test/configuration_test2.json");
+    std::ifstream configFile("./test/configuration_test.json");
     json jsonConfig;
     configFile >> jsonConfig;
 
@@ -29,7 +29,10 @@ class ChisquaredTest : public ::testing::Test {
 };
 
 TEST_F(ChisquaredTest, inverseCovarianceMatrix) {
-  Chisquared chi = *chi_;
+  mat invCov = chi_->invCovMat_;
+  EXPECT_NEAR(invCov(0, 0), 19290.123456790123 , 1e-15);
+  EXPECT_NEAR(invCov(1, 1), 310415.88885578304 , 1e-7);
+  EXPECT_NEAR(invCov(4, 4), 2392765.2394170612, 1e-6);
 }
 
 TEST_F(ChisquaredTest, chi2) {

@@ -55,7 +55,10 @@ class Chisquared: Numerics {
     s0Set_(config.s0Set), order_(config.order), momCount_(config.momCount),
     invCovMat_(momCount_, momCount_),
     expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)),
-    thMom_(TheoreticalMoments(config)) {}
+    thMom_(TheoreticalMoments(config)) {
+    // cache inverse covariance matrix
+    initInvCovMat();
+  }
 
   double operator ()(const double *xx) const {
     // init fit parameters
