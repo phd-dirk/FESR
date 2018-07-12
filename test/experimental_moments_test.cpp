@@ -74,7 +74,7 @@ TEST_F(ExperimentalMomentsTest, kPiFac) {
 }
 
 TEST_F(ExperimentalMomentsTest, errorMatrix) {
-  mat errMat = expMom->errMatrix();
+  mat errMat = expMom->errMat();
   EXPECT_NEAR(errMat(0, 0), 2.2154942818661503e-7, 1.e-15);
   EXPECT_NEAR(errMat(21, 48), -1.6735241745083317e-5, 1.e-15);
   EXPECT_NEAR(errMat(80, 80), 5.28999999999999999e-4, 1.e-15);
@@ -82,7 +82,7 @@ TEST_F(ExperimentalMomentsTest, errorMatrix) {
 }
 
 TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
-  mat jacMat = expMom->jacobianMatrix();
+  mat jacMat = expMom->jacMat();
   EXPECT_NEAR(jacMat(0, 0), 5.9068224019943202e-2, 1.e-15);
   EXPECT_NEAR(jacMat(80, 1), -0.14605172447424614, 1.e-14);
   EXPECT_NEAR(jacMat(50, 2), 0.0, 1.e-14);
@@ -90,12 +90,13 @@ TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
   EXPECT_NEAR(jacMat(21, 4), 1.792620664346542e-2, 1.e-14);
 }
 
-// TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
-//   // EXPECT_NEAR(expMom->covarianceMatrix(0, 0), 1.38387768233595e-4, 1.e-12);
-//   EXPECT_NEAR(expMom->covarianceMatrix(1, 1), 1.1211551248845397e-4 , 1.e-14);
-//   EXPECT_NEAR(expMom->covarianceMatrix(2, 6), 9.7822218694526206e-5, 1.e-14);
-//   EXPECT_NEAR(expMom->covarianceMatrix(7, 8), 1.2914710292441723e-4, 1.e-14);
-// }
+TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
+  mat cov = expMom->covMom();
+  EXPECT_NEAR(cov(0, 0), 8.4576517915615828e-5, 1.e-15);
+  EXPECT_NEAR(cov(4, 2), 1.9349658295540526e-5, 1.e-15);
+  EXPECT_NEAR(cov(1, 3), 9.5344778533946512e-6, 1.e-15);
+  EXPECT_NEAR(cov(2, 2), 2.5799227204695101e-4, 1.e-15);
+}
 
 // TEST_F(ExperimentalMomentsTest, inverseCovarianceMatrix) {
 //   EXPECT_NEAR(expMom->inverseCovarianceMatrix(0, 0), 19290.123456790123, 1.e-12);

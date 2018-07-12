@@ -86,7 +86,7 @@ class Chisquared {
               const double &rho, const double &c8) const {
     double chi = 0;
 
-    ublas::matrix<double> covMat = expMom_.covarianceMatrix;
+    ublas::matrix<double> covMat = expMom_.covMom();
     ublas::matrix<double> invCovMat = expMom_.inverseCovarianceMatrix; //readMatrixFromFile(9, "./data/invCovMat.dat");
     vec momDiff(s0Set.size());
     for(uint i = 0; i < s0Set.size(); i++) {

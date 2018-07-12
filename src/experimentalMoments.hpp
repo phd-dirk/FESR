@@ -28,9 +28,6 @@ class ExperimentalMoments : public Numerics {
     }
 
 
-    // init covariance matrix
-    // initCovarianceMatrix();
-
     // Remove correlations with R_tau,V+A in Aleph fit
     // for (uint i = 1; i < s0s.size(); i++) {
     //   covarianceMatrix(0, i) = 0.;
@@ -107,8 +104,8 @@ class ExperimentalMoments : public Numerics {
   void log() const {
     // cout << "s0 \t" << s0s[0] << endl;
     // cout << "ExpMom = \t" << getExpPlusPionMoment(0) << endl;
-    cout << "CovMom = \t" << covarianceMatrix << endl;
-    cout << "InvCov = \t" << inverseCovarianceMatrix << endl;
+    // cout << "CovMom = \t" << covarianceMatrix << endl;
+    // cout << "InvCov = \t" << inverseCovarianceMatrix << endl;
   }
 
   double kPiFac() const {
@@ -121,7 +118,7 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the error matrix
-  mat errMatrix() {
+  mat errMat() const {
     mat errMat(data_.binCount+2, data_.binCount+2);
     for (int i = 0; i < data_.binCount+2; i++) {
       for (int j = 0; j < data_.binCount+2; j++) {
@@ -138,7 +135,7 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the Jacobian Matrix
-  mat jacobianMatrix() {
+  mat jacMat() const {
     mat jac(data_.binCount+2, momCount_);
     int xMom = 0;
     for(auto const &input: inputs_) {
@@ -162,25 +159,28 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the covariance matrix
-  // void initCovarianceMatrix() {
-  //   for (uint i = 0; i < s0s.size(); i++) {
-  //     for (uint j = 0; j < s0s.size(); j++) {
-  //       covarianceMatrix(i, j) = 0.;
-  //       for (int k = 0; k < data.binCount+2; k++) {
-  //         for (int l = 0; l < data.binCount+2; l++) {
-  //           covarianceMatrix(i,j) += jacobianMatrix(k, i)*errorMatrix(k, l)*jacobianMatrix(l, j);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  mat covMom() const {
+    mat jac = jacMat();
+    mat err = errMat();
+    mat cov(momCount_, momCount_);
+    for(int i = 0; i < momCount_; i++) {
+      for(int j = 0; j < momCount_; j++) {
+        for (int k = 0; k < data_.binCount+2; k++) {
+          for (int l = 0; l < data_.binCount+2; l++) {
+            cov(i,j) += jac(k, i)*err(k, l)*jac(l, j);
+          }
+        }
+      }
+    }
+    return cov;
+  }
 
 
   Configuration config_;
   const Data data_;
   std::vector<Input> inputs_;
   int momCount_ = 0;
-  mat covarianceMatrix, inverseCovarianceMatrix;
+  mat inverseCovarianceMatrix;
 }; // END ExperimentalMoments
 
 #endif

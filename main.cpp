@@ -186,7 +186,8 @@ int main (int argc, char* argv[]) {
   // // cout << num.complexContourIntegral(testFunction) << endl;
 
   ExperimentalMoments expMoms("/Users/knowledge/Developer/PhD/FESR/aleph.json", config);
-  cout << expMoms().size() << endl;;
+  cout << expMoms().size() << endl;
+  cout << expMoms.covMom() << endl;
 
   AdlerFunction adler(config);
   // cout << adler.D0(3.0, sqrt(3.0), 0.32307, 5) << endl;
