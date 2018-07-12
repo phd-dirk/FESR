@@ -21,8 +21,12 @@ class ExperimentalMoments : public Numerics {
     Numerics(), config_(config), data_(Data(filename, config.RVANormalization)),
     inputs_(config_.inputs)
   {
-    // init jacobian matrix
-    // initJacobianMatrix();
+    // moment count
+    for(auto const &input: inputs_) {
+      vec s0s = input.s0s;
+      momCount_ += s0s.size();
+    }
+
 
     // init covariance matrix
     // initCovarianceMatrix();
@@ -44,7 +48,7 @@ class ExperimentalMoments : public Numerics {
       vec s0s = input.s0s;
       Weight w = input.weight;
       for(auto const &s0: s0s) {
-        expMoms.push_back(expMom(s0, w) + pionPoleMoment(s0, w));
+        expMoms.push_back(expPlusPionMom(s0, w));
       }
     }
     return expMoms;
@@ -96,6 +100,10 @@ class ExperimentalMoments : public Numerics {
     return axialMoment + pseudoMoment;
   }
 
+  double expPlusPionMom(const double &s0, const Weight &w) const {
+    return expMom(s0, w) + pionPoleMoment(s0, w);
+  }
+
   void log() const {
     // cout << "s0 \t" << s0s[0] << endl;
     // cout << "ExpMom = \t" << getExpPlusPionMoment(0) << endl;
@@ -130,21 +138,28 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the Jacobian Matrix
-  // void initJacobianMatrix() {
-  //   mat<double> jacobi(data.binCount+2, s0s.size());
-  //   for (uint i = 0; i < s0s.size(); i++) {
-  //     for (int j = 0; j < data.binCount+2; j++) {
-  //       if (j <= closestBinToS0(s0s[i])) {
-  //         jacobi(j, i) = config_.sTau/s0s[i]/config_.be*weightRatios(i, j);
-  //       } else {
-  //         jacobi(j, i) = 0.;
-  //       }
-  //     }
-  //     jacobi(data.binCount, i) = (pionPoleMoment(s0s[i]) - getExpPlusPionMoment(i))/config_.be;
-  //     jacobi(data.binCount+1, i) = pionPoleMoment(s0s[i])/kPiFac();
-  //   }
-  //   this->jacobianMatrix = jacobi;
-  // }
+  mat jacobianMatrix() {
+    mat jac(data_.binCount+2, momCount_);
+    int xMom = 0;
+    for(auto const &input: inputs_) {
+      vec s0s = input.s0s;
+      Weight w = input.weight;
+      for(auto const &s0: s0s) {
+        for (int j = 0; j < data_.binCount+2; j++) {
+          if (j <= closestBinToS0(s0)) {
+            jac(j, xMom) = config_.sTau/s0/config_.be*wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
+          } else {
+            jac(j, xMom) = 0.;
+          }
+          jac(data_.binCount, xMom) = (pionPoleMoment(s0, w)
+                                          - expPlusPionMom(s0, w))/config_.be;
+          jac(data_.binCount+1, xMom) = pionPoleMoment(s0, w)/kPiFac();
+        }
+        xMom++;
+      }
+    }
+    return jac;
+  }
 
   // returns the covariance matrix
   // void initCovarianceMatrix() {
@@ -164,9 +179,8 @@ class ExperimentalMoments : public Numerics {
   Configuration config_;
   const Data data_;
   std::vector<Input> inputs_;
-  vec experimentalMoments;
-  mat jacobianMatrix, covarianceMatrix,
-    inverseCovarianceMatrix;
+  int momCount_ = 0;
+  mat covarianceMatrix, inverseCovarianceMatrix;
 }; // END ExperimentalMoments
 
 #endif
