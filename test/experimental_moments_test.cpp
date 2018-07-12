@@ -91,11 +91,11 @@ TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
 }
 
 TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
-  mat cov = expMom->covMom();
-  EXPECT_NEAR(cov(0, 0), 8.4576517915615828e-5, 1.e-15);
-  EXPECT_NEAR(cov(4, 2), 1.9349658295540526e-5, 1.e-15);
-  EXPECT_NEAR(cov(1, 3), 9.5344778533946512e-6, 1.e-15);
-  EXPECT_NEAR(cov(2, 2), 2.5799227204695101e-4, 1.e-15);
+  mat covMat = expMom->getCovMat();
+  EXPECT_NEAR(covMat(0, 0), 8.4576517915615828e-5, 1.e-15);
+  EXPECT_NEAR(covMat(4, 2), 1.9349658295540526e-5, 1.e-15);
+  EXPECT_NEAR(covMat(1, 3), 9.5344778533946512e-6, 1.e-15);
+  EXPECT_NEAR(covMat(2, 2), 2.5799227204695101e-4, 1.e-15);
 }
 
 // TEST_F(ExperimentalMomentsTest, inverseCovarianceMatrix) {

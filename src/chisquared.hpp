@@ -1,6 +1,7 @@
 #ifndef SRC_CHISQUARED_H
 #define SRC_CHISQUARED_H
 
+#include "./types.hpp"
 #include "./configuration.hpp"
 #include "./experimentalMoments.hpp"
 #include "./theoretical_moments.hpp"
@@ -9,20 +10,18 @@
 #include <vector>
 #include <functional>
 #include <iostream>
-#include <boost/numeric/ublas/matrix.hpp>
 
 
 // test invCovMat
 #include <boost/numeric/ublas/io.hpp>
-using ublas::matrix;
 using ublas::prod;
 
 using std::ifstream;
 
 namespace ublas = boost::numeric::ublas;
 
-matrix<double> readMatrixFromFile(const int &size, const string filePath) {
-  matrix<double> m(size, size);
+mat readMatrixFromFile(const int &size, const string filePath) {
+  mat m(size, size);
   ifstream file;
   file.open(filePath);
   if(!file) {
@@ -86,8 +85,7 @@ class Chisquared {
               const double &rho, const double &c8) const {
     double chi = 0;
 
-    ublas::matrix<double> covMat = expMom_.covMom();
-
+    mat covMat = expMom_.getCovMat();
 
     // Remove correlations with R_tau,V+A in Aleph fit
     // for (uint i = 1; i < s0s.size(); i++) {

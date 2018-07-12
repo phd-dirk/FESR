@@ -25,10 +25,18 @@ class ExperimentalMoments : public Numerics {
 
     // cache experimental moments
     initExpMoms();
+
+    // cache covariance matrix
+    covMat.resize(momCount_, momCount_);
+    initCovMat();
   }
 
   vec operator ()() const {
     return expMoms;
+  }
+
+  mat getCovMat () const {
+    return covMat;
   }
 
   void initExpMoms() {
@@ -149,26 +157,25 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the covariance matrix
-  mat covMom() const {
+  void initCovMat() {
     mat jac = jacMat();
     mat err = errMat();
-    mat cov(momCount_, momCount_);
     for(int i = 0; i < momCount_; i++) {
       for(int j = 0; j < momCount_; j++) {
         for (int k = 0; k < data_.binCount+2; k++) {
           for (int l = 0; l < data_.binCount+2; l++) {
-            cov(i,j) += jac(k, i)*err(k, l)*jac(l, j);
+            covMat(i,j) += jac(k, i)*err(k, l)*jac(l, j);
           }
         }
       }
     }
-    return cov;
   }
 
   Configuration config_;
   const Data data_;
   std::vector<Input> inputs_;
   vec expMoms;
+  mat covMat;
   int momCount_ = 0;
 }; // END ExperimentalMoments
 
