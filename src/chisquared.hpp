@@ -52,7 +52,7 @@ using std::endl;
 class Chisquared: Numerics {
  public:
   Chisquared(Configuration config) :
-    s0Set_(config.s0Set), order_(config.order), momCount_(config.momCount),
+    inputs_(config.inputs), order_(config.order), momCount_(config.momCount),
     invCovMat_(momCount_, momCount_),
     expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)),
     thMom_(TheoreticalMoments(config)) {
@@ -60,18 +60,18 @@ class Chisquared: Numerics {
     initInvCovMat();
   }
 
-  double operator ()(const double *xx) const {
+  double operator ()( const double *xx) const {
     // init fit parameters
     double astau = xx[0];
     double aGGinv = xx[1];
     double rhoD6VpA = xx[2];
     double c8D8VpA = xx[3];
 
-    return chi2(s0Set_, astau, aGGinv, rhoD6VpA, c8D8VpA);
+    return chi2(astau, aGGinv, rhoD6VpA, c8D8VpA);
   }
 
-  double operator ()(const vec s0Set, const double &astau, const double &aGGinv, const double &rho, const double &c8) const {
-    return chi2(s0Set, astau, aGGinv, rho, c8);
+  double operator ()(const double &astau, const double &aGGinv, const double &rho, const double &c8) const {
+    return chi2(astau, aGGinv, rho, c8);
   }
 
   double operator ()(const json &config) const {
@@ -83,22 +83,20 @@ class Chisquared: Numerics {
     return operator()(xx);
   }
 
-  double chi2(const vec s0Set, const double &astau, const double &aGGinv,
+  double chi2(const double &astau, const double &aGGinv,
               const double &rho, const double &c8) const {
     double chi = 0;
 
-    // vec momDiff(s0Set.size());
-    // for(uint i = 0; i < s0Set.size(); i++) {
-    //   const double s0 = s0Set[i];
-    //   // momDiff[i] = expMom_(i) - thMom_(s0, astau, aGGinv, rho, c8, order_);
-    // }
+    vec momDiff(momCount_);
+    for(uint i = 0; i < momCount_; i++) {
+      momDiff[i] = expMom_()[i] - thMom_(astau, aGGinv, rho, c8, order_)[i];
+    }
 
-    // for(uint k = 0; k < s0Set.size(); k++) {
-    //   for(uint l = 0; l < s0Set.size(); l++) {
-    //     chi += momDiff[k] * invCovMat(k, l) * momDiff[l];
-    //   }
-    // }
-
+    for(uint k = 0; k < momCount_; k++) {
+      for(uint l = 0; l < momCount_; l++) {
+        chi += momDiff[k] * invCovMat_(k, l) * momDiff[l];
+      }
+    }
     return chi;
   }
 
@@ -124,7 +122,7 @@ class Chisquared: Numerics {
     cout << endl;
   }
 
-  const vec s0Set_;
+  const std::vector<Input> inputs_;
   const int order_;
   const uint momCount_;
   mat invCovMat_;

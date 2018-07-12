@@ -28,9 +28,7 @@ class Configuration {
  public:
   Configuration(json config) :
     order(config["parameters"]["order"]),
-    s0Set(config["parameters"]["s0Set"].get<vec>()),
     RVANormalization(config["parameters"]["RVANormalization"]),
-    weight(config["parameters"]["weight"].get<int>()),
 
     nc(config["parameters"]["nc"]),
     nf(config["parameters"]["nf"]),
@@ -76,9 +74,7 @@ class Configuration {
   }
 
   const int order;
-  const vec s0Set;
   const double RVANormalization;
-  Weight weight;
   std::vector<Input> inputs;
   uint momCount = 0;
 

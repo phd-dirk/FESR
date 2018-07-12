@@ -119,15 +119,16 @@ int dof(const json config) {
 }
 
 int dof(const Configuration config) {
-  int dof = config.s0Set.size();
-  if(!config.astau.isFixed)
-    dof--;
-  if(!config.aGGInv.isFixed)
-    dof--;
-  if(!config.rhoVpA.isFixed)
-    dof--;
-  if(!config.c8VpA.isFixed)
-    dof--;
+  int dof = 1;
+  // int dof = config.s0Set.size();
+  // if(!config.astau.isFixed)
+  //   dof--;
+  // if(!config.aGGInv.isFixed)
+  //   dof--;
+  // if(!config.rhoVpA.isFixed)
+  //   dof--;
+  // if(!config.c8VpA.isFixed)
+  //   dof--;
   return dof;
 }
 
@@ -135,7 +136,7 @@ void writeOutput(const string filePath, const double *variables, const double *e
   ofstream file;
   file.open(filePath, std::ios::app);
   file << std::setprecision(15);
-  file << config.s0Set.size();
+  // file << config.s0Set.size();
 
   // add variables and errors
   for(int i = 0; i < 4; i++) {
@@ -147,21 +148,21 @@ void writeOutput(const string filePath, const double *variables, const double *e
   file << "," << chi2 << "," << chi2/dof(config) << "," << edm;
 
   // // add used s0s
-  vector<double> s0s = config.s0Set;
-  std::stringstream ss;
-  ss << std::setprecision(15);
-  for(size_t i = 0; i < s0s.size(); ++i) {
-    if(i != 0)
-      ss << " ";
-    ss << s0s[i];
-  }
-  std::string s0sStr = ss.str();
-  cout << s0sStr << endl;
-  file << ",[" << ss.str() << "]";
+  // vector<double> s0s = config.s0Set;
+  // std::stringstream ss;
+  // ss << std::setprecision(15);
+  // for(size_t i = 0; i < s0s.size(); ++i) {
+  //   if(i != 0)
+  //     ss << " ";
+  //   ss << s0s[i];
+  // }
+  // std::string s0sStr = ss.str();
+  // cout << s0sStr << endl;
+  // file << ",[" << ss.str() << "]";
 
-  cout << "weight: " << config.weight.getId() << endl;
+  // cout << "weight: " << config.weight.getId() << endl;
   // add used weight
-  file << "," << config.weight.getId();
+  // file << "," << config.weight.getId();
 
   file << endl;
   file.close();
@@ -185,8 +186,9 @@ int main (int argc, char* argv[]) {
   // // Numerics num(constants);
   // // cout << num.complexContourIntegral(testFunction) << endl;
 
-  ExperimentalMoments expMoms("/Users/knowledge/Developer/PhD/FESR/aleph.json", config);
-  cout << expMoms().size() << endl;
+  Chisquared chi(config);
+  cout << chi(0.31927, 0.021, -0.1894, 0.16315) << endl;
+
 
   AdlerFunction adler(config);
   // cout << adler.D0(3.0, sqrt(3.0), 0.32307, 5) << endl;

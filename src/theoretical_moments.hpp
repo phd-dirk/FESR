@@ -107,11 +107,11 @@ class TheoreticalMoments: public AdlerFunction {
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) const {
     // cout << "thMom: \t" << operator() (config_.sTau, astau, aGGinv, rhoVpA, c8VpA, order) << endl;
-    cout << "Delta^(0): \t" << del0(config_.sTau, config_.weight, config_.sTau, astau, order) << endl;
-    cout << "Delta^(4): \t" << del4(config_.sTau, config_.weight, config_.sTau, astau, aGGinv) << endl;
-    cout << "Delta^(6): \t" << del6(config_.sTau, config_.weight, rhoVpA) << endl;
-    cout << "Delta^(8): \t" << del8(config_.sTau, config_.weight, c8VpA) << endl;
-    cout << "Delta_P+S: \t" << deltaP(config_.sTau, config_.weight) << endl;
+    // cout << "Delta^(0): \t" << del0(config_.sTau, config_.weight, config_.sTau, astau, order) << endl;
+    // cout << "Delta^(4): \t" << del4(config_.sTau, config_.weight, config_.sTau, astau, aGGinv) << endl;
+    // cout << "Delta^(6): \t" << del6(config_.sTau, config_.weight, rhoVpA) << endl;
+    // cout << "Delta^(8): \t" << del8(config_.sTau, config_.weight, c8VpA) << endl;
+    // cout << "Delta_P+S: \t" << deltaP(config_.sTau, config_.weight) << endl;
   }
 
 

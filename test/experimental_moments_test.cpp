@@ -11,7 +11,6 @@ using std::vector;
 class ExperimentalMomentsTest : public ::testing::Test {
  protected:
   ExperimentalMoments *expMom;
-  ExperimentalMoments *expMom2;
 
 
   virtual void SetUp() {
@@ -21,12 +20,6 @@ class ExperimentalMomentsTest : public ::testing::Test {
     configFile >> config;
 
     expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config);
-
-    std::ifstream configFile2("./test/configuration_test2.json");
-    json config2;
-    configFile2 >> config2;
-
-    expMom2 = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config2);
   }
 
   virtual void TearDown() {

@@ -8,8 +8,6 @@
         "mTau": 1.77682,
         "be": 17.815,
         "dBe": 0.023,
-        "s0Set": [3.1570893124, 3.0, 2.8, 2.6, 2.4, 2.3, 2.2, 2.1, 2.0],
-        "weight": 1,
         "input": [{
             "weight": 1,
             "s0s": [3.0, 2.0, 1.0]
@@ -20,8 +18,8 @@
     },
     "variables": {
         "astau": {
-            "fixed": true,
-            "value": 0.31927,
+            "fixed": false,
+            "value": 0.323,
             "stepSize": 0.002
         },
         "aGGInv": {
@@ -31,12 +29,12 @@
         },
         "rhoVpA": {
             "fixed": false,
-            "value": -0.1894,
+            "value": -0.31489,
             "stepSize": 0.1
         },
         "c8VpA": {
             "fixed": false,
-            "value": 0.16315,
+            "value": -0.026525,
             "stepSize": 0.3
         }
     },
