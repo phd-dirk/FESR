@@ -154,9 +154,10 @@ class ExperimentalMoments {
     mat err = errMat();
     for(uint i = 0; i < config_.momCount; i++) {
       for(uint j = 0; j < config_.momCount; j++) {
+        covMat(i, j) = 0.0;
         for (int k = 0; k < data_.binCount+2; k++) {
           for (int l = 0; l < data_.binCount+2; l++) {
-            covMat(i,j) += jac(k, i)*err(k, l)*jac(l, j);
+            covMat(i, j) += jac(k, i)*err(k, l)*jac(l, j);
           }
         }
       }

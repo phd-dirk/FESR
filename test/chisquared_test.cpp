@@ -28,6 +28,10 @@ class ChisquaredTest : public ::testing::Test {
   }
 };
 
+TEST_F(ChisquaredTest, inverseCovarianceMatrix) {
+  Chisquared chi = *chi_;
+}
+
 TEST_F(ChisquaredTest, chi2) {
   Chisquared chi = *chi_;
   // EXPECT_NEAR(chi({ 3.0 }, 0.31927, 0.021, -0.1894, 0.16315), 0.37595084146692792 , 1e-12);

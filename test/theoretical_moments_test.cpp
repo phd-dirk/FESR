@@ -35,12 +35,13 @@ protected:
 TEST_F(TheoreticalMomentsTest, IntegralMoment) {
   // thMom(const int &i, const double &astau, const double &aGGinv,
   // const double &rhoVpA, const double &c8VpA, const double &order)
+  TheoreticalMoments th = *thMom_;
   Weight w(1);
-  EXPECT_NEAR((*thMom_).thMom(3.1570893124, w, astau_, aGGinv_, rhoVpA_, c8VpA_, 5), 3.4634999665533375, 1.e-14);
-  EXPECT_NEAR((*thMom_).thMom(3.0, w, 0.31927, 0.021, -0.1894, -0.161315, 5), 3.4848911406246970, 1.e-14);
-  EXPECT_NEAR((*thMom_).thMom(3.0, w, 0.2, 0.021, -0.1894, -0.161315, 5), 3.1542708728473938, 1.e-14);
-  EXPECT_NEAR((*thMom_).thMom(3.0, w, 0.2, 0.1, -0.1894, -0.161315, 5), 3.1571219772351791, 1.e-14);
-  EXPECT_NEAR((*thMom_).thMom(3.0, w, 0.2, 0.1, -0.3, 0.9, 5), 3.1129921630758908, 1.e-14);
+  EXPECT_NEAR(th.thMom(3.1570893124, w, astau_, aGGinv_, rhoVpA_, c8VpA_, 5), 3.4634999665533375, 1.e-14);
+  EXPECT_NEAR(th.thMom(3.0, w, 0.31927, 0.021, -0.1894, -0.161315, 5), 3.4848911406246970, 1.e-14);
+  EXPECT_NEAR(th.thMom(3.0, w, 0.2, 0.021, -0.1894, -0.161315, 5), 3.1542708728473938, 1.e-14);
+  EXPECT_NEAR(th.thMom(3.0, w, 0.2, 0.1, -0.1894, -0.161315, 5), 3.1571219772351791, 1.e-14);
+  EXPECT_NEAR(th.thMom(3.0, w, 0.2, 0.1, -0.3, 0.9, 5), 3.1129921630758908, 1.e-14);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta0) {

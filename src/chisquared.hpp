@@ -53,6 +53,7 @@ class Chisquared: Numerics {
  public:
   Chisquared(Configuration config) :
     s0Set_(config.s0Set), order_(config.order), momCount_(config.momCount),
+    invCovMat_(momCount_, momCount_),
     expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)),
     thMom_(TheoreticalMoments(config)) {}
 
@@ -83,18 +84,6 @@ class Chisquared: Numerics {
               const double &rho, const double &c8) const {
     double chi = 0;
 
-    mat covMat = expMom_.getCovMat();
-
-    // Remove correlations with R_tau,V+A in Aleph fit
-    for (uint i = 1; i < momCount_; i++) {
-      covMat(0, i) = 0.;
-      covMat(i, 0) = 0.;
-    }
-    // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
-    covMat(0, 0) = pow(0.0072, 2);
-
-    mat invCovMat(covMat.size1(), covMat.size2()); //readMatrixFromFile(9, "./data/invCovMat.dat");
-    Numerics::invertMatrix(covMat, invCovMat);
     // vec momDiff(s0Set.size());
     // for(uint i = 0; i < s0Set.size(); i++) {
     //   const double s0 = s0Set[i];
@@ -110,6 +99,19 @@ class Chisquared: Numerics {
     return chi;
   }
 
+  void initInvCovMat() {
+    mat covMat = expMom_.getCovMat();
+
+    // Remove correlations with R_tau,V+A in Aleph fit
+    for (uint i = 1; i < momCount_; i++) {
+      covMat(0, i) = 0.;
+      covMat(i, 0) = 0.;
+    }
+    // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
+    covMat(0, 0) = pow(0.0072, 2);
+    Numerics::invertMatrix(covMat, invCovMat_);
+  }
+
   void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) const {
     cout << "Theoretical Moments:" << endl;
     thMom_.log(astau, aGGinv, rhoVpa, c8Vpa, order_);
@@ -122,6 +124,7 @@ class Chisquared: Numerics {
   const vec s0Set_;
   const int order_;
   const uint momCount_;
+  mat invCovMat_;
   const ExperimentalMoments expMom_;
   const TheoreticalMoments thMom_;
  private:
