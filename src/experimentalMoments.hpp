@@ -113,7 +113,7 @@ class ExperimentalMoments : public Numerics {
   }
 
   // returns the error matrix
-  void initErrorMatrix() {
+  mat errMatrix() {
     mat errMat(data_.binCount+2, data_.binCount+2);
     for (int i = 0; i < data_.binCount+2; i++) {
       for (int j = 0; j < data_.binCount+2; j++) {
@@ -126,7 +126,7 @@ class ExperimentalMoments : public Numerics {
     }
     errMat(data_.binCount, data_.binCount) = pow(config_.dBe, 2);
     errMat(data_.binCount+1, data_.binCount+1) = pow(kDPiFac(), 2);
-    this->errorMatrix = errMat;
+    return errMat;
   }
 
   // returns the Jacobian Matrix
@@ -165,7 +165,7 @@ class ExperimentalMoments : public Numerics {
   const Data data_;
   std::vector<Input> inputs_;
   vec experimentalMoments;
-  mat weightRatios, errorMatrix, jacobianMatrix, covarianceMatrix,
+  mat jacobianMatrix, covarianceMatrix,
     inverseCovarianceMatrix;
 }; // END ExperimentalMoments
 

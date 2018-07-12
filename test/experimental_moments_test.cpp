@@ -73,13 +73,13 @@ TEST_F(ExperimentalMomentsTest, kPiFac) {
   EXPECT_NEAR(expMom->kDPiFac(), 6.0937786116003652e-3  ,1.e-14);
 }
 
-// TEST_F(ExperimentalMomentsTest, errorMatrix) {
-//   EXPECT_NEAR(expMom->errorMatrix(0, 0), 2.2268960999999995e-7, 1.e-15);
-//   EXPECT_NEAR(expMom->errorMatrix(21, 48), -1.6821367980824591e-5, 1.e-15);
-//   EXPECT_NEAR(expMom->errorMatrix(0, 79), -8.9303148579275616e-11, 1.e-15);
-//   EXPECT_NEAR(expMom->errorMatrix(80, 80), 1.6e-3, 1.e-15);
-//   EXPECT_NEAR(expMom->errorMatrix(81, 81), 3.7134137767198075e-5, 1.e-15);
-// }
+TEST_F(ExperimentalMomentsTest, errorMatrix) {
+  mat errMat = expMom->errMatrix();
+  EXPECT_NEAR(errMat(0, 0), 2.2154942818661503e-7, 1.e-15);
+  EXPECT_NEAR(errMat(21, 48), -1.6735241745083317e-5, 1.e-15);
+  EXPECT_NEAR(errMat(80, 80), 5.28999999999999999e-4, 1.e-15);
+  EXPECT_NEAR(errMat(81, 81), 3.7134137767198075e-5, 1.e-15);
+}
 
 // TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
 //   EXPECT_NEAR(expMom->jacobianMatrix(0, 0), 5.6094687833062200e-2, 1.e-15);
