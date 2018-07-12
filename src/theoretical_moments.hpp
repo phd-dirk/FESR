@@ -11,10 +11,10 @@ class TheoreticalMoments: public AdlerFunction {
   TheoreticalMoments(const Configuration &config) :
     AdlerFunction(config), config_(config), inputs_(config_.inputs) {}
 
-  double operator ()(const double &s0, const Weight &w, const double &astau,
+  vec operator ()(const double &astau,
                      const double &aGGinv, const double &rhoVpA, const double &c8VpA,
                      const double &order) const {
-    return thMom(s0, w, astau, aGGinv, rhoVpA, c8VpA, order);
+    return thMoms(astau, aGGinv, rhoVpA, c8VpA, order);
   }
 
   double thMom(const double &s0, const Weight &w, const double &astau,
@@ -106,7 +106,7 @@ class TheoreticalMoments: public AdlerFunction {
   }
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpA, const double &c8VpA, const int &order) const {
-    cout << "thMom: \t" << operator() (config_.sTau, astau, aGGinv, rhoVpA, c8VpA, order) << endl;
+    // cout << "thMom: \t" << operator() (config_.sTau, astau, aGGinv, rhoVpA, c8VpA, order) << endl;
     cout << "Delta^(0): \t" << del0(config_.sTau, config_.weight, config_.sTau, astau, order) << endl;
     cout << "Delta^(4): \t" << del4(config_.sTau, config_.weight, config_.sTau, astau, aGGinv) << endl;
     cout << "Delta^(6): \t" << del6(config_.sTau, config_.weight, rhoVpA) << endl;

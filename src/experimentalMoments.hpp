@@ -22,6 +22,9 @@ class ExperimentalMoments : public Numerics {
       vec s0s = input.s0s;
       momCount_ += s0s.size();
     }
+
+    // cache experimental moments
+    initExpMoms();
   }
 
   vec operator ()() const {
