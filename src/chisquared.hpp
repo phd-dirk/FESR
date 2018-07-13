@@ -10,6 +10,8 @@
 #include "json.hpp"
 #include <functional>
 #include <iostream>
+#include <thread>
+#include <future>
 
 
 // test invCovMat
@@ -19,6 +21,12 @@ using ublas::prod;
 using std::ifstream;
 
 namespace ublas = boost::numeric::ublas;
+
+struct Test {
+  void func(int x) {
+    cout << x << endl;
+  }
+};
 
 mat readMatrixFromFile(const int &size, const string filePath) {
   mat m(size, size);
@@ -52,10 +60,9 @@ using std::endl;
 class Chisquared: Numerics {
  public:
   Chisquared(Configuration config) :
-    inputs_(config.inputs), order_(config.order), momCount_(config.momCount),
-    invCovMat_(momCount_, momCount_),
-    expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)),
-    thMom_(TheoreticalMoments(config)) {
+    config_(config), inputs_(config.inputs), order_(config.order),
+    momCount_(config.momCount), invCovMat_(momCount_, momCount_),
+    expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)) {
     // cache inverse covariance matrix
     initInvCovMat();
   }
@@ -89,7 +96,11 @@ class Chisquared: Numerics {
 
     vec momDiff(momCount_);
     for(uint i = 0; i < momCount_; i++) {
-      momDiff[i] = expMom_()[i] - thMom_(astau, aGGinv, rho, c8, order_)[i];
+      // parallelized
+      momDiff[i] = expMom_()[i] - calcThMoms(astau, aGGinv, rho, c8, order_)[i];
+      // without parallization
+      // TheoreticalMoments th(config_);
+      // momDiff[i] = expMom_()[i] - th(astau, aGGinv, rho, c8, order_)[i];
     }
 
     for(uint k = 0; k < momCount_; k++) {
@@ -98,6 +109,28 @@ class Chisquared: Numerics {
       }
     }
     return chi;
+  }
+
+  vec calcThMoms(const double &astau, const double &aGGinv,
+                 const double &rhoVpA, const double &c8VpA, const double &order) const {
+    vec thMoms(config_.momCount);
+    std::vector<std::future<double>> ftrs(config_.momCount);
+    TheoreticalMoments th(config_);
+    int i = 0;
+    for(auto const& input: inputs_) {
+      vec s0s = input.s0s;
+      Weight w = input.weight;
+      for(auto const& s0: s0s) {
+        ftrs[i] = std::async(&TheoreticalMoments::thMom, &th, s0, w, astau, aGGinv, rhoVpA, c8VpA, order);
+        i++;
+      }
+    }
+
+    for(uint i=0; i<config_.momCount; i++) {
+      thMoms[i] = ftrs[i].get();
+    }
+
+    return thMoms;
   }
 
   void initInvCovMat() {
@@ -115,19 +148,19 @@ class Chisquared: Numerics {
 
   void log(const double &astau, const double &aGGinv, const double &rhoVpa, const double &c8Vpa) const {
     cout << "Theoretical Moments:" << endl;
-    thMom_.log(astau, aGGinv, rhoVpa, c8Vpa, order_);
+    // thMom_.log(astau, aGGinv, rhoVpa, c8Vpa, order_);
     cout << endl;
     cout << "Experimental Moments:" << endl;
     expMom_.log();
     cout << endl;
   }
 
+  const Configuration config_;
   const std::vector<Input> inputs_;
   const int order_;
   const uint momCount_;
   mat invCovMat_;
   const ExperimentalMoments expMom_;
-  const TheoreticalMoments thMom_;
  private:
 };
 

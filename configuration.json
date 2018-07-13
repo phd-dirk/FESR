@@ -1,6 +1,6 @@
 {
     "version": 0.3,
-    "scheme": "CI",
+    "scheme": "FO",
     "parameters": {
         "nc": 3,
         "nf": 3,
@@ -20,7 +20,7 @@
     "variables": {
         "astau": {
             "fixed": false,
-            "value": 0.323,
+            "value": 0.32307,
             "stepSize": 0.002
         },
         "aGGInv": {
@@ -30,12 +30,12 @@
         },
         "rhoVpA": {
             "fixed": false,
-            "value": -0.31489,
+            "value": -0.30949,
             "stepSize": 0.1
         },
         "c8VpA": {
             "fixed": false,
-            "value": -0.026525,
+            "value": -0.030869,
             "stepSize": 0.3
         }
     },

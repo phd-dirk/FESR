@@ -128,6 +128,7 @@ class Numerics {
 
   double adaptiveIntegrate(function<double(double)> func, double from, double to) const {
     double result, error;
+    gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1200);
     gsl_function F;
     F = {
       [](double d, void* vf) -> double {

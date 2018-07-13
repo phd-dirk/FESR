@@ -1,5 +1,6 @@
 #define BOOST_UBLAS_NDEBUG 1 // numerical issues with ublas matrix inverse
 
+#include <chrono>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -169,7 +170,20 @@ void writeOutput(const string filePath, const double *variables, const double *e
 }
 
 
+cmplx integrate(cmplx x) {
+  cout << "go " << endl;
+  return x*x*x*x*x*log(x)*log(x)+exp(x)+7.;
+}
+
+double func() {
+  double x;
+  Numerics n;
+  x = n.complexContourIntegral(integrate).real();
+  return x;
+}
+
 int main (int argc, char* argv[]) {
+  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   cout.precision(17);
   string outputFilePath = "./output/fits.csv";
   if (argc > 1) {
@@ -182,15 +196,27 @@ int main (int argc, char* argv[]) {
   configFile >> jsonConfig;
   const Configuration config(jsonConfig);
   const Chisquared chisquared(config);
+  const TheoreticalMoments th(config);
+
+
+
+
+  // std::vector<std::future<double>> ftrs(100);
+  // for(int i=0; i<100; i++) {
+  //   ftrs[i] = std::async(&TheoreticalMoments::thMom, &th, 3.0, Weight(1), 0.32307, 0.021, -0.30949, -0.0308869, 5);
+  //   // ftrs[i] = std::async(func);
+  // }
+  // for(int i=0; i<100; i++) {
+  //   cout << ftrs[i].get() << endl;
+  // }
+
 
   // // Numerics num(constants);
   // // cout << num.complexContourIntegral(testFunction) << endl;
 
-  Chisquared chi(config);
-  cout << chi(0.31927, 0.021, -0.1894, 0.16315) << endl;
 
 
-  AdlerFunction adler(config);
+  // AdlerFunction adler(config);
   // cout << adler.D0(3.0, sqrt(3.0), 0.32307, 5) << endl;
   // cout << adler.D0(3.0, -3.0, 3.1570893124000001, 0.31927, 1) << endl;
   // cout << adler.D0(3.0, -3.0, 3.1570893124000001, 0.31927, 2) << endl;
@@ -232,50 +258,52 @@ int main (int argc, char* argv[]) {
 
 
   // MINUIT
-  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // // set tolerances
-  // // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // // min->SetMaxIterations(10000000); // for GSL
-  // // min->SetTolerance(1e-6);
-  // min->SetStrategy(2);
-  // min->SetPrintLevel(3); // activate logging
+  // set tolerances
+  // min->SetMaxFunctionCalls(10000000); // for Minuit2
+  // min->SetMaxIterations(10000000); // for GSL
+  // min->SetTolerance(1e-6);
+  min->SetStrategy(2);
+  min->SetPrintLevel(3); // activate logging
 
-  // // function wrapper
-  // Functor chi2(chisquared, 4);
+  // function wrapper
+  Functor chi2(chisquared, 4);
 
-  // min->SetFunction(chi2);
+  min->SetFunction(chi2);
 
-  // // set free variables to be minimized
-  // if (config.astau.isFixed) {
-  //   min->SetFixedVariable(0, "astau", config.astau.value);
-  // } else {
-  //   min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
-  // }
-  // if (config.aGGInv.isFixed) {
-  //   min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
-  // } else {
-  //   min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
-  // }
-  // if (config.rhoVpA.isFixed) {
-  //   min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
-  // } else {
-  //   min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
-  // }
-  // if (config.c8VpA.isFixed) {
-  //   min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
-  // } else {
-  //   min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
-  // }
+  // set free variables to be minimized
+  if (config.astau.isFixed) {
+    min->SetFixedVariable(0, "astau", config.astau.value);
+  } else {
+    min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
+  }
+  if (config.aGGInv.isFixed) {
+    min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
+  } else {
+    min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
+  }
+  if (config.rhoVpA.isFixed) {
+    min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
+  } else {
+    min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
+  }
+  if (config.c8VpA.isFixed) {
+    min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
+  } else {
+    min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
+  }
 
-  // // minimize!
-  // min->Minimize();
+  // minimize!
+  min->Minimize();
+  std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
+  std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
   // const double *xs = min->X();
   // const double *errors = min->Errors();
   // const double edm = min->Edm();
   // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
   // const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
-  // // min->PrintResults();
+  // min->PrintResults();
 
   // writeOutput(outputFilePath, xs, errors, chi2AtMin, edm, config);
 
