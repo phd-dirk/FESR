@@ -45,10 +45,10 @@ class TheoreticalMoments:
   //   }
   //   return moms;
   // }
-  double thMom(const double &s0, const Weight &w, const double &astau,
-               const double &aGGinv, const double &rhoVpA, const double &c8VpA,
-               const double &order)
-
+  double thMom(cDbl &s0, const Weight &w, cDbl &astau, cDbl &aGGinv, cDbl &rhoVpA,
+               cDbl &c8VpA, cDbl &order,
+               cDbl &vKappa, cDbl &vGamma, cDbl &vAlpha, cDbl &vBeta,
+               cDbl &aKappa, cDbl &aGamma, cDbl &aAlpha, cDbl &aBeta) const
   {
     double rTauTh = 0.;
     // D0

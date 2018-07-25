@@ -143,7 +143,9 @@ class Chisquared: Numerics {
       Weight w = input.weight;
       for(auto const& s0: s0s) {
         ftrs[i] = std::async(&TheoreticalMoments::thMom, &th, s0, w, astau, aGGinv,
-                             rhoVpA, c8VpA, order);
+                             rhoVpA, c8VpA, order,
+                             vKappa, vGamma, vAlpha, vBeta,
+                             aKappa, aGamma, aAlpha, aBeta);
         i++;
       }
     }
