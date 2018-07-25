@@ -4,6 +4,7 @@
 #include "./types.hpp"
 #include "./configuration.hpp"
 #include "./adler_function.hpp"
+#include "./duality_violations.hpp"
 
 template <typename T>
 void print(T t)
@@ -19,33 +20,36 @@ void print(T t, Args... args)
   std::cout << std::endl;
 }
 
-class TheoreticalMoments: public AdlerFunction {
+class TheoreticalMoments:
+    public AdlerFunction, DualityViolations
+{
  public:
   TheoreticalMoments(const Configuration &config) :
     AdlerFunction(config), config_(config), inputs_(config_.inputs) {}
 
-  vec operator ()(const double &astau,
-                     const double &aGGinv, const double &rhoVpA, const double &c8VpA,
-                     const double &order) const {
-    return thMoms(astau, aGGinv, rhoVpA, c8VpA, order);
-  }
+  // vec operator ()(const double &astau,
+  //                    const double &aGGinv, const double &rhoVpA, const double &c8VpA,
+  //                    const double &order) const {
+  //   return thMoms(astau, aGGinv, rhoVpA, c8VpA, order);
+  // }
 
-  vec thMoms(const double &astau, const double &aGGinv, const double &rhoVpA,
-             const double &c8VpA, const double &order) const {
-    vec moms;
-    for(auto const& input: inputs_) {
-      vec s0s = input.s0s;
-      Weight w = input.weight;
-      for(auto const& s0: s0s) {
-        moms.push_back(thMom(s0, w, astau, aGGinv, rhoVpA, c8VpA, order));
-      }
-    }
-    return moms;
-  }
-
+  // vec thMoms(const double &astau, const double &aGGinv, const double &rhoVpA,
+  //            const double &c8VpA, const double &order) const {
+  //   vec moms;
+  //   for(auto const& input: inputs_) {
+  //     vec s0s = input.s0s;
+  //     Weight w = input.weight;
+  //     for(auto const& s0: s0s) {
+  //       moms.push_back(thMom(s0, w, astau, aGGinv, rhoVpA, c8VpA, order));
+  //     }
+  //   }
+  //   return moms;
+  // }
   double thMom(const double &s0, const Weight &w, const double &astau,
-        const double &aGGinv, const double &rhoVpA, const double &c8VpA,
-        const double &order) const {
+               const double &aGGinv, const double &rhoVpA, const double &c8VpA,
+               const double &order)
+
+  {
     double rTauTh = 0.;
     // D0
     if ( config_.OPE.D0 ) {
@@ -66,6 +70,9 @@ class TheoreticalMoments: public AdlerFunction {
     // PionPole
     if ( config_.OPE.PionPole )
       rTauTh += 3.*deltaP(s0, w);
+
+    // rTauTh += DVMomentVpA(s0, w, vKappa, vGamma, vAlpha, vBeta, aKappa, aGamma, aAlpha,
+    //                       aBeta);
 
     return pow(config_.kVud, 2)*config_.kSEW*rTauTh;
   }

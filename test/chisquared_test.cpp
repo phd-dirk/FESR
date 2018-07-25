@@ -37,6 +37,7 @@ TEST_F(ChisquaredTest, inverseCovarianceMatrix) {
 
 TEST_F(ChisquaredTest, chi2) {
   Chisquared chi = *chi_;
-  EXPECT_NEAR(chi(0.31927, 0.021, -0.1894, 0.16315), 31701.49710037827, 1e-8);
+  EXPECT_NEAR(chi(0.31927, 0.021, -0.1894, 0.16315, 0.0, 0.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0, 0.0), 31701.49710037827, 1e-8);
   // EXPECT_NEAR(chi({ 3.0, 2.0 }, 0.31927, 0.021, -0.1894, 0.16315), 1.4619737304634208, 1e-11);
 }

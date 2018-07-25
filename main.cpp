@@ -21,6 +21,7 @@ using std::runtime_error;
 #include "./src/adler_function.hpp"
 #include "./src/alpha_s.hpp"
 #include "./src/numerics.hpp"
+#include "./src/duality_violations.hpp"
 
 // Chisquared
 #include "./src/chisquared.hpp"
@@ -175,13 +176,6 @@ cmplx integrate(cmplx x) {
   return x*x*x*x*x*log(x)*log(x)+exp(x)+7.;
 }
 
-double func() {
-  double x;
-  Numerics n;
-  x = n.complexContourIntegral(integrate).real();
-  return x;
-}
-
 int main (int argc, char* argv[]) {
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   cout.precision(17);
@@ -197,6 +191,8 @@ int main (int argc, char* argv[]) {
   const Configuration config(jsonConfig);
   const Chisquared chisquared(config);
   const TheoreticalMoments th(config);
+  const DualityViolations dv;
+  cout << dv.moment(1., Weight(1), 1., 1., 1., 1.) << endl;
 
 
 
@@ -258,46 +254,46 @@ int main (int argc, char* argv[]) {
 
 
   // MINUIT
-  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+  // Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // set tolerances
-  // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // min->SetMaxIterations(10000000); // for GSL
-  // min->SetTolerance(1e-6);
-  min->SetStrategy(2);
-  min->SetPrintLevel(3); // activate logging
+  // // set tolerances
+  // // min->SetMaxFunctionCalls(10000000); // for Minuit2
+  // // min->SetMaxIterations(10000000); // for GSL
+  // min->SetTolerance(1e-15);
+  // min->SetStrategy(2);
+  // min->SetPrintLevel(3); // activate logging
 
-  // function wrapper
-  Functor chi2(chisquared, 4);
+  // // function wrapper
+  // Functor chi2(chisquared, 4);
 
-  min->SetFunction(chi2);
+  // min->SetFunction(chi2);
 
-  // set free variables to be minimized
-  if (config.astau.isFixed) {
-    min->SetFixedVariable(0, "astau", config.astau.value);
-  } else {
-    min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
-  }
-  if (config.aGGInv.isFixed) {
-    min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
-  } else {
-    min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
-  }
-  if (config.rhoVpA.isFixed) {
-    min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
-  } else {
-    min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
-  }
-  if (config.c8VpA.isFixed) {
-    min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
-  } else {
-    min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
-  }
+  // // set free variables to be minimized
+  // if (config.astau.isFixed) {
+  //   min->SetFixedVariable(0, "astau", config.astau.value);
+  // } else {
+  //   min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
+  // }
+  // if (config.aGGInv.isFixed) {
+  //   min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
+  // } else {
+  //   min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
+  // }
+  // if (config.rhoVpA.isFixed) {
+  //   min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
+  // } else {
+  //   min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
+  // }
+  // if (config.c8VpA.isFixed) {
+  //   min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
+  // } else {
+  //   min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
+  // }
 
-  // minimize!
-  min->Minimize();
-  std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
-  std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
+  // // minimize!
+  // min->Minimize();
+  // std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
+  // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
   // const double *xs = min->X();
   // const double *errors = min->Errors();
   // const double edm = min->Edm();

@@ -1,6 +1,6 @@
 {
     "version": 0.3,
-    "scheme": "FO",
+    "scheme": "CI",
     "parameters": {
         "nc": 3,
         "nf": 3,
@@ -11,10 +11,19 @@
         "dBe": 0.023,
         "input": [{
             "weight": 1,
-            "s0s": [3.0, 2.0, 1.0]
+            "s0s": [3.1570893124]
+        }, {
+            "weight": 5,
+            "s0s": [3.1570893124]
         }, {
             "weight": 6,
-            "s0s": [2.8, 1.8]
+            "s0s": [3.1570893124]
+        }, {
+            "weight": 7,
+            "s0s": [3.1570893124]
+        }, {
+            "weight": 8,
+            "s0s": [3.1570893124]
         }]
     },
     "variables": {
@@ -24,26 +33,26 @@
             "stepSize": 0.002
         },
         "aGGInv": {
-            "fixed": true,
-            "value": 0.021,
+            "fixed": false,
+            "value": -0.003,
             "stepSize": 0.01
         },
         "rhoVpA": {
             "fixed": false,
-            "value": -0.30949,
+            "value": 0.0013,
             "stepSize": 0.1
         },
         "c8VpA": {
             "fixed": false,
-            "value": -0.030869,
+            "value": -0.008,
             "stepSize": 0.3
         }
     },
     "adler": {
         "D0": true,
         "D2": false,
-        "D4": false,
-        "D68": false,
-        "PionPole": false
+        "D4": true,
+        "D68": true,
+        "PionPole": true
     }
 }

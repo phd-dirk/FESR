@@ -73,12 +73,27 @@ class Chisquared: Numerics {
     double aGGinv = xx[1];
     double rhoD6VpA = xx[2];
     double c8D8VpA = xx[3];
+    double vKappa = xx[4];
+    double vGamma = xx[5];
+    double vAlpha = xx[6];
+    double vBeta = xx[7];
+    double aKappa = xx[8];
+    double aGamma = xx[9];
+    double aAlpha = xx[10];
+    double aBeta = xx[11];
 
-    return chi2(astau, aGGinv, rhoD6VpA, c8D8VpA);
+    return chi2(astau, aGGinv, rhoD6VpA, c8D8VpA,
+                vKappa, vGamma, vAlpha, vBeta,
+                aKappa, aGamma, aAlpha, aBeta);
   }
 
-  double operator ()(const double &astau, const double &aGGinv, const double &rho, const double &c8) const {
-    return chi2(astau, aGGinv, rho, c8);
+  double operator ()(cDbl &astau, cDbl &aGGinv, cDbl &rho, cDbl &c8,
+                     cDbl &vKappa, cDbl &vGamma, cDbl &vAlpha, cDbl &vBeta,
+                     cDbl &aKappa, cDbl &aGamma, cDbl &aAlpha, cDbl &aBeta) const
+  {
+    return chi2(astau, aGGinv, rho, c8,
+                vKappa, vGamma, vAlpha, vBeta,
+                aKappa, aGamma, aAlpha, aBeta);
   }
 
   double operator ()(const json &config) const {
@@ -90,14 +105,18 @@ class Chisquared: Numerics {
     return operator()(xx);
   }
 
-  double chi2(const double &astau, const double &aGGinv,
-              const double &rho, const double &c8) const {
+  double chi2(cDbl &astau, cDbl &aGGinv, cDbl &rho, cDbl &c8,
+              cDbl &vKappa, cDbl &vGamma, cDbl &vAlpha, cDbl &vBeta,
+              cDbl &aKappa, cDbl &aGamma, cDbl &aAlpha, cDbl &aBeta) const
+  {
     double chi = 0;
 
     vec momDiff(momCount_);
     for(uint i = 0; i < momCount_; i++) {
       // parallelized
-      momDiff[i] = expMom_()[i] - calcThMoms(astau, aGGinv, rho, c8, order_)[i];
+      momDiff[i] = expMom_()[i]
+                   - calcThMoms(astau, aGGinv, rho, c8, order_, vKappa, vGamma, vAlpha,
+                                vBeta, aKappa, aGamma, aAlpha, aBeta)[i];
       // without parallization
       // TheoreticalMoments th(config_);
       // momDiff[i] = expMom_()[i] - th(astau, aGGinv, rho, c8, order_)[i];
@@ -111,8 +130,10 @@ class Chisquared: Numerics {
     return chi;
   }
 
-  vec calcThMoms(const double &astau, const double &aGGinv,
-                 const double &rhoVpA, const double &c8VpA, const double &order) const {
+  vec calcThMoms(cDbl &astau, cDbl &aGGinv, cDbl &rhoVpA, cDbl &c8VpA, cDbl &order,
+                 cDbl &vKappa, cDbl &vGamma, cDbl &vAlpha, cDbl &vBeta,
+                 cDbl &aKappa, cDbl &aGamma, cDbl &aAlpha, cDbl &aBeta) const
+  {
     vec thMoms(config_.momCount);
     std::vector<std::future<double>> ftrs(config_.momCount);
     TheoreticalMoments th(config_);
@@ -121,7 +142,8 @@ class Chisquared: Numerics {
       vec s0s = input.s0s;
       Weight w = input.weight;
       for(auto const& s0: s0s) {
-        ftrs[i] = std::async(&TheoreticalMoments::thMom, &th, s0, w, astau, aGGinv, rhoVpA, c8VpA, order);
+        ftrs[i] = std::async(&TheoreticalMoments::thMom, &th, s0, w, astau, aGGinv,
+                             rhoVpA, c8VpA, order);
         i++;
       }
     }

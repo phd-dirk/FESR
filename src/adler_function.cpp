@@ -152,7 +152,8 @@ cmplx AdlerFunction::D4(const cmplx &s, const cmplx &mu2, const double &sTau,
 }
 double AdlerFunction::D4CInt(const double &s0, const Weight &weight,
                              const double &sTau, const double &astau,
-                             const double &aGGinv, const int &r) const {
+                             const double &aGGinv, const int &r) const
+{
   cmplxFunc fTest =
     [&](cmplx s) -> cmplx const {
     return weight.wD(s)/pow(s, 2);

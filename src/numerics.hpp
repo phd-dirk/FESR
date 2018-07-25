@@ -144,6 +144,25 @@ class Numerics {
     return result;
   }
 
+  double semiInfInt(function<double(double)> func, double from) const
+  {
+    double result, error;
+    gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1200);
+    gsl_function F;
+    F = {
+      [](double d, void* vf) -> double {
+        auto& f = *static_cast<std::function<double(double)>*>(vf);
+        return f(d);
+      },
+      &func
+    };
+    gsl_integration_qagiu(&F, from, epsabs_, epsrel_, 1200, w_, &result, &error);
+    // size_t fCalls = 1100;
+    // gsl_integration_qng(&F, from, to, epsabs_, epsrel_, &result, &error, &fCalls);
+    // cout << "error \t" << error << endl;
+    return result;
+  }
+
   complex<double> integrateComplex(function<complex<double>(double)> func, double from, double to) const {
     auto funcReal = [func](double t) {
       return func(t).real();
