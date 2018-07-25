@@ -192,7 +192,7 @@ int main (int argc, char* argv[]) {
   const Chisquared chisquared(config);
   const TheoreticalMoments th(config);
   const DualityViolations dv;
-  cout << dv.moment(1., Weight(1), 1., 1., 1., 1.) << endl;
+  cout << dv.moment(1., Weight(1), 3.6, 0.6, -2.3, 4.3) << endl;
 
 
 
@@ -289,14 +289,14 @@ int main (int argc, char* argv[]) {
   } else {
     min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
   }
-  min->SetFixedVariable(4, "vKappa", 0.0);
-  min->SetFixedVariable(5, "vGamma", 0.0);
-  min->SetFixedVariable(6, "vAlpha", 0.0);
-  min->SetFixedVariable(7, "vBeta", 0.0);
-  min->SetFixedVariable(8, "aKappa", 0.0);
-  min->SetFixedVariable(9, "aGamma", 0.0);
-  min->SetFixedVariable(10, "aAlpha", 0.0);
-  min->SetFixedVariable(11, "aBeta", 0.0);
+  min->SetFixedVariable(4, "vKappa", 3.0);
+  min->SetFixedVariable(5, "vGamma", 1.2);
+  min->SetFixedVariable(6, "vAlpha", -2.2);
+  min->SetFixedVariable(7, "vBeta", 3.9);
+  min->SetFixedVariable(8, "aKappa", 3.0);
+  min->SetFixedVariable(9, "aGamma", 1.3);
+  min->SetFixedVariable(10, "aAlpha", 4.7);
+  min->SetFixedVariable(11, "aBeta", 1.8);
 
   // minimize!
   min->Minimize();

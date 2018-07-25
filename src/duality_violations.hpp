@@ -26,7 +26,7 @@ class DualityViolations : Numerics
 
   double model(double s, double kappa, double gamma, double alpha, double beta)
   const {
-    return kappa*exp(-gamma*s)*sin(alpha+beta*s);
+    return exp(-kappa-gamma*s)*sin(alpha+beta*s);
   }
 };
 
