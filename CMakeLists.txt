@@ -13,7 +13,7 @@ include(${ROOT_USE_FILE})
 set(DIR src)
 include_directories(${DIR} ${BOOST_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS})
 # file(GLOB SRC "*.cpp")
-set(SOURCES src/adler_function.cpp)
+set(SOURCES src/utils.cpp src/adler_function.cpp)
 
 add_executable(FESR main.cpp ${SOURCES})
 target_link_libraries(FESR GSL::gsl ${ROOT_LIBRARIES})
