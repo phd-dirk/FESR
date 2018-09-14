@@ -67,10 +67,8 @@ make
 
 ```
 
-
 ## Fits
 alphas(Mz^2) = 0.1196 +- 0.0030 (PDG 2016)
-
 
 ## Testing
 `cmake Dtest=ON` tells cmake to include testing sourcefiles and generate `runUnitTests` executable. 

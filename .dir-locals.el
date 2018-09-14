@@ -1,6 +1,5 @@
 ;;; Directory Local Variables
 ;;; For more information see (info "(emacs) Directory Variables")
 
-((c++-mode
-  (flycheck-gcc-language-standard . "c++11")))
-9eR&Io#TS*cn
+((c++-mode . (flycheck-gcc-language-standard . "c++11"))
+ (nil . ((projectile-project-run-cmd . "./build/FESR"))))

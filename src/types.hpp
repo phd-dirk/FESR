@@ -6,7 +6,7 @@
 #include <complex>
 #include <vector>
 #include <boost/numeric/ublas/matrix.hpp>
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 #include <fstream>
 #include <string>
 

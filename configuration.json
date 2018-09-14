@@ -1,46 +1,63 @@
 {
-    "version": 0.3,
-    "scheme": "CI",
-    "parameters": {
-        "nc": 3,
-        "nf": 3,
-        "order": 5,
-        "RVANormalization": 0.99743669,
-        "mTau": 1.77682,
-        "be": 17.815,
-        "dBe": 0.023,
-        "input": [{
-            "weight": 1,
-            "s0s": [3.1570893124]
-        }]
+  "version": 0.3,
+  "scheme": "CI",
+  "parameters": {
+    "nc": 3,
+    "nf": 3,
+    "order": 5,
+    "RVANormalization": 0.99743669,
+    "mTau": 1.77682,
+    "be": 17.815,
+    "dBe": 0.023,
+    "input": [{
+      "weight": 1,
+      "s0s": [3.15709]
+    }, {
+      "weight": 5,
+      "s0s": [3.15709]
+    }, {
+      "weight": 6,
+      "s0s": [3.15709]
+    }, {
+      "weight": 7,
+      "s0s": [3.15709]
+    }, {
+      "weight": 8,
+      "s0s": [3.15709]
+    }]
+  },
+  "variables": {
+    "astau": {
+      "fixed": false,
+      "value": 0.32307,
+      "stepSize": 0.002
     },
-    "variables": {
-        "astau": {
-            "fixed": false,
-            "value": 0.32307,
-            "stepSize": 0.002
-        },
-        "aGGInv": {
-            "fixed": false,
-            "value": -0.003,
-            "stepSize": 0.01
-        },
-        "rhoVpA": {
-            "fixed": false,
-            "value": 0.0013,
-            "stepSize": 0.1
-        },
-        "c8VpA": {
-            "fixed": false,
-            "value": -0.008,
-            "stepSize": 0.3
-        }
+    "aGGInv": {
+      "fixed": false,
+      "value": 2.1e-2,
+      "stepSize": 0.01
     },
-    "adler": {
-        "D0": true,
-        "D2": false,
-        "D4": true,
-        "D68": true,
-        "PionPole": true
+    "rhoVpA": {
+      "fixed": false,
+      "value": -0.30949,
+      "stepSize": 0.1
+    },
+    "c8VpA": {
+      "fixed": false,
+      "value": -0.30869e-1,
+      "stepSize": 0.3
+    },
+    "deltaV": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
     }
+  },
+  "adler": {
+    "D0": true,
+    "D2": false,
+    "D4": true,
+    "D68": true,
+    "PionPole": true
+  }
 }

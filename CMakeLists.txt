@@ -3,7 +3,7 @@ project (FESR)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
-find_package(Boost 1.66.0)
+find_package(Boost)
 find_package(GSL REQUIRED)
 find_package(ROOT COMPONENTS MINUIT)
 

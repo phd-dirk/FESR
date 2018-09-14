@@ -24,8 +24,10 @@ class DualityViolations : Numerics
     return -M_PI*semiInfInt(f, s0);
   }
 
-  double model(double s, double kappa, double gamma, double alpha, double beta)
-  const {
+  double model(double s, double kappa, double gamma, double alpha, double beta) const
+  {
+    cout << exp(-kappa - gamma*s)*sin(alpha + beta*s) << "\t" << s << "\t" << kappa << "\t" << gamma << "\t" << alpha << "\t" << beta << endl;
+    // 3.8787504179628975e-05	3514.4831785351275	3	0.0018963380072094527	-2.2000000000000002	3.8999999999999999
     return exp(-kappa-gamma*s)*sin(alpha+beta*s);
   }
 };

@@ -7,7 +7,7 @@
 #include "./theoretical_moments.hpp"
 #include "./numerics.hpp"
 #include "./weights.hpp"
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 #include <functional>
 #include <iostream>
 #include <thread>

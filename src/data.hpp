@@ -3,7 +3,7 @@
 
 #include "./types.hpp"
 #include "./weights.hpp"
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <vector>
 #include <string>

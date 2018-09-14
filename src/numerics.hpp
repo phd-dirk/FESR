@@ -147,7 +147,7 @@ class Numerics {
   double semiInfInt(function<double(double)> func, double from) const
   {
     double result, error;
-    gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1200);
+    gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(5000);
     gsl_function F;
     F = {
       [](double d, void* vf) -> double {
@@ -156,10 +156,27 @@ class Numerics {
       },
       &func
     };
-    gsl_integration_qagiu(&F, from, epsabs_, epsrel_, 1200, w_, &result, &error);
-    // size_t fCalls = 1100;
-    // gsl_integration_qng(&F, from, to, epsabs_, epsrel_, &result, &error, &fCalls);
-    // cout << "error \t" << error << endl;
+    gsl_integration_qagiu(&F, from, epsabs_, epsrel_, 5000, w_, &result, &error);
+    return result;
+  }
+
+  double qawf(func func, cDbl &omega, cDbl &from) const {
+    double result, error;
+    gsl_integration_workspace * wSpace = gsl_integration_workspace_alloc(1200);
+    gsl_integration_workspace * cycleSpace = gsl_integration_workspace_alloc(1200);
+
+    gsl_integration_qawo_table *qawoTable = gsl_integration_qawo_table_alloc(omega, 1.0, GSL_INTEG_SINE, 1200);
+    gsl_function F;
+    F = {
+      [](double d, void* vf) -> double {
+        auto& f = *static_cast<std::function<double(double)>*>(vf);
+        return f(d);
+      },
+      &func
+    };
+
+    gsl_integration_qawf(&F, from, epsabs_, 1200, wSpace, cycleSpace, qawoTable, &result, &error);
+
     return result;
   }
 
@@ -218,7 +235,7 @@ class Numerics {
  private:
   gsl_integration_workspace * w_;
   const double epsrel_ = 0.; // relative error
-  const double epsabs_ = 1e-12; // absolute error
+  const double epsabs_ = 1e-11; // absolute error
   vec gaulegX;
   vec gaulegW;
 };
