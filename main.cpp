@@ -123,8 +123,6 @@ int main (int argc, char* argv[]) {
   // // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
   // // const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
 
-
-
   writeOutput("./configuration.json", outputFilePath, min);
   return 0;
 }

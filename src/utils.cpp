@@ -18,9 +18,14 @@ void writeOutput(const string configFilePath, const string outputFilePath, Minim
         outputFile << line << "\n";
       }
 
+      // write FVAL & Edm
+      outputFile << endl;
+      outputFile << "FVAL: \t = " << min->MinValue() << endl;
+      outputFile << "Edm: \t = " << min->Edm() << endl;
+
+      // write vars with errors
       const double *xs = min->X();
       const double *errors = min->Errors();
-
       outputFile << endl;
       outputFile << "astau: \t = " << xs[0] << "\t +/- \t " << errors[0] << "\n";
       outputFile << "aGG: \t = " << xs[1] << "\t +/- \t " << errors[1] << "\n";
