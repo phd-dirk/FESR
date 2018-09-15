@@ -3,6 +3,7 @@
 
 #include "./types.hpp"
 #include "./weights.hpp"
+#include <iostream>
 
 struct Variable {
   bool isFixed;
@@ -71,6 +72,27 @@ class Configuration {
     }
     initializeBetaCoefficients();
     initializeAdlerCoefficients();
+  }
+
+  int dof() const {
+    // model: [{w_1, [s1, s2, s3, ...]}, {w_2, [s1, s_2, ...]}, ...]
+    // sum_i sum_j s_{ij}, where i is index of weight and j is the index of the corresponding s0
+    int dof = 0;
+    for(auto const &input: inputs) {
+      vec s0s = input.s0s;
+      dof += s0s.size();
+    }
+
+    if(!astau.isFixed)
+      dof--;
+    if(!aGGInv.isFixed)
+      dof--;
+    if(!rhoVpA.isFixed)
+      dof--;
+    if(!c8VpA.isFixed)
+      dof--;
+
+    return dof;
   }
 
   const int order;

@@ -15,6 +15,6 @@ using std::ofstream;
 using std::cout;
 using std::endl;
 
-void writeOutput(const string configFilePath, const string outputFilePath, Minimizer* min);
+void writeOutput(const string configFilePath, const string outputFilePath, Minimizer* min, const Configuration config);
 
 #endif
