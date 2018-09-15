@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <complex>
 #include <stdexcept>
@@ -41,8 +40,6 @@ using ROOT::Math::Functor;
 #include <boost/numeric/ublas/io.hpp>
 using ublas::matrix;
 using ublas::prod;
-
-using std::ifstream;
 
 #include "./src/utils.hpp"
 
