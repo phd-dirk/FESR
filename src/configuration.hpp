@@ -3,7 +3,7 @@
 
 #include "./types.hpp"
 #include "./weights.hpp"
-#include <iostream>
+#include <string>
 
 struct Variable {
   bool isFixed;
@@ -27,44 +27,48 @@ struct Input {
 
 class Configuration {
  public:
-  Configuration(json config) :
-    order(config["parameters"]["order"]),
-    RVANormalization(config["parameters"]["RVANormalization"]),
+  Configuration(string configFilePath) {
+    ifstream configFile(configFilePath);
+    json jsonConfig;
+    configFile >> jsonConfig;
 
-    nc(config["parameters"]["nc"]),
-    nf(config["parameters"]["nf"]),
+    order = jsonConfig["parameters"]["order"];
+    RVANormalization = jsonConfig["parameters"]["RVANormalization"];
 
-    OPE{ config["scheme"], true, true, true, true },
-    astau {
-      config["variables"]["astau"]["fixed"],
-      config["variables"]["astau"]["value"],
-      config["variables"]["astau"]["stepSize"]
-        },
-    aGGInv {
-      config["variables"]["aGGInv"]["fixed"],
-        config["variables"]["aGGInv"]["value"],
-        config["variables"]["aGGInv"]["stepSize"]
-        },
-    rhoVpA {
-      config["variables"]["rhoVpA"]["fixed"],
-        config["variables"]["rhoVpA"]["value"],
-        config["variables"]["rhoVpA"]["stepSize"]
-        },
-    c8VpA {
-      config["variables"]["c8VpA"]["fixed"],
-        config["variables"]["c8VpA"]["value"],
-        config["variables"]["c8VpA"]["stepSize"]
-        },
+    nc = jsonConfig["parameters"]["nc"];
+    nf = jsonConfig["parameters"]["nf"];
 
-    mTau(config["parameters"]["mTau"]),
-    sTau(pow(mTau, 2)),
+    OPE = { jsonConfig["scheme"], true, true, true, true };
 
-    be(config["parameters"]["be"]),
-    dBe(config["parameters"]["dBe"])
+    astau = {
+      jsonConfig["variables"]["astau"]["fixed"],
+      jsonConfig["variables"]["astau"]["value"],
+      jsonConfig["variables"]["astau"]["stepSize"]
+    };
+    aGGInv = {
+      jsonConfig["variables"]["aGGInv"]["fixed"],
+      jsonConfig["variables"]["aGGInv"]["value"],
+      jsonConfig["variables"]["aGGInv"]["stepSize"]
+    };
+    rhoVpA = {
+      jsonConfig["variables"]["rhoVpA"]["fixed"],
+      jsonConfig["variables"]["rhoVpA"]["value"],
+      jsonConfig["variables"]["rhoVpA"]["stepSize"]
+    };
+    c8VpA = {
+      jsonConfig["variables"]["c8VpA"]["fixed"],
+      jsonConfig["variables"]["c8VpA"]["value"],
+      jsonConfig["variables"]["c8VpA"]["stepSize"]
+    };
 
-  {
+    mTau = jsonConfig["parameters"]["mTau"];
+    sTau = pow(mTau, 2);
+
+    be = jsonConfig["parameters"]["be"];
+    dBe = jsonConfig["parameters"]["dBe"];
+
     // add weights & s0s
-    for(auto const& input : config["parameters"]["input"]) {
+    for(auto const& input : jsonConfig["parameters"]["input"]) {
       Weight w(input["weight"].get<int>());
       vec s0s = input["s0s"].get<vec>();
       inputs.push_back({ w, s0s });
@@ -95,22 +99,22 @@ class Configuration {
     return dof;
   }
 
-  const int order;
-  const double RVANormalization;
+  int order;
+  double RVANormalization;
   std::vector<Input> inputs;
   uint momCount = 0;
 
   // QCD
-  const double nc;
-  const double nf;
+  double nc;
+  double nf;
 
  // OPE
   OPE OPE;
   Variable astau, aGGInv, rhoVpA, c8VpA;
 
   // masses
-  const double mTau;
-  const double sTau;
+  double mTau;
+  double sTau;
   const double mumtau = 2.8e-3;
   const double mdmtau = 5.e-3;
   const double msmtau = 97e-3;
