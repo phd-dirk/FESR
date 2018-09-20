@@ -1,14 +1,12 @@
 #!/bin/bash
 DATE=`date '+%Y-%m-%d_%H:%M:%S'`
-OUTPUT_DIR="$DATE""_$1"
-echo $OUTPUT_DIR
+OUTPUT_FILE="$1/fits.csv"
 
-mkdir ./output/$OUTPUT_DIR
-echo -e 'numS,alpha,alphaErr,aGGInv,aGGInvErr,rhoVpA,rhoVpAErr,cVpA,cVpAErr,chi,chiDof,edm,sSet,weight' > ./output/$OUTPUT_DIR/fits.csv
-for i in $( ls ./configurations/ ); do
-    # run fit
-    cp ./configurations/$i ./configuration.json
-    ./build/FESR ./output/$OUTPUT_DIR/fits.csvdh
-    # output
-    cp ./configurations/$i ./output/$OUTPUT_DIR/$i
+echo $OUTPUT_FILE
+echo -e "$DATE \n"'alpha,alphaErr,aGGInv,aGGInvErr,O6,O6Err,O8,O8Err,chi,dof,chiDof,edm' > $OUTPUT_FILE
+for i in $( ls $1 ); do
+    if [ "$i" != "fits.csv" ]; then
+        echo $i
+        ./build/FESR "$1/$i" "$1/fits.csv"
+    fi
 done

@@ -1,6 +1,6 @@
 {
   "version": 0.3,
-  "scheme": "CI",
+  "scheme": "FO",
   "parameters": {
     "nc": 3,
     "nf": 3,
@@ -12,18 +12,6 @@
     "input": [{
       "weight": 1,
       "s0s": [3.15709]
-    }, {
-      "weight": 5,
-      "s0s": [3.15709]
-    }, {
-      "weight": 6,
-      "s0s": [3.15709]
-    }, {
-      "weight": 7,
-      "s0s": [3.15709]
-    }, {
-      "weight": 8,
-      "s0s": [3.15709]
     }]
   },
   "variables": {
@@ -33,7 +21,7 @@
       "stepSize": 0.002
     },
     "aGGInv": {
-      "fixed": false,
+      "fixed": true,
       "value": 2.1e-2,
       "stepSize": 0.01
     },

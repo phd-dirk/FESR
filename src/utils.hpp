@@ -1,7 +1,6 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include <string>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
@@ -15,6 +14,6 @@ using std::ofstream;
 using std::cout;
 using std::endl;
 
-void writeOutput(const string configFilePath, const string outputFilePath, Minimizer* min, const Configuration config);
+void writeOutput(const string outputFilePath, Minimizer* min, const Configuration config);
 
 #endif

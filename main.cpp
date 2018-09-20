@@ -46,11 +46,14 @@ using ublas::prod;
 int main (int argc, char* argv[]) {
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   cout.precision(17);
-  string outputFilePath = "./output/fit.txt";
   string configFilePath = "./configuration.json";
+  string outputFilePath = "./output/fit.txt";
   if (argc > 1) {
-    printf("Error no outputfile argument. Try ./build/FESR ./output/folder/fits.dat");
-    outputFilePath = argv[1];
+    configFilePath = argv[1];
+    if(argc < 2) {
+      throw std::invalid_argument( "Error no outputfile argument. Try ./build/FESR ./configurations/X" );
+    }
+    outputFilePath = argv[2];
   }
 
   const Configuration config(configFilePath);
@@ -116,6 +119,6 @@ int main (int argc, char* argv[]) {
   // // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
   // // const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
 
-  writeOutput("./configuration.json", outputFilePath, min, config);
+  writeOutput(outputFilePath, min, config);
   return 0;
 }
