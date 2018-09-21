@@ -22,6 +22,8 @@ void writeOutput (
   {
     const double *xs = min->X();
     const double *errors = min->Errors();
+    // min status
+    addCSV(min->Status(), outputFile);
     // alpha_s
     addCSV(xs[0], outputFile);
     addCSV(errors[0], outputFile);
@@ -40,7 +42,7 @@ void writeOutput (
     // dof
     addCSV(config.dof(), outputFile);
     addCSV(min->MinValue()/config.dof(), outputFile);
-    addCSV(min->MinEdm(), outputFile, true);
+    addCSV(min->Edm(), outputFile, true);
 
     outputFile << endl;
     outputFile.close();
