@@ -48,77 +48,83 @@ int main (int argc, char* argv[]) {
   cout.precision(17);
   string configFilePath = "./configuration.json";
   string outputFilePath = "./output/fit.txt";
-  if (argc > 1) {
+  if (argc == 2) {
     configFilePath = argv[1];
-    if(argc < 2) {
-      throw std::invalid_argument( "Error no outputfile argument. Try ./build/FESR ./configurations/X" );
-    }
+  }
+  if (argc == 3) {
+    configFilePath = argv[1];
     outputFilePath = argv[2];
   }
 
-  const Configuration config(configFilePath);
-  const Chisquared chisquared(config);
+  try {
+    const Configuration config(configFilePath);
+    const Chisquared chisquared(config);
 
-  // const DualityViolations dv;
-  // cout << "lol" << endl;
-  // cout << dv.moment(1., Weight(1), 3.0, 0.0018963380072094527, -2.2, 3.9) << endl;
+    // const DualityViolations dv;
+    // cout << "lol" << endl;
+    // cout << dv.moment(1., Weight(1), 3.0, 0.0018963380072094527, -2.2, 3.9) << endl;
 
-  // MINUIT
-  Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
+    // MINUIT
+    Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
-  // set tolerances
-  // min->SetMaxFunctionCalls(10000000); // for Minuit2
-  // min->SetMaxIterations(10000000); // for GSL
-  min->SetTolerance(1e-15);
-  min->SetStrategy(2);
-  min->SetPrintLevel(3); // activate logging
+    // set tolerances
+    // min->SetMaxFunctionCalls(10000000); // for Minuit2
+    // min->SetMaxIterations(10000000); // for GSL
+    min->SetTolerance(1e-15);
+    min->SetStrategy(2);
+    min->SetPrintLevel(3); // activate logging
 
-  // function wrapper
-  Functor chi2(chisquared, 4);
+    // function wrapper
+    Functor chi2(chisquared, 4);
 
-  min->SetFunction(chi2);
+    min->SetFunction(chi2);
 
-  // set free variables to be minimized
-  if (config.astau.isFixed) {
-    min->SetFixedVariable(0, "astau", config.astau.value);
-  } else {
-    min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
+    // set free variables to be minimized
+    if (config.astau.isFixed) {
+      min->SetFixedVariable(0, "astau", config.astau.value);
+    } else {
+      min->SetVariable(0, "astau", config.astau.value, config.astau.stepSize);
+    }
+    if (config.aGGInv.isFixed) {
+      min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
+    } else {
+      min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
+    }
+    if (config.rhoVpA.isFixed) {
+      min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
+    } else {
+      min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
+    }
+    if (config.c8VpA.isFixed) {
+      min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
+    } else {
+      min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
+    }
+    // min->SetVariable(4, "vKappa", 3.0, 0.1);
+    // min->SetVariableLowerLimit(4, 0);
+    // min->SetVariable(5, "vGamma", 1.2, 0.1);
+    // min->SetFixedVariable(6, "vAlpha", -2.2);
+    // min->SetFixedVariable(7, "vBeta", 3.9);
+    // min->SetVariable(8, "aKappa", 3.0, 0.1);
+    // min->SetVariableLowerLimit(8, 0);
+    // min->SetFixedVariable(9, "aGamma", 1.3);
+    // min->SetFixedVariable(10, "aAlpha", 4.7);
+    // min->SetFixedVariable(11, "aBeta", 1.8);
+
+    // minimize!
+    min->Minimize();
+    // std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
+    // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
+    // const double *xs = min->X();
+    // const double *errors = min->Errors();
+    // // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
+    // // const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
+
+    writeOutput(outputFilePath, min, config);
+    return 0;
   }
-  if (config.aGGInv.isFixed) {
-    min->SetFixedVariable(1, "aGGInv", config.aGGInv.value);
-  } else {
-    min->SetVariable(1, "aGGInv", config.aGGInv.value, config.aGGInv.stepSize);
+  catch (const std::exception& e) {
+    writeOutput(e.what(), outputFilePath);
+    return 1;
   }
-  if (config.rhoVpA.isFixed) {
-    min->SetFixedVariable(2, "rhoVpA", config.rhoVpA.value);
-  } else {
-    min->SetVariable(2, "rhoVpA", config.rhoVpA.value, config.rhoVpA.stepSize);
-  }
-  if (config.c8VpA.isFixed) {
-    min->SetFixedVariable(3, "c8VpA", config.c8VpA.value);
-  } else {
-    min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
-  }
-  // min->SetVariable(4, "vKappa", 3.0, 0.1);
-  // min->SetVariableLowerLimit(4, 0);
-  // min->SetVariable(5, "vGamma", 1.2, 0.1);
-  // min->SetFixedVariable(6, "vAlpha", -2.2);
-  // min->SetFixedVariable(7, "vBeta", 3.9);
-  // min->SetVariable(8, "aKappa", 3.0, 0.1);
-  // min->SetVariableLowerLimit(8, 0);
-  // min->SetFixedVariable(9, "aGamma", 1.3);
-  // min->SetFixedVariable(10, "aAlpha", 4.7);
-  // min->SetFixedVariable(11, "aBeta", 1.8);
-
-  // minimize!
-  min->Minimize();
-  // std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
-  // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
-  // const double *xs = min->X();
-  // const double *errors = min->Errors();
-  // // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
-  // // const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
-
-  writeOutput(outputFilePath, min, config);
-  return 0;
 }

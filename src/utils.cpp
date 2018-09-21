@@ -43,3 +43,9 @@ void writeOutput (
   }
 }
 
+void writeOutput(const string text, const string outputFilePath)
+{
+  ofstream outputFile;
+  outputFile.open(outputFilePath, std::ios::app);
+  outputFile << text << endl;
+}
