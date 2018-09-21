@@ -40,7 +40,7 @@ void writeOutput (
     // dof
     addCSV(config.dof(), outputFile);
     addCSV(min->MinValue()/config.dof(), outputFile);
-    addCSV(min->Edm()/config.dof(), outputFile, true);
+    addCSV(min->MinEdm(), outputFile, true);
 
     outputFile << endl;
     outputFile.close();
