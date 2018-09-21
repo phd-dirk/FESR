@@ -128,7 +128,7 @@ class Numerics {
 
   double adaptiveIntegrate(function<double(double)> func, double from, double to) const {
     double result, error;
-    gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1200);
+    gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1100);
     gsl_function F;
     F = {
       [](double d, void* vf) -> double {
@@ -137,7 +137,7 @@ class Numerics {
       },
       &func
     };
-    gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1200, 6, w_, &result, &error);
+    gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1100, 6, w_, &result, &error);
     // size_t fCalls = 1100;
     // gsl_integration_qng(&F, from, to, epsabs_, epsrel_, &result, &error, &fCalls);
     // cout << "error \t" << error << endl;
@@ -235,7 +235,7 @@ class Numerics {
  private:
   gsl_integration_workspace * w_;
   const double epsrel_ = 0.; // relative error
-  const double epsabs_ = 1e-1; // absolute error
+  const double epsabs_ = 1e-10; // absolute error
   vec gaulegX;
   vec gaulegW;
 };

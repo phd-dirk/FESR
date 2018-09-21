@@ -1,7 +1,11 @@
 #include "utils.hpp"
 
-void addCSV(double value, ofstream &outputFile) {
-  outputFile << value << ",";
+void addCSV(double value, ofstream &outputFile, bool last = false) {
+  if(!last) {
+    outputFile << value << ",";
+  } else {
+    outputFile << value;
+  }
 }
 
 void writeOutput (
@@ -36,7 +40,7 @@ void writeOutput (
     // dof
     addCSV(config.dof(), outputFile);
     addCSV(min->MinValue()/config.dof(), outputFile);
-    addCSV(min->Edm()/config.dof(), outputFile);
+    addCSV(min->Edm()/config.dof(), outputFile, true);
 
     outputFile << endl;
     outputFile.close();
