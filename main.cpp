@@ -47,13 +47,8 @@ int main (int argc, char* argv[]) {
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   cout.precision(17);
   string configFilePath = "./configuration.json";
-  string outputFilePath = "./output/fit.txt";
   if (argc == 2) {
     configFilePath = argv[1];
-  }
-  if (argc == 3) {
-    configFilePath = argv[1];
-    outputFilePath = argv[2];
   }
 
   try {
@@ -113,18 +108,16 @@ int main (int argc, char* argv[]) {
 
     // minimize!
     min->Minimize();
-    // std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
-    // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
-    // const double *xs = min->X();
-    // const double *errors = min->Errors();
-    // // chisquared.log(xs[0], xs[1], xs[2], xs[3]);
-    // // const double chi2AtMin = chisquared(config.s0Set, xs[0], xs[1], xs[2], xs[3]);
 
-    writeOutput(outputFilePath, min, config);
+    std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
+    std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
+
+    writeOutput(configFilePath, min, config);
     return 0;
   }
   catch (const std::exception& e) {
-    writeOutput(e.what(), outputFilePath);
+    cout << e.what() << endl;
+    // writeOutput(e.what(), outputFilePath);
     return 1;
   }
 }

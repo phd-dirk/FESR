@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <cstdio>
 #include "Math/Minimizer.h"
 #include "./configuration.hpp"
 
