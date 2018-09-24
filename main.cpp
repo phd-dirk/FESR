@@ -70,7 +70,7 @@ int main (int argc, char* argv[]) {
     min->SetPrintLevel(3); // activate logging
 
     // function wrapper
-    Functor chi2(chisquared, 4);
+    Functor chi2(chisquared, 12);
 
     min->SetFunction(chi2);
 
@@ -95,16 +95,14 @@ int main (int argc, char* argv[]) {
     } else {
       min->SetVariable(3, "c8VpA", config.c8VpA.value, config.c8VpA.stepSize);
     }
-    // min->SetVariable(4, "vKappa", 3.0, 0.1);
-    // min->SetVariableLowerLimit(4, 0);
-    // min->SetVariable(5, "vGamma", 1.2, 0.1);
-    // min->SetFixedVariable(6, "vAlpha", -2.2);
-    // min->SetFixedVariable(7, "vBeta", 3.9);
-    // min->SetVariable(8, "aKappa", 3.0, 0.1);
-    // min->SetVariableLowerLimit(8, 0);
-    // min->SetFixedVariable(9, "aGamma", 1.3);
-    // min->SetFixedVariable(10, "aAlpha", 4.7);
-    // min->SetFixedVariable(11, "aBeta", 1.8);
+    min->SetVariable(4, "deltaV", 3.9, 0.1);
+    min->SetVariable(5, "gammaV", 0.29, 0.1);
+    min->SetVariable(8, "alphaV", -1.02, 0.1);
+    min->SetVariable(9, "betaV", 3.64, 0.1);
+    min->SetVariable(10, "deltaA", 1.82, 0.1);
+    min->SetVariable(11, "gammaA", 1.46, 0.1);
+    min->SetVariable(11, "alphaA", -2.5, 0.1);
+    min->SetVariable(11, "betaA", 2.91, 0.1);
 
     // minimize!
     min->Minimize();

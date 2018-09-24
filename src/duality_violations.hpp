@@ -8,27 +8,52 @@
 class DualityViolations : Numerics
 {
  public:
-  double DVMomentVpA(cDbl &s0, const Weight &w,
-                cDbl &vKappa, cDbl &vGamma, cDbl &vAlpha, cDbl &vBeta,
-                cDbl &aKappa, cDbl &aGamma, cDbl &aAlpha, cDbl &aBeta) const
+  double DVMomentVpA(cDbl &s0,
+                cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,
+                cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA) const
   {
-    return moment(s0, w, vKappa, vGamma, vAlpha, vBeta)
-        + moment(s0, w, aKappa, aGamma, aAlpha, aBeta);
-  }
-  double moment(cDbl &s0, const Weight &w, cDbl &kappa,
-                cDbl &gamma, const cDbl &alpha, const cDbl &beta) const
-  {
-    func f = [&](double s) -> double {
-      return w.wR(s).real()/s0*model(s, kappa, gamma, alpha, beta);
-    };
-    return -M_PI*semiInfInt(f, s0);
+    return -12.0*pow(M_PI, 2)*(
+        cintDVp_VA(s0, deV, gaV, alV, beV)
+        +cintDVp_VA(s0, deA, gaA, alA, beA));
   }
 
-  double model(double s, double kappa, double gamma, double alpha, double beta) const
+  double cintDVp_VA(cDbl &s0, cDbl &de, cDbl &ga, cDbl &al, cDbl &be) const
   {
-    cout << exp(-kappa - gamma*s)*sin(alpha + beta*s) << "\t" << s << "\t" << kappa << "\t" << gamma << "\t" << alpha << "\t" << beta << endl;
-    // 3.8787504179628975e-05	3514.4831785351275	3	0.0018963380072094527	-2.2000000000000002	3.8999999999999999
-    return exp(-kappa-gamma*s)*sin(alpha+beta*s);
+    return intDVp0(s0, de, ga, al, be)
+        - 3.0*intDVp2(s0, de, ga, al, be)
+        + 2.0*intDVp3(s0, de, ga, al, be);
+  }
+
+  double rhoDV(cDbl &s, cDbl &delta, cDbl &gamma, cDbl &alpha, cDbl &beta) const
+  {
+    return exp(-delta-gamma*s)*sin(alpha+beta*s);
+  }
+
+  double intDVp0(cDbl &s0, cDbl &delta, cDbl &gamma, cDbl &alpha, cDbl &beta) const
+  {
+    return (exp(-delta - gamma*s0)*(beta*cos(alpha + beta*s0) + gamma*sin(alpha + beta*s0)))/(pow(beta,2) + pow(gamma,2));
+  }
+
+  double intDVp1(cDbl &s0, cDbl &delta, cDbl &gamma, cDbl &alpha, cDbl &beta) const
+  {
+    return (exp(-delta - gamma*s0)*(beta*(2*gamma + (pow(beta,2) + pow(gamma,2))*s0)*cos(alpha + beta*s0) + (pow(gamma,2) + pow(gamma,3)*s0 + pow(beta,2)*(-1 + gamma*s0))*sin(alpha + beta*s0)))/
+        pow(pow(beta,2) + pow(gamma,2),2);
+  }
+
+  double intDVp2(cDbl &s0, cDbl &delta, cDbl &gamma, cDbl &alpha, cDbl &beta) const
+  {
+    return (exp(-delta - gamma*s0)*(beta*(-2*pow(beta,2) + 6*pow(gamma,2) + 4*gamma*(pow(beta,2) + pow(gamma,2))*s0 + pow(pow(beta,2) + pow(gamma,2),2)*pow(s0,2))*cos(alpha + beta*s0) +(2*gamma*(-3*pow(beta,2) + pow(gamma,2)) + 2*(-pow(beta,4) + pow(gamma,4))*s0 + gamma*pow(pow(beta,2) + pow(gamma,2),2)*pow(s0,2))*sin(alpha + beta*s0)))/
+        pow(pow(beta,2) + pow(gamma,2),3);
+  }
+
+  double intDVp3(cDbl &s0, cDbl &delta, cDbl &gamma, cDbl &alpha, cDbl &beta) const
+  {
+    return (exp(-delta - gamma*s0)*(beta*(pow(beta,6)*pow(s0,3) + 3*pow(beta,4)*s0*(-2 + 2*gamma*s0 + pow(gamma,2)*pow(s0,2)) + 
+                                              3*pow(beta,2)*gamma*(-8 + 4*gamma*s0 + 4*pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)) + 
+                                              pow(gamma,3)*(24 + 18*gamma*s0 + 6*pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)))*cos(alpha + beta*s0) + 
+                                        (pow(beta,6)*pow(s0,2)*(-3 + gamma*s0) + 3*pow(beta,4)*(2 - 6*gamma*s0 - pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)) + 
+                                         3*pow(beta,2)*pow(gamma,2)*(-12 - 4*gamma*s0 + pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)) + 
+                                         pow(gamma,4)*(6 + 6*gamma*s0 + 3*pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)))*sin(alpha + beta*s0)))/pow(pow(beta,2) + pow(gamma,2),4);
   }
 };
 

@@ -47,8 +47,8 @@ class TheoreticalMoments:
   // }
   double thMom(cDbl &s0, const Weight &w, cDbl &astau, cDbl &aGGinv, cDbl &rhoVpA,
                cDbl &c8VpA, cDbl &order,
-               cDbl &vKappa, cDbl &vGamma, cDbl &vAlpha, cDbl &vBeta,
-               cDbl &aKappa, cDbl &aGamma, cDbl &aAlpha, cDbl &aBeta) const
+               cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,
+               cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA) const
   {
     double rTauTh = 0.;
     // D0
@@ -71,8 +71,7 @@ class TheoreticalMoments:
     if ( config_.OPE.PionPole )
       rTauTh += 3.*deltaP(s0, w);
 
-    // rTauTh += DVMomentVpA(s0, w, vKappa, vGamma, vAlpha, vBeta, aKappa, aGamma, aAlpha,
-    //                       aBeta);
+    rTauTh += DVMomentVpA(s0, deV, gaV, alV, beV, deA, gaA, alA, beA);
 
     return pow(config_.kVud, 2)*config_.kSEW*rTauTh;
   }
