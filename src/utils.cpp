@@ -70,6 +70,16 @@ void writeToOutputFile(
     outputFile << "O6\t=\t" << xs[2] << "\t+/-\t" << errors[2] << endl;
     outputFile << "O8\t=\t" << xs[3] << "\t+/-\t" << errors[3] << endl;
 
+    // DV
+    outputFile << "deltaV\t=\t" << xs[4] << "\t+/-\t" << errors[4] << endl;
+    outputFile << "gammaV\t=\t" << xs[5] << "\t+/-\t" << errors[5] << endl;
+    outputFile << "alphaV\t=\t" << xs[6] << "\t+/-\t" << errors[6] << endl;
+    outputFile << "betaV\t=\t" << xs[7] << "\t+/-\t" << errors[7] << endl;
+    outputFile << "deltaA\t=\t" << xs[8] << "\t+/-\t" << errors[8] << endl;
+    outputFile << "gammaA\t=\t" << xs[9] << "\t+/-\t" << errors[9] << endl;
+    outputFile << "alphaA\t=\t" << xs[10] << "\t+/-\t" << errors[10] << endl;
+    outputFile << "betaA\t=\t" << xs[11] << "\t+/-\t" << errors[11] << endl;
+
     outputFile.close();
   }
 }
