@@ -71,7 +71,7 @@ class TheoreticalMoments:
     if ( config_.OPE.PionPole )
       rTauTh += 3.*deltaP(s0, w);
 
-    rTauTh += DVMomentVpA(s0, deV, gaV, alV, beV, deA, gaA, alA, beA);
+    rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
 
     return pow(config_.kVud, 2)*config_.kSEW*rTauTh;
   }

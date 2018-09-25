@@ -8,20 +8,21 @@
 class DualityViolations : Numerics
 {
  public:
-  double DVMomentVpA(cDbl &s0,
+  double DVMomentVpA(cDbl &s0, const Weight &w,
                 cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,
                 cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA) const
   {
     return -12.0*pow(M_PI, 2)*(
-        cintDVp_VA(s0, deV, gaV, alV, beV)
-        +cintDVp_VA(s0, deA, gaA, alA, beA));
+        cintDVp_VA(s0, w, deV, gaV, alV, beV)
+        +cintDVp_VA(s0, w, deA, gaA, alA, beA));
   }
 
-  double cintDVp_VA(cDbl &s0, cDbl &de, cDbl &ga, cDbl &al, cDbl &be) const
+  double cintDVp_VA(cDbl &s0, const Weight &w, cDbl &de, cDbl &ga, cDbl &al, cDbl &be) const
   {
-    return intDVp0(s0, de, ga, al, be)
-        - 3.0*intDVp2(s0, de, ga, al, be)
-        + 2.0*intDVp3(s0, de, ga, al, be);
+    return w.poli().x0*intDVp0(s0, de, ga, al, be)
+        + w.poli().x1*intDVp0(s0, de, ga, al, be)
+        + w.poli().x2*intDVp2(s0, de, ga, al, be)
+        + w.poli().x3*intDVp3(s0, de, ga, al, be);
   }
 
   double rhoDV(cDbl &s, cDbl &delta, cDbl &gamma, cDbl &alpha, cDbl &beta) const

@@ -5,7 +5,15 @@
 #include <cmath>
 #include <complex>
 #include <functional>
+#include <stdexcept>
+#include <string>
 
+struct WeightPolynomial {
+  int x0;
+  int x1;
+  int x2;
+  int x3;
+};
 
 class Weight {
  public:
@@ -15,44 +23,60 @@ class Weight {
 
   cmplx wD(cmplx x) const {
     switch(weightId_) {
-    case 1: return wD00(x);
-    case 2: return wD01(x);
-    case 3: return wD02(x);
-    case 4: return wD03(x);
-    case 5: return wD10(x);
-    case 6: return wD11(x);
-    case 7: return wD12(x);
-    case 8: return wD13(x);
-    case 9: return wD20(x);
-    case 10: return wD21(x);
-    case 11: return wD22(x);
-    case 12: return wD23(x);
+      case 1: return wD00(x);
+      case 2: return wD01(x);
+      case 3: return wD02(x);
+      case 4: return wD03(x);
+      case 5: return wD10(x);
+      case 6: return wD11(x);
+      case 7: return wD12(x);
+      case 8: return wD13(x);
+      case 9: return wD20(x);
+      case 10: return wD21(x);
+      case 11: return wD22(x);
+      case 12: return wD23(x);
+      default:
+        throw std::invalid_argument("weight wD(" + std::to_string(weightId_) + ") is not defined");
+        return wD00(x);
     }
-    return wD00(x);
   }
 
   cmplx wR(cmplx x) const {
     switch(weightId_) {
-    case 1: return wR00(x);
-    case 2: return wR01(x);
-    case 3: return wR02(x);
-    case 4: return wR03(x);
-    case 5: return wR10(x);
-    case 6: return wR11(x);
-    case 7: return wR12(x);
-    case 8: return wR13(x);
-    case 9: return wR20(x);
-    case 10: return wR21(x);
-    case 11: return wR22(x);
-    case 12: return wR23(x);
+      case 1: return wR00(x);
+      case 2: return wR01(x);
+      case 3: return wR02(x);
+      case 4: return wR03(x);
+      case 5: return wR10(x);
+      case 6: return wR11(x);
+      case 7: return wR12(x);
+      case 8: return wR13(x);
+      case 9: return wR20(x);
+      case 10: return wR21(x);
+      case 11: return wR22(x);
+      case 12: return wR23(x);
+      default:
+        throw std::invalid_argument("weight wR(" + std::to_string(weightId_) + ") is not defined");
+        wR00(x);
     }
-    return wR00(x);
+  }
+
+  WeightPolynomial poli() const {
+    switch(weightId_) {
+      case 1: return wR00Poli();
+      default:
+        throw std::invalid_argument("weight wR(" + std::to_string(weightId_) + ") is not defined");
+        wR00Poli();
+    }
   }
 
   static cmplx wTau(cmplx x) {
     return wD00(x);
   }
   // Polunomial weights
+  static WeightPolynomial wR00Poli() {
+    return { 1, 0, -3, 2 };
+  }
   static cmplx wR00(cmplx x) {
     return pow((1. - x), 2)*(1. + 2.*x);
   }
