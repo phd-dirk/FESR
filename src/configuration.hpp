@@ -39,10 +39,11 @@ class Configuration {
     nc = jsonConfig["parameters"]["nc"];
     nf = jsonConfig["parameters"]["nf"];
 
-    thMomContribs = {
-      jsonConfig["scheme"], jsonConfig["thMomContribs"]["D0"], jsonConfig["thMomContribs"]["D4"],
-      jsonConfig["thMomContribs"]["D68"], jsonConfig["thMomContribs"]["DV"], jsonConfig["thMomContribs"]["PionPole"]
-    };
+    // thMomContribs = {
+    //   jsonConfig["scheme"], jsonConfig["thMomContribs"]["D0"], jsonConfig["thMomContribs"]["D4"],
+    //   jsonConfig["thMomContribs"]["D68"], jsonConfig["thMomContribs"]["DV"], jsonConfig["thMomContribs"]["PionPole"]
+    // };
+    thMomContribs = { "FO", true, false, true, true, true };
 
     astau = {
       jsonConfig["variables"]["astau"]["fixed"],
@@ -64,46 +65,47 @@ class Configuration {
       jsonConfig["variables"]["c8VpA"]["value"],
       jsonConfig["variables"]["c8VpA"]["stepSize"]
     };
-    deltaV = {
-      jsonConfig["variables"]["deltaV"]["fixed"],
-      jsonConfig["variables"]["deltaV"]["value"],
-      jsonConfig["variables"]["deltaV"]["stepSize"]
-    };
-    gammaV = {
-      jsonConfig["variables"]["gammaV"]["fixed"],
-      jsonConfig["variables"]["gammaV"]["value"],
-      jsonConfig["variables"]["gammaV"]["stepSize"]
-    };
-    alphaV = {
-      jsonConfig["variables"]["alphaV"]["fixed"],
-      jsonConfig["variables"]["alphaV"]["value"],
-      jsonConfig["variables"]["alphaV"]["stepSize"]
-    };
-    betaV = {
-      jsonConfig["variables"]["betaV"]["fixed"],
-      jsonConfig["variables"]["betaV"]["value"],
-      jsonConfig["variables"]["betaV"]["stepSize"]
-    };
-    deltaA = {
-      jsonConfig["variables"]["deltaA"]["fixed"],
-      jsonConfig["variables"]["deltaA"]["value"],
-      jsonConfig["variables"]["deltaA"]["stepSize"]
-    };
-    gammaA = {
-      jsonConfig["variables"]["gammaA"]["fixed"],
-      jsonConfig["variables"]["gammaA"]["value"],
-      jsonConfig["variables"]["gammaA"]["stepSize"]
-    };
-    alphaA = {
-      jsonConfig["variables"]["alphaA"]["fixed"],
-      jsonConfig["variables"]["alphaA"]["value"],
-      jsonConfig["variables"]["alphaA"]["stepSize"]
-    };
-    betaA = {
-      jsonConfig["variables"]["betaA"]["fixed"],
-      jsonConfig["variables"]["betaA"]["value"],
-      jsonConfig["variables"]["betaA"]["stepSize"]
-    };
+    // deltaV = {
+    //   jsonConfig["variables"]["deltaV"]["fixed"],
+    //   jsonConfig["variables"]["deltaV"]["value"],
+    //   jsonConfig["variables"]["deltaV"]["stepSize"]
+    // };
+    // gammaV = {
+    //   jsonConfig["variables"]["gammaV"]["fixed"],
+    //   jsonConfig["variables"]["gammaV"]["value"],
+    //   jsonConfig["variables"]["gammaV"]["stepSize"]
+    // };
+    // alphaV = {
+    //   jsonConfig["variables"]["alphaV"]["fixed"],
+    //   jsonConfig["variables"]["alphaV"]["value"],
+    //   jsonConfig["variables"]["alphaV"]["stepSize"]
+    // };
+    // betaV = {
+    //   jsonConfig["variables"]["betaV"]["fixed"],
+    //   jsonConfig["variables"]["betaV"]["value"],
+    //   jsonConfig["variables"]["betaV"]["stepSize"]
+    // };
+    // deltaA = {
+    //   jsonConfig["variables"]["deltaA"]["fixed"],
+    //   jsonConfig["variables"]["deltaA"]["value"],
+    //   jsonConfig["variables"]["deltaA"]["stepSize"]
+    // };
+    // gammaA = {
+    //   jsonConfig["variables"]["gammaA"]["fixed"],
+    //   jsonConfig["variables"]["gammaA"]["value"],
+    //   jsonConfig["variables"]["gammaA"]["stepSize"]
+    // };
+    // alphaA = {
+    //   jsonConfig["variables"]["alphaA"]["fixed"],
+    //   jsonConfig["variables"]["alphaA"]["value"],
+    //   jsonConfig["variables"]["alphaA"]["stepSize"]
+    // };
+    // betaA = {
+    //   jsonConfig["variables"]["betaA"]["fixed"],
+    //   jsonConfig["variables"]["betaA"]["value"],
+    //   jsonConfig["variables"]["betaA"]["stepSize"]
+    // };
+
 
     mTau = jsonConfig["parameters"]["mTau"];
     sTau = pow(mTau, 2);
