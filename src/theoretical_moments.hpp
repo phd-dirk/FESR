@@ -52,26 +52,28 @@ class TheoreticalMoments:
   {
     double rTauTh = 0.;
     // D0
-    if ( config_.OPE.D0 ) {
+    if ( config_.thMomContribs.D0 ) {
       // check if FOPT or CIPT
-      if ( config_.OPE.scheme == "FO" ) {
+      if ( config_.thMomContribs.scheme == "FO" ) {
         rTauTh += cIntVpAD0FO(s0, w, config_.sTau, astau, order);
       }
-      if ( config_.OPE.scheme == "CI") {
+      if ( config_.thMomContribs.scheme == "CI") {
         rTauTh += cIntVpAD0CI(s0, w, config_.sTau, astau, order);
       }
     }
     // D4
-    if ( config_.OPE.D4 )
+    if ( config_.thMomContribs.D4 )
       rTauTh += cIntVpAD4FO(s0, w, config_.sTau, astau, aGGinv);
     // D68
-    if ( config_.OPE.D68 )
+    if ( config_.thMomContribs.D68 )
       rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
+    // DV
+    if ( config_.thMomContribs.DV )
+      cout << "active" << endl;
+      rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
     // PionPole
-    if ( config_.OPE.PionPole )
+    if ( config_.thMomContribs.PionPole )
       rTauTh += 3.*deltaP(s0, w);
-
-    rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
 
     return pow(config_.kVud, 2)*config_.kSEW*rTauTh;
   }

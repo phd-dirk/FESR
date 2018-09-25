@@ -11,11 +11,12 @@ struct Variable {
   double stepSize;
 };
 
-struct OPE {
+struct ThMomContribs {
   string scheme;
   bool D0;
   bool D4;
   bool D68;
+  bool DV;
   bool PionPole;
 };
 
@@ -38,7 +39,10 @@ class Configuration {
     nc = jsonConfig["parameters"]["nc"];
     nf = jsonConfig["parameters"]["nf"];
 
-    OPE = { jsonConfig["scheme"], true, true, true, true };
+    thMomContribs = {
+      jsonConfig["scheme"], jsonConfig["thMomContribs"]["D0"], jsonConfig["thMomContribs"]["D4"],
+      jsonConfig["thMomContribs"]["D68"], jsonConfig["thMomContribs"]["DV"], jsonConfig["thMomContribs"]["PionPole"]
+    };
 
     astau = {
       jsonConfig["variables"]["astau"]["fixed"],
@@ -109,7 +113,7 @@ class Configuration {
   double nf;
 
  // OPE
-  OPE OPE;
+  ThMomContribs thMomContribs;
   Variable astau, aGGInv, rhoVpA, c8VpA;
 
   // masses

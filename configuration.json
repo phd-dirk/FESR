@@ -1,5 +1,5 @@
 {
-  "version": 0.3,
+  "version": 0.4,
   "scheme": "FO",
   "parameters": {
     "nc": 3,
@@ -41,11 +41,12 @@
       "stepSize": 0.1
     }
   },
-  "adler": {
+  "thMomContribs": {
     "D0": true,
     "D2": false,
     "D4": true,
     "D68": true,
+    "DV": true,
     "PionPole": true
   }
 }
