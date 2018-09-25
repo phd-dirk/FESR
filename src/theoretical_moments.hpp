@@ -69,7 +69,6 @@ class TheoreticalMoments:
       rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
     // DV
     if ( config_.thMomContribs.DV )
-      cout << "active" << endl;
       rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
     // PionPole
     if ( config_.thMomContribs.PionPole )

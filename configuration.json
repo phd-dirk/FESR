@@ -39,6 +39,41 @@
       "fixed": true,
       "value": 3.56,
       "stepSize": 0.1
+    },
+    "gammaV": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
+    },
+    "alphaV": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
+    },
+    "betaV": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
+    },
+    "deltaA": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
+    },
+    "gammaA": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
+    },
+    "alphaA": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
+    },
+    "betaA": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
     }
   },
   "thMomContribs": {
