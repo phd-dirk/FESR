@@ -1,16 +1,104 @@
 Minuit2Minimizer	 Status:	1
-FVAL	=	2.20623014911456e-14
-Edm	=	2.20457776114859e-14
+FVAL	=	7.88004456773695e-13
+Edm	=	7.87189265090994e-13
 Nfcn	=	59
-astau	=	0.32298041265767	+/-	0.0105871012743323
-aGGInv	=	0.021	+/-	0
-O6	=	-0.314064961785653	+/-	0.105317101465559
-O8	=	-0.0205753353858857	+/-	0.236963468329541
-deltaV	=	3.56	+/-	0
-gammaV	=	3.56	+/-	0
-alphaV	=	3.56	+/-	0
-betaV	=	3.56	+/-	0
-deltaA	=	3.56	+/-	0
-gammaA	=	3.56	+/-	0
-alphaA	=	3.56	+/-	0
-betaA	=	3.56	+/-	0
+astau	=	0.323811	+/-	0.030404	
+aGGInv	=	0.323811	(fixed)
+rhoVpA	=	0.323811	+/-	0.030404	
+c8VpA	=	0.323811	+/-	0.030404	
+deltaV	=	0.323811	(fixed)
+gammaV	=	0.323811	(fixed)
+alphaV	=	0.323811	(fixed)
+betaV	=	0.323811	(fixed)
+deltaA	=	0.323811	(fixed)
+gammaA	=	0.323811	(fixed)
+alphaA	=	0.323811	(fixed)
+betaA	=	0.323811	(fixed)
+
+{
+  "version": 0.4,
+  "scheme": "FO",
+  "parameters": {
+    "nc": 3,
+    "nf": 3,
+    "order": 5,
+    "RVANormalization": 0.99743669,
+    "mTau": 1.77682,
+    "be": 17.815,
+    "dBe": 0.023,
+    "input": [{
+      "weight": 1,
+      "s0s": [3.15709]
+    }]
+  },
+  "variables": {
+    "astau": {
+      "fixed": false,
+      "value": 0.32307,
+      "stepSize": 0.002
+    },
+    "aGGInv": {
+      "fixed": true,
+      "value": 2.1e-2,
+      "stepSize": 0.01
+    },
+    "rhoVpA": {
+      "fixed": false,
+      "value": -0.30949,
+      "stepSize": 0.1
+    },
+    "c8VpA": {
+      "fixed": false,
+      "value": -0.30869e-1,
+      "stepSize": 0.3
+    },
+    "deltaV": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
+    },
+    "gammaV": {
+      "fixed": true,
+      "value": 0.59,
+      "stepSize": 0.1
+    },
+    "alphaV": {
+      "fixed": true,
+      "value": -2.0,
+      "stepSize": 0.1
+    },
+    "betaV": {
+      "fixed": true,
+      "value": 4.1,
+      "stepSize": 0.1
+    },
+    "deltaA": {
+      "fixed": true,
+      "value": 1.41,
+      "stepSize": 0.1
+    },
+    "gammaA": {
+      "fixed": true,
+      "value": 1.52,
+      "stepSize": 0.1
+    },
+    "alphaA": {
+      "fixed": true,
+      "value": 5.4,
+      "stepSize": 0.1
+    },
+    "betaA": {
+      "fixed": true,
+      "value": 2.01,
+      "stepSize": 0.1
+    }
+  },
+  "thMomContribs": {
+    "D0": true,
+    "D2": false,
+    "D4": true,
+    "D68": true,
+    "DV": false,
+    "PionPole": true
+  }
+}

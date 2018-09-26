@@ -10,14 +10,8 @@
     "be": 17.815,
     "dBe": 0.023,
     "input": [{
-      "weight": 0,
-      "s0s": [1.6]
-    }, {
       "weight": 1,
-      "s0s": [1.6]
-    }, {
-      "weight": 13,
-      "s0s": [1.6]
+      "s0s": [3.15709]
     }]
   },
   "variables": {
@@ -42,42 +36,42 @@
       "stepSize": 0.3
     },
     "deltaV": {
-      "fixed": false,
+      "fixed": true,
       "value": 3.56,
       "stepSize": 0.1
     },
     "gammaV": {
-      "fixed": false,
+      "fixed": true,
       "value": 0.59,
       "stepSize": 0.1
     },
     "alphaV": {
-      "fixed": false,
+      "fixed": true,
       "value": -2.0,
       "stepSize": 0.1
     },
     "betaV": {
-      "fixed": false,
+      "fixed": true,
       "value": 4.1,
       "stepSize": 0.1
     },
     "deltaA": {
-      "fixed": false,
+      "fixed": true,
       "value": 1.41,
       "stepSize": 0.1
     },
     "gammaA": {
-      "fixed": false,
+      "fixed": true,
       "value": 1.52,
       "stepSize": 0.1
     },
     "alphaA": {
-      "fixed": false,
+      "fixed": true,
       "value": 5.4,
       "stepSize": 0.1
     },
     "betaA": {
-      "fixed": false,
+      "fixed": true,
       "value": 2.01,
       "stepSize": 0.1
     }
@@ -87,7 +81,7 @@
     "D2": false,
     "D4": true,
     "D68": true,
-    "DV": true,
+    "DV": false,
     "PionPole": true
   }
 }
