@@ -8,25 +8,42 @@ void addCSV(double value, ofstream &outputFile, bool last = false) {
   }
 }
 
-string variableOutput(Minimizer* min, const uint &i) {
-  const bool isFixed = min->IsFixedVariable(i);
+string variablesOutput(Minimizer* min) {
   const double *xs = min->X();
   const double *errors = min->Errors();
   string out = "";
 
-  // name
-  out += min->VariableName(i) + "\t=\t" + std::to_string(xs[0]);
+  for(uint i = 0; i < min->NDim(); i++) {
+    const bool isFixed = min->IsFixedVariable(i);
+    // name
+    out += min->VariableName(i) + "\t=\t" + std::to_string(xs[0]);
 
-  // error
-  if(!isFixed) {
-    out += "\t+/-\t" + std::to_string(errors[0]) + "\t";
+    // error
+    if(!isFixed) {
+      out += "\t+/-\t" + std::to_string(errors[0]) + "\t";
+    }
+
+    // fixed
+    if(isFixed) {
+      out += "\t(fixed)";
+    }
+
+    out += "\n";
   }
+  out += "\n";
+  return out;
+}
 
-  // fixed
-  if(isFixed) {
-    out += "\t(fixed)";
+string correlationOutput(Minimizer* min) {
+  string out;
+  out += "Correlation Matrix: \n";
+  for(uint i = 0; i < min->NDim(); i++) {
+    for(uint j = 0; j < min->NDim(); j++) {
+      out += std::to_string(min->Correlation(i, j));
+      if(j < min->NDim() - 1) out += ", ";
+    }
+    out += "\n";
   }
-
   out += "\n";
   return out;
 }
@@ -76,8 +93,7 @@ void writeToOutputFile(
     Minimizer* min
 ) {
   std::size_t pos = configFilePath.find_last_of("/\\");
-  pos = configFilePath.find_last_of(".");
-  std::string outputFilePath = configFilePath.substr(0,pos) + ".txt";
+  std::string outputFilePath = configFilePath.substr(0,pos) + "/fit_summary.txt";
 
   ofstream outputFile;
   outputFile.open(outputFilePath);
@@ -96,10 +112,11 @@ void writeToOutputFile(
     const double *xs = min->X();
     const double *errors = min->Errors();
 
-    // output variables
-    for(uint i = 0; i <= 11; i++) {
-      outputFile << variableOutput(min, i);
-    }
+    // variables
+    outputFile << variablesOutput(min);
+
+    // correlation matrix
+    outputFile << correlationOutput(min);
 
     outputFile << endl;
 
