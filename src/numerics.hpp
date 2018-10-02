@@ -26,7 +26,7 @@ using std::abs;
 
 class Numerics {
  public:
-  Numerics() : w_(gsl_integration_workspace_alloc(1200)),
+  Numerics() :
       gaulegX(1201), gaulegW(1201) {
     // init Gaussian quadratures from Numerical recepies
     gauleg(-M_PI, M_PI, gaulegX, gaulegW, 1201);
@@ -126,7 +126,7 @@ class Numerics {
     return result;
   }
 
-  double adaptiveIntegrate(function<double(double)> func, double from, double to) const {
+  double adaptiveIntegrate(func f, double from, double to) const {
     double result, error;
     gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1100);
     gsl_function F;
@@ -135,7 +135,7 @@ class Numerics {
         auto& f = *static_cast<std::function<double(double)>*>(vf);
         return f(d);
       },
-      &func
+      &f
     };
     gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1100, 6, w_, &result, &error);
     // size_t fCalls = 1100;
@@ -144,10 +144,24 @@ class Numerics {
     return result;
   }
 
+  // GaussLegendre
+  double gaussLegendre(func f, double from, double to) const {
+    double result, error;
+    gsl_function F;
+    F = {
+      [](double d, void* vf) -> double {
+        auto& f = *static_cast<std::function<double(double)>*>(vf);
+        return f(d);
+      },
+      &f
+    };
+    return gsl_integration_glfixed(&F, from, to, t_);
+  }
+
   double semiInfInt(function<double(double)> func, double from) const
   {
     double result, error;
-    gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(5000);
+    gsl_integration_workspace * w = gsl_integration_workspace_alloc(5000);
     gsl_function F;
     F = {
       [](double d, void* vf) -> double {
@@ -156,7 +170,7 @@ class Numerics {
       },
       &func
     };
-    gsl_integration_qagiu(&F, from, epsabs_, epsrel_, 5000, w_, &result, &error);
+    gsl_integration_qagiu(&F, from, epsabs_, epsrel_, 5000, w, &result, &error);
     return result;
   }
 
@@ -180,7 +194,7 @@ class Numerics {
     return result;
   }
 
-  complex<double> integrateComplex(function<complex<double>(double)> func, double from, double to) const {
+  cmplx integrateComplex(function<complex<double>(double)> func, double from, double to) const {
     auto funcReal = [func](double t) {
       return func(t).real();
     };
@@ -188,8 +202,10 @@ class Numerics {
       return func(t).imag();
     };
 
-    double cintReal = adaptiveIntegrate(funcReal, from, to);
-    double cintImag = adaptiveIntegrate(funcImag, from, to);
+    double cintReal = gaussLegendre(funcReal, from, to);
+    double cintImag = gaussLegendre(funcImag, from, to);
+    // double cintReal = adaptiveIntegrate(funcReal, from, to);
+    // double cintImag = adaptiveIntegrate(funcImag, from, to);
 
     return complex<double>(cintReal, cintImag);
   }
@@ -233,9 +249,9 @@ class Numerics {
 
 
  private:
-  gsl_integration_workspace * w_;
   const double epsrel_ = 0.; // relative error
-  const double epsabs_ = 1e-11; // absolute error
+  const double epsabs_ = 1e-5; // absolute error
+  gsl_integration_glfixed_table * t_ = gsl_integration_glfixed_table_alloc(1100);
   vec gaulegX;
   vec gaulegW;
 };

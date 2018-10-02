@@ -1,7 +1,7 @@
-Minuit2Minimizer	 Status:	3
+Minuit2Minimizer	 Status:	0
 FVAL	=	26.8230725168396
 Edm	=	1.3232706794263e-08
-Nfcn	=	125
+Nfcn	=	122
 astau	=	0.328005	+/-	0.002298	
 aGGInv	=	0.328005	(fixed)
 rhoVpA	=	0.328005	+/-	0.002298	
@@ -36,8 +36,11 @@ delta_V+A^(6) 	-0.011648
 delta_V+A^(8) 	0.000245
 
 {
-  "version": 0.4,
+  "version": 0.5,
   "scheme": "FO",
+  "minuit": {
+    "tolerance": 1e-6
+  },
   "parameters": {
     "nc": 3,
     "nf": 3,
