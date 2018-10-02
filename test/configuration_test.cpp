@@ -1,18 +1,11 @@
 #include <gtest/gtest.h>
 #include "../src/configuration.hpp"
-#include "json.hpp"
-#include <fstream>
-using json = nlohmann::json;
 
 class ConfigurationTest : public ::testing::Test {
 protected:
   Configuration *config;
   virtual void SetUp() {
-    std::ifstream configFile("./test/configuration_test.json");
-    json jsonConfig;
-    configFile >> jsonConfig;
-
-    config = new Configuration(jsonConfig);
+    config = new Configuration("./test/configuration_test.json");
   }
 
   virtual void TearDown() {

@@ -2,9 +2,6 @@
 #include "../src/types.hpp"
 #include "../src/experimentalMoments.hpp"
 #include "../src/weights.hpp"
-#include "json.hpp"
-using json = nlohmann::json;
-#include <fstream>
 
 using std::vector;
 
@@ -15,11 +12,11 @@ class ExperimentalMomentsTest : public ::testing::Test {
 
   virtual void SetUp() {
     Weight weight(1);
-    std::ifstream configFile("./test/configuration_test.json");
-    json config;
-    configFile >> config;
 
-    expMom = new ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config);
+    expMom = new ExperimentalMoments(
+        "/Users/knowledge/Developer/PhD/FESR/aleph.json",
+        Configuration("./test/configuration_test.json")
+                                     );
   }
 
   virtual void TearDown() {

@@ -5,10 +5,7 @@
 #include <gtest/gtest.h>
 #include <cmath>
 #include <complex>
-#include "json.hpp"
-#include <fstream>
 
-using json = nlohmann::json;
 using std::pow;
 using std::complex;
 
@@ -17,10 +14,7 @@ protected:
   TheoreticalMoments *thMom_;
   AdlerFunction *adler;
   virtual void SetUp() {
-    std::ifstream configFile("./test/configuration_test.json");
-    json jsonConfig;
-    configFile >> jsonConfig;
-    Configuration config(jsonConfig);
+    Configuration config("./test/configuration_test.json");
 
     adler = new AdlerFunction(config);
     thMom_ = new TheoreticalMoments(config);

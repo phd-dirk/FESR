@@ -2,10 +2,7 @@
 #include "../src/configuration.hpp"
 #include "../src/weights.hpp"
 #include "../src/chisquared.hpp"
-#include "json.hpp"
 #include <gtest/gtest.h>
-#include <fstream>
-using json = nlohmann::json;
 
 class ChisquaredTest : public ::testing::Test {
  protected:
@@ -14,12 +11,8 @@ class ChisquaredTest : public ::testing::Test {
   virtual void SetUp() {
     const uint order = 5;
     const uint nc = 3, nf = 3;
-    std::ifstream configFile("./test/configuration_test.json");
-    json jsonConfig;
-    configFile >> jsonConfig;
 
-    Configuration config(jsonConfig);
-
+    Configuration config("./test/configuration_test.json");
     chi_ = new Chisquared(config);
   }
 

@@ -1,48 +1,90 @@
 {
-    "scheme": "FO",
-    "parameters": {
-        "nc": 3,
-        "nf": 3,
-        "order": 5,
-        "RVANormalization": 0.99743669,
-        "mTau": 1.77682,
-        "be": 17.815,
-        "dBe": 0.023,
-        "input": [{
-            "weight": 1,
-            "s0s": [3.0, 2.0, 1.0]
-        }, {
-            "weight": 6,
-            "s0s": [2.8, 1.8]
-        }]
+  "version": 0.4,
+  "scheme": "FO",
+  "parameters": {
+    "nc": 3,
+    "nf": 3,
+    "order": 5,
+    "RVANormalization": 0.99743669,
+    "mTau": 1.77682,
+    "be": 17.815,
+    "dBe": 0.023,
+    "input": [{
+      "weight": 1,
+      "s0s": [3.0, 2.0, 1.0]
+    }, {
+      "weight": 6,
+      "s0s": [2.8, 1.8]
+    }]
+  },
+  "variables": {
+    "astau": {
+      "fixed": false,
+      "value": 0.323,
+      "stepSize": 0.002
     },
-    "variables": {
-        "astau": {
-            "fixed": false,
-            "value": 0.323,
-            "stepSize": 0.002
-        },
-        "aGGInv": {
-            "fixed": true,
-            "value": 0.021,
-            "stepSize": 0.01
-        },
-        "rhoVpA": {
-            "fixed": false,
-            "value": -0.31489,
-            "stepSize": 0.1
-        },
-        "c8VpA": {
-            "fixed": false,
-            "value": -0.026525,
-            "stepSize": 0.3
-        }
+    "aGGInv": {
+      "fixed": true,
+      "value": 0.021,
+      "stepSize": 0.01
     },
-    "adler": {
-        "D0": true,
-        "D2": false,
-        "D4": true,
-        "D68": true,
-        "PionPole": true
+    "rhoVpA": {
+      "fixed": false,
+      "value": -0.31489,
+      "stepSize": 0.1
+    },
+    "c8VpA": {
+      "fixed": false,
+      "value": -0.026525,
+      "stepSize": 0.3
+    },
+    "deltaV": {
+      "fixed": true,
+      "value": 3.56,
+      "stepSize": 0.1
+    },
+    "gammaV": {
+      "fixed": true,
+      "value": 0.59,
+      "stepSize": 0.1
+    },
+    "alphaV": {
+      "fixed": true,
+      "value": -2.0,
+      "stepSize": 0.1
+    },
+    "betaV": {
+      "fixed": true,
+      "value": 4.1,
+      "stepSize": 0.1
+    },
+    "deltaA": {
+      "fixed": true,
+      "value": 1.41,
+      "stepSize": 0.1
+    },
+    "gammaA": {
+      "fixed": true,
+      "value": 1.52,
+      "stepSize": 0.1
+    },
+    "alphaA": {
+      "fixed": true,
+      "value": 5.4,
+      "stepSize": 0.1
+    },
+    "betaA": {
+      "fixed": true,
+      "value": 2.01,
+      "stepSize": 0.1
     }
+  },
+  "thMomContribs": {
+    "D0": true,
+    "D2": false,
+    "D4": true,
+    "D68": true,
+    "DV": false,
+    "PionPole": true
+  }
 }

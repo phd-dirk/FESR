@@ -3,10 +3,6 @@
 #include <gtest/gtest.h>
 #include <cmath>
 #include <complex>
-#include "json.hpp"
-#include <fstream>
-
-using json = nlohmann::json;
 
 class TheoreticalMomentsTest : public ::testing::Test {
 protected:
@@ -19,10 +15,7 @@ protected:
   const double rhoVpA_ = -0.1894;
   const double c8VpA_ = 0.16315;
   virtual void SetUp() {
-    std::ifstream configFile("./test/configuration_test.json");
-    json jsonConfig;
-    configFile >> jsonConfig;
-    Configuration config(jsonConfig);
+    Configuration config("./test/configuration_test.json");
     weight_ = new Weight(1);
     thMom_ = new TheoreticalMoments(config);
   }
