@@ -7,6 +7,8 @@
 #include <cstdio>
 #include "Math/Minimizer.h"
 #include "./configuration.hpp"
+#include "./theoretical_moments.hpp"
+#include "./weights.hpp"
 
 using std::string;
 using ROOT::Math::Minimizer;

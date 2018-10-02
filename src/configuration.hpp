@@ -121,6 +121,9 @@ class Configuration {
     }
     initializeBetaCoefficients();
     initializeAdlerCoefficients();
+
+    // minuit
+    tolerance = jsonConfig["minuit"]["tolerance"];
   }
 
   int dof() const {
@@ -214,6 +217,9 @@ class Configuration {
   const double kDFPi = 0.14e-3;
   const double kDRTauVex = 0.0;
   const double deltaEW = 0.001;
+
+  // minuit
+  double tolerance;
 
 
  private:

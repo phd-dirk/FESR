@@ -48,6 +48,40 @@ string correlationOutput(Minimizer* min) {
   return out;
 }
 
+string deltaOutput(Minimizer* min, const Configuration &config) {
+  string out;
+  TheoreticalMoments thMom(config);
+  const double *xs = min->X();
+
+  out += "Deltas (FO): \n";
+  out += "delta_V+A^(0) \t" +
+      std::to_string(
+          thMom.del0(
+              config.sTau, Weight(1), config.sTau, xs[0], config.order
+          )
+      ) + "\n";
+  out += "delta_V+A^(4) \t" +
+      std::to_string(
+          thMom.del4(
+              config.sTau, Weight(1), config.sTau, xs[0], config.aGGInv.value
+          )
+      ) + "\n";
+  out += "delta_V+A^(6) \t" +
+      std::to_string(
+          thMom.del6(
+              config.sTau, Weight(1), config.rhoVpA.value
+          )
+      ) + "\n";
+  out += "delta_V+A^(8) \t" +
+      std::to_string(
+          thMom.del8(
+              config.sTau, Weight(1), config.c8VpA.value
+          )
+      ) + "\n";
+  out += "\n";
+  return out;
+}
+
 void writeToCSV(
     string &csvFilePath,
     Minimizer* min,
@@ -90,7 +124,8 @@ void writeToCSV(
 
 void writeToOutputFile(
     const string &configFilePath,
-    Minimizer* min
+    Minimizer* min,
+    const Configuration &config
 ) {
   std::size_t pos = configFilePath.find_last_of("/\\");
   std::string outputFilePath = configFilePath.substr(0,pos) + "/fit_summary.txt";
@@ -118,7 +153,8 @@ void writeToOutputFile(
     // correlation matrix
     outputFile << correlationOutput(min);
 
-    outputFile << endl;
+    // deltas
+    outputFile << deltaOutput(min, config);
 
     // add configFile
     outputFile << configFile.rdbuf();
@@ -137,7 +173,7 @@ void writeOutput (
   std::string csvFilePath = configFilePath.substr(0,pos) + "/fits.csv";
 
   writeToCSV(csvFilePath, min, config);
-  writeToOutputFile(configFilePath, min);
+  writeToOutputFile(configFilePath, min, config);
 }
 
 
