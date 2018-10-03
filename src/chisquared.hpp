@@ -12,6 +12,7 @@
 #include <iostream>
 #include <thread>
 #include <future>
+#include <chrono>
 
 
 // test invCovMat
@@ -96,15 +97,6 @@ class Chisquared: Numerics {
                 aKappa, aGamma, aAlpha, aBeta);
   }
 
-  double operator ()(const json &config) const {
-    double xx[4];
-    xx[0] = config["variables"]["astau"]["value"];
-    xx[1] = config["variables"]["aGGInv"]["value"];
-    xx[2] = config["variables"]["rhoVpA"]["value"];
-    xx[3] = config["variables"]["c8VpA"]["value"];
-    return operator()(xx);
-  }
-
   double chi2(cDbl &astau, cDbl &aGGinv, cDbl &rho, cDbl &c8,
               cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,
               cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA) const
@@ -112,14 +104,15 @@ class Chisquared: Numerics {
     double chi = 0;
 
     vec momDiff(momCount_);
+    vec thMoms = calcThMoms(astau, aGGinv, rho, c8, order_, deV, gaV, alV,
+                            beV, deA, gaA, alA, beA);
     for(uint i = 0; i < momCount_; i++) {
       // parallelized
-      momDiff[i] = expMom_()[i]
-                   - calcThMoms(astau, aGGinv, rho, c8, order_, deV, gaV, alV,
-                                beV, deA, gaA, alA, beA)[i];
+      momDiff[i] = expMom_()[i] - thMoms[i];
       // without parallization
       // TheoreticalMoments th(config_);
-      // momDiff[i] = expMom_()[i] - th(astau, aGGinv, rho, c8, order_)[i];
+      // momDiff[i] = expMom_()[i] - th.thMom(astau, aGGinv, rho, c8, order_, deV, gaV, alV,
+      //                                      beV, deA, gaA, alA, beA)[i];
     }
 
     for(uint k = 0; k < momCount_; k++) {
@@ -167,6 +160,7 @@ class Chisquared: Numerics {
     }
     // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
     covMat(0, 0) = pow(0.0072, 2);
+
     Numerics::invertMatrix(covMat, invCovMat_);
   }
 

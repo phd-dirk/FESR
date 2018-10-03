@@ -66,7 +66,7 @@ int main (int argc, char* argv[]) {
     // min->SetMaxFunctionCalls(10000000); // for Minuit2
     // min->SetMaxIterations(10000000); // for GSL
     min->SetTolerance(config.tolerance);
-    min->SetStrategy(2);
+    // min->SetStrategy(2);
     min->SetPrintLevel(3); // activate logging
 
     // function wrapper
