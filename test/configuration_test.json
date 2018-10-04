@@ -1,6 +1,7 @@
 {
-  "version": 0.4,
+  "version": 0.5,
   "scheme": "FO",
+  "tolerance": 1e-9,
   "parameters": {
     "nc": 3,
     "nf": 3,

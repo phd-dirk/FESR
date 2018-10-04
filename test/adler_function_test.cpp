@@ -13,11 +13,12 @@ class AdlerFunctionTest : public ::testing::Test {
 protected:
   TheoreticalMoments *thMom_;
   AdlerFunction *adler;
+  Configuration *config;
   virtual void SetUp() {
-    Configuration config("./test/configuration_test.json");
+    config = new Configuration("./test/configuration_test.json");
 
-    adler = new AdlerFunction(config);
-    thMom_ = new TheoreticalMoments(config);
+    adler = new AdlerFunction(*config);
+    thMom_ = new TheoreticalMoments(*config);
   }
 };
 
@@ -37,12 +38,12 @@ TEST_F(AdlerFunctionTest, D0) {
 
 }
 
-TEST_F(AdlerFunctionTest, CIntD0) {
+TEST_F(AdlerFunctionTest, D0CInt) {
   //D0CIntFO(s0, weight, sTau, aStau, order)
-  EXPECT_NEAR(adler->D0CIntFO(3.0, Weight(1), 3.1570893124000001, 0.31927, 5), 1.8130325533146323, 1e-14);
-  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(1), 3.1570893124000001, 0.31927, 5), 1.8398156114670496 , 1e-14);
-  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(6), 3.1570893124000001, 0.31927, 5), 0.28724759227498259, 1e-14);
-  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(6), 3.1570893124000001, 0.29, 5), 0.28350497970822786, 1e-14);
+  EXPECT_NEAR(adler->D0CIntFO(3.0, Weight(1), 3.1570893124000001, 0.31927, 5), 1.8130325533146323, config->tolerance);
+  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(1), 3.1570893124000001, 0.31927, 5), 1.8398156114670496 , config->tolerance);
+  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(6), 3.1570893124000001, 0.31927, 5), 0.28724759227498259, config->tolerance);
+  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(6), 3.1570893124000001, 0.29, 5), 0.28350497970822786, config->tolerance);
 
   // CIPT
   EXPECT_NEAR(adler->D0CIntCI(2.6, Weight(1), 3.1570893124000001, 0.31927, 1), 1.7203914169060759, 1e-13);
@@ -66,9 +67,12 @@ TEST_F(AdlerFunctionTest, D4) {
 
 TEST_F(AdlerFunctionTest, D4CInt) {
   // D4CInt(s0, weight, sTau, astau, aGGinv, r)
-  EXPECT_NEAR(adler->D4CInt(3.0, Weight(1), 3.1570893124000001, 0.31927, 2.1e-2, 1), 1.942350658196885e-3, 1e-15);
-  EXPECT_NEAR(adler->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.31927, 2.1e-2, 1), -1.8595234733280692e-2 , 1e-15);
-  EXPECT_NEAR(adler->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.28, 2.1e-2, 1), -1.8945624330502554e-2, 1e-15);
+  EXPECT_NEAR(adler->D4CInt(3.0, Weight(1), 3.1570893124000001, 0.31927, 2.1e-2, 1),
+              1.942350658196885e-3, config->tolerance);
+  EXPECT_NEAR(adler->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.31927, 2.1e-2, 1),
+              -1.8595234733280692e-2 , config->tolerance);
+  EXPECT_NEAR(adler->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.28, 2.1e-2, 1),
+              -1.8945624330502554e-2, config->tolerance);
 }
 
 TEST_F(AdlerFunctionTest, D68) {
@@ -81,11 +85,11 @@ TEST_F(AdlerFunctionTest, D68) {
 
 TEST_F(AdlerFunctionTest, D68CInt) {
   // D68CInt(s0, weight, rho, c8)
-  EXPECT_NEAR(adler->D68CInt(3.0, Weight(1), -0.1894, 0.16315), -2.9695080856551679e-2, 1e-15);
-  EXPECT_NEAR(adler->D68CInt(2.0, Weight(1), -0.1894, 0.16315), -0.10827202768105049, 1e-15);
-  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.1894, 0.16315), 8.1905379523540371e-3, 1e-15);
-  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.7, 0.16315), -6.7400762155589364e-2, 1e-15);
-  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.7, 0.9), 9.6228642910621415e-2, 1e-15);
+  EXPECT_NEAR(adler->D68CInt(3.0, Weight(1), -0.1894, 0.16315), -2.9695080856551679e-2, config->tolerance);
+  EXPECT_NEAR(adler->D68CInt(2.0, Weight(1), -0.1894, 0.16315), -0.10827202768105049, config->tolerance);
+  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.1894, 0.16315), 8.1905379523540371e-3, config->tolerance);
+  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.7, 0.16315), -6.7400762155589364e-2, config->tolerance);
+  EXPECT_NEAR(adler->D68CInt(2.0, Weight(6), -0.7, 0.9), 9.6228642910621415e-2, config->tolerance);
 }
 
 TEST_F(AdlerFunctionTest, deltaP) {

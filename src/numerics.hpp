@@ -202,10 +202,10 @@ class Numerics {
       return func(t).imag();
     };
 
-    double cintReal = gaussLegendre(funcReal, from, to);
-    double cintImag = gaussLegendre(funcImag, from, to);
-    // double cintReal = adaptiveIntegrate(funcReal, from, to);
-    // double cintImag = adaptiveIntegrate(funcImag, from, to);
+    // double cintReal = gaussLegendre(funcReal, from, to);
+    // double cintImag = gaussLegendre(funcImag, from, to);
+    double cintReal = adaptiveIntegrate(funcReal, from, to);
+    double cintImag = adaptiveIntegrate(funcImag, from, to);
 
     return complex<double>(cintReal, cintImag);
   }
@@ -250,7 +250,7 @@ class Numerics {
 
  private:
   const double epsrel_ = 0.; // relative error
-  const double epsabs_ = 1e-5; // absolute error
+  const double epsabs_ = 1e-10; // absolute error
   gsl_integration_glfixed_table * t_ = gsl_integration_glfixed_table_alloc(1100);
   vec gaulegX;
   vec gaulegW;

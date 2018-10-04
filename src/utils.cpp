@@ -16,11 +16,11 @@ string variablesOutput(Minimizer* min) {
   for(uint i = 0; i < min->NDim(); i++) {
     const bool isFixed = min->IsFixedVariable(i);
     // name
-    out += min->VariableName(i) + "\t=\t" + std::to_string(xs[0]);
+    out += min->VariableName(i) + "\t=\t" + std::to_string(xs[i]);
 
     // error
     if(!isFixed) {
-      out += "\t+/-\t" + std::to_string(errors[0]) + "\t";
+      out += "\t+/-\t" + std::to_string(errors[i]) + "\t";
     }
 
     // fixed

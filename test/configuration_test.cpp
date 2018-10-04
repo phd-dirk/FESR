@@ -5,7 +5,9 @@ class ConfigurationTest : public ::testing::Test {
 protected:
   Configuration *config;
   virtual void SetUp() {
+    std::cout << "hola" << std::endl;
     config = new Configuration("./test/configuration_test.json");
+    std::cout << "end" << std::endl;
   }
 
   virtual void TearDown() {

@@ -8,6 +8,7 @@ class TheoreticalMomentsTest : public ::testing::Test {
 protected:
   TheoreticalMoments *thMom_;
   Weight *weight_;
+  Configuration *config;
   const uint order_ = 4;
   const double sTau_ = 3.1570893124;
   const double astau_ = 0.31927;
@@ -15,9 +16,9 @@ protected:
   const double rhoVpA_ = -0.1894;
   const double c8VpA_ = 0.16315;
   virtual void SetUp() {
-    Configuration config("./test/configuration_test.json");
+    config = new Configuration("./test/configuration_test.json");
     weight_ = new Weight(1);
-    thMom_ = new TheoreticalMoments(config);
+    thMom_ = new TheoreticalMoments(*config);
   }
 
   virtual void TearDown() {
@@ -30,21 +31,25 @@ TEST_F(TheoreticalMomentsTest, IntegralMoment) {
   // const double &rhoVpA, const double &c8VpA, const double &order)
   TheoreticalMoments th = *thMom_;
   Weight w(1);
-  EXPECT_NEAR(th.thMom(3.1570893124, w, astau_, aGGinv_, rhoVpA_, c8VpA_, 5,
-                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
-              3.4634999665533375, 1.e-14);
+  EXPECT_NEAR(
+      th.thMom(
+          3.1570893124, w, astau_, aGGinv_, rhoVpA_, c8VpA_, 5,
+          0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+      ),
+      3.4634999665533375, config->tolerance
+  );
   EXPECT_NEAR(th.thMom(3.0, w, 0.31927, 0.021, -0.1894, -0.161315, 5,
                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
-              3.4848911406246970, 1.e-14);
+              3.4848911406246970, config->tolerance);
   EXPECT_NEAR(th.thMom(3.0, w, 0.2, 0.021, -0.1894, -0.161315, 5,
                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
-              3.1542708728473938, 1.e-14);
+              3.1542708728473938, config->tolerance);
   EXPECT_NEAR(th.thMom(3.0, w, 0.2, 0.1, -0.1894, -0.161315, 5,
                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
-              3.1571219772351791, 1.e-14);
+              3.1571219772351791, config->tolerance);
   EXPECT_NEAR(th.thMom(3.0, w, 0.2, 0.1, -0.3, 0.9, 5,
                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
-              3.1129921630758908, 1.e-14);
+              3.1129921630758908, config->tolerance);
 }
 
 TEST_F(TheoreticalMomentsTest, Delta0) {

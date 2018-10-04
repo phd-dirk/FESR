@@ -123,7 +123,7 @@ class Configuration {
     initializeAdlerCoefficients();
 
     // minuit
-    tolerance = jsonConfig["minuit"]["tolerance"];
+    tolerance = jsonConfig["tolerance"];
   }
 
   int dof() const {
