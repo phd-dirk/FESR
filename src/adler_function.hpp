@@ -16,7 +16,7 @@
 class AdlerFunction : Numerics {
 public:
   AdlerFunction(const Configuration &config) :
-    Numerics(), config_(config), amu_(), mq_(config.sTau) {}
+    Numerics(), config_(config), amu_(), mq_(config.sTau_) {}
 
   cmplx D0(const cmplx &s, const cmplx &mu2, const double &sTau, const double &astau,
            const double &order) const;
@@ -62,7 +62,7 @@ public:
   // Pseudoscalar contribution from pion pion pole and excited resonances
   double deltaP(const double &s0, const Weight &weight) const {
     double spi = pow(config_.kPionMinusMass, 2);
-    double pionPole = -4.*pow(config_.kFPi, 2)/s0*spi/(config_.sTau + 2.*spi)
+    double pionPole = -4.*pow(config_.kFPi, 2)/s0*spi/(config_.sTau_ + 2.*spi)
       *weight.wR(spi/s0).real();
     double xth = 9.*spi/s0;
 
@@ -72,7 +72,7 @@ public:
       *(pow(config_.kF1P, 2)*pow(config_.kM1P, 4)*breitwigner(x, config_.kM1P, config_.kG1P)
         + pow(config_.kF2P, 2)*pow(config_.kM2P, 4)*breitwigner(x, config_.kM2P, config_.kG2P) );
 
-      return weight.wR(s).real()*2.*x/(config_.sTau + 2.*x)*rhores;
+      return weight.wR(s).real()*2.*x/(config_.sTau_ + 2.*x)*rhores;
     };
 
     return 4.*pow(M_PI, 2)*( pionPole - adaptiveIntegrate(f, xth, 1.));

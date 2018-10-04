@@ -1,12 +1,12 @@
 #include "./chisquared.hpp"
 
 // Public
-Chisquared::Chisquared(Configuration config):
-  config_(config), inputs_(config.inputs), order_(config.order),
-  expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config))
+Chisquared::Chisquared(Configuration config)
+  :config_(config), inputs_(config.inputs),
+   expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config))
 {
-  momCount_ = utils::momCount(config.inputs);
-  invCovMat_(momCount_, momCount_);
+  invCovMat_(config.momCount_, config.momCount_);
+  std::cout << "mhmm" << std::endl;
   initInvCovMat();
 }
 
@@ -73,18 +73,18 @@ double Chisquared::chi2(
 {
   double chi = 0;
 
-  vec momDiff(momCount_);
+  vec momDiff(config_.momCount_);
   vec thMoms = calcThMoms(
-    inputs, astau, aGGinv, rho, c8, order_,
+    inputs, astau, aGGinv, rho, c8, config_.order_,
     deV, gaV, alV, beV, deA, gaA, alA, beA
   );
 
-  for(uint i = 0; i < momCount_; i++) {
+  for(uint i = 0; i < config_.momCount_; i++) {
     momDiff[i] = expMom_()[i] - thMoms[i];
   }
 
-  for(uint k = 0; k < momCount_; k++) {
-    for(uint l = 0; l < momCount_; l++) {
+  for(uint k = 0; k < config_.momCount_; k++) {
+    for(uint l = 0; l < config_.momCount_; l++) {
       chi += momDiff[k] * invCovMat_(k, l) * momDiff[l];
     }
   }
@@ -108,8 +108,8 @@ vec Chisquared::calcThMoms(
   const double &beA
 ) const
 {
-  vec thMoms(momCount_);
-  std::vector<std::future<double>> ftrs(momCount_);
+  vec thMoms(config_.momCount_);
+  std::vector<std::future<double>> ftrs(config_.momCount_);
   TheoreticalMoments th(config_);
   int i = 0;
   for(auto const& input: inputs_) {
@@ -125,7 +125,7 @@ vec Chisquared::calcThMoms(
     }
   }
 
-  for(uint i=0; i<momCount_; i++) {
+  for(uint i=0; i<config_.momCount_; i++) {
     thMoms[i] = ftrs[i].get();
   }
 
@@ -135,8 +135,10 @@ vec Chisquared::calcThMoms(
 void Chisquared::initInvCovMat() {
   mat covMat = expMom_.getCovMat();
 
+  std::cout << "jo" << std::endl;
+  std::cout << config_.momCount_ << endl;
   // Remove correlations with R_tau,V+A in Aleph fit
-  for (uint i = 1; i < momCount_; i++) {
+  for (uint i = 1; i < config_.momCount_; i++) {
     covMat(0, i) = 0.;
     covMat(i, 0) = 0.;
   }

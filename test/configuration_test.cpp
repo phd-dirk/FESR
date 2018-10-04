@@ -18,10 +18,10 @@ protected:
 // compare constants to Matthias params
 // from fesr_aleph_2015/params.f90
 TEST_F (ConfigurationTest, various_constants) {
-  EXPECT_EQ(config->be, 17.815);
+  EXPECT_EQ(config->be_, 17.815);
   EXPECT_EQ(config->kFPi, 92.21e-3);
   EXPECT_EQ(config->kSEW, 1.0198);
-  EXPECT_EQ(config->mTau, 1.77682);
+  EXPECT_EQ(config->mTau_, 1.77682);
   EXPECT_EQ(config->kPionMinusMass, 0.13957018);
   EXPECT_EQ(config->kVud, 0.97425);
 }

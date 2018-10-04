@@ -25,59 +25,42 @@ struct Input {
   std::vector<double> s0s;
 };
 
-
 class Configuration {
  public:
   Configuration(string configFilePath);
+  Configuration(
+    const double &be,
+    const double &dBe,
+    const std::vector<Input> &inputs,
+    const double &mTau,
+    const int &nc,
+    const int &nf,
+    const int &order,
+    const double &RVANormalization,
+    const string &scheme
+  );
 
-  int dof() const {
-    // model: [{w_1, [s1, s2, s3, ...]}, {w_2, [s1, s_2, ...]}, ...]
-    // sum_i sum_j s_{ij}, where i is index of weight and j is the index of the corresponding s0
-    int dof = 0;
-    for(auto const &input: inputs) {
-      vec s0s = input.s0s;
-      dof += s0s.size();
-    }
+  int dof() const;
 
-    if(!astau.isFixed)
-      dof--;
-    if(!aGGInv.isFixed)
-      dof--;
-    if(!rhoVpA.isFixed)
-      dof--;
-    if(!c8VpA.isFixed)
-      dof--;
-
-    return dof;
-  }
-
-  int order;
-  double RVANormalization;
+  int order_;
+  double RVANormalization_;
   std::vector<Input> inputs;
-  uint momCount = 0;
-
-  // QCD
-  double nc;
-  double nf;
+  uint momCount_ = 0;
 
  // OPE
   ThMomContribs thMomContribs;
   Variable astau, aGGInv, rhoVpA, c8VpA, deltaV, gammaV, alphaV, betaV, deltaA, gammaA, alphaA, betaA;
 
   // masses
-  double mTau;
-  double sTau;
-  const double mumtau = 2.8e-3;
-  const double mdmtau = 5.e-3;
-  const double msmtau = 97e-3;
+  double mTau_, sTau_;
+  const double mumtau = 2.8e-3, mdmtau = 5.e-3, msmtau = 97e-3;
   const double kPionMinusMass = 0.13957018; // M_pi^-
   const double kFPi = 92.21e-3; // PDG 2010
   const vec mq = {mumtau, mdmtau, msmtau};
   const double kTauMass = 1.77682; // PDF 2012
 
   // RGE
-  double beta[5];
-  double c[6][6];
+  double beta[5], c[6][6];
 
   // math
   const vec zeta = {
@@ -112,12 +95,9 @@ class Configuration {
   const double kF2P = 0.19e-3, kM2P = 1.8, kG2P = 0.21;
 
   // Various
-  const double kVud = 0.97425; // Towner, Hardy 2009
-  const double kDVud = 0.00022;
-  const double kSEW = 1.0198; // EW radiative corr.
-  const double kDSEW = 0.0006;
-  double be; // HFAG
-  double dBe; // HFAG
+  const double kVud = 0.97425, kDVud = 0.00022; // Towner, Hardy 2009
+  const double kSEW = 1.0198, kDSEW = 0.0006; // EW radiative corr.
+  double be_, dBe_; // HFAG
   const double kDFPi = 0.14e-3;
   const double kDRTauVex = 0.0;
   const double deltaEW = 0.001;
@@ -125,43 +105,9 @@ class Configuration {
   // minuit
   double tolerance;
 
-
  private:
-  void initializeBetaCoefficients() {
-    beta[1] = 1./6.*(11.*nc - 2.*nf);
-    beta[2] = 51./4. - 19./12.*nf;  // rgm06
-    beta[3] = 2857./64. - 5033./576.*nf + 325./1728.*pow(nf, 2);  // rgm06
-    beta[4] = 149753./768. + 891./32.*zeta[3]  // rgm06
-      -(1078361./20736. + 1627./864.*zeta[3])*nf
-      + (50065./20736. + 809./1296.*zeta[3])*pow(nf, 2)
-      + 1093./93312.*pow(nf, 3);
-  }
-
-  void initializeAdlerCoefficients() {
-    c[0][0] = -5./3.; c[0][1] = 1;  // rgm06
-    c[1][1] = 1.; c[1][2] = 0.;  //  rgm06
-    c[2][1] = 365./24. - 11.*zeta[3] - (11./12. - 2./3.*zeta[3])*nf;
-    c[2][2] = -beta[1]*c[1][1]/4.; c[2][3] = 0.;  // rgm06
-    c[3][1] = 87029./288. - 1103./4.*zeta[3] + 275./6.*zeta[5]
-        +(-7847./216. + 262./9.*zeta[3] - 25./9.*zeta[5])*nf
-        + (151./162.-19./27.*zeta[3])*pow(nf, 2);  // rgm06
-    c[3][2] = -1./4.*(beta[2]*c[1][1]+2*beta[1]*c[2][1]);
-    c[3][3] = pow(beta[1], 2)/12.*c[1][1]; c[3][4] = 0.;  // rgm06
-    c[4][1] = 78631453./20736. - 1704247./432.*zeta[3]
-        + 4185./8.*pow(zeta[3], 2) + 34165./96.*zeta[5]
-        - 1995./16.*zeta[7];  // Diogo PHD
-    c[4][2] = -1./4.*(beta[3]*c[1][1]+2*beta[2]*c[2][1]+3*beta[1]*c[3][1]);
-    c[4][3] = beta[1]/24.*(5.*beta[2]*c[1][1]+6*beta[1]*c[2][1]);  // rgm-6
-    c[4][4] = -pow(beta[1], 3)/32.*c[1][1]; c[4][5] = 0.;  // rgm06
-    c[5][1] = 283.;
-    c[5][2] = 1./4.*(-beta[4]*c[1][1] - 2.*beta[3]*c[2][1]-3.
-                      *beta[2]*c[3][1]-4.*beta[1]*c[4][1]);
-    c[5][3] = 1./24.*(12.*c[3][1]*pow(beta[1], 2)+6.*beta[1]*beta[3]*c[1][1]
-                       +14.*beta[2]*beta[1]*c[2][1]+3.*pow(beta[2], 2)*c[1][1]);
-    c[5][4] = 1./96.*(-12*pow(beta[1], 3)*c[2][1]
-                       -13.*beta[2]*pow(beta[1], 2)*c[1][1]);
-    c[5][5] = 1./80.*pow(beta[1], 4)*c[1][1];beta[1] = 11./2. - 1./3.*nf;  // rgm06
-  }
+  void initializeBetaCoefficients(const int &nc, const int &nf);
+  void initializeAdlerCoefficients(const int &nf);
 };
 
 #endif

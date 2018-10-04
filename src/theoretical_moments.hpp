@@ -55,15 +55,15 @@ class TheoreticalMoments:
     if ( config_.thMomContribs.D0 ) {
       // check if FOPT or CIPT
       if ( config_.thMomContribs.scheme == "FO" ) {
-        rTauTh += cIntVpAD0FO(s0, w, config_.sTau, astau, order);
+        rTauTh += cIntVpAD0FO(s0, w, config_.sTau_, astau, order);
       }
       if ( config_.thMomContribs.scheme == "CI") {
-        rTauTh += cIntVpAD0CI(s0, w, config_.sTau, astau, order);
+        rTauTh += cIntVpAD0CI(s0, w, config_.sTau_, astau, order);
       }
     }
     // D4
     if ( config_.thMomContribs.D4 )
-      rTauTh += cIntVpAD4FO(s0, w, config_.sTau, astau, aGGinv);
+      rTauTh += cIntVpAD4FO(s0, w, config_.sTau_, astau, aGGinv);
     // D68
     if ( config_.thMomContribs.D68 )
       rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);

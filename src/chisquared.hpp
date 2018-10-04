@@ -79,8 +79,6 @@ private:
 
   const Configuration config_;
   const std::vector<Input> inputs_;
-  const int order_;
-  int momCount_;
   const ExperimentalMoments expMom_;
 };
 

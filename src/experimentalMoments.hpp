@@ -13,8 +13,8 @@ class ExperimentalMoments {
   // The Spectral Moments and Covariance matrix can then bet exported via the
   // public getter functions
   ExperimentalMoments(const string &filename, const Configuration &config) :
-    config_(config), data_(Data(filename, config.RVANormalization)),
-    inputs_(config_.inputs), covMat(config_.momCount, config_.momCount)
+    config_(config), data_(Data(filename, config.RVANormalization_)),
+    inputs_(config_.inputs), covMat(config_.momCount_, config_.momCount_)
   {
     // cache experimental moments
     initExpMoms();
@@ -61,10 +61,10 @@ class ExperimentalMoments {
                 const double &dsbin) const {
     double binRight = sbin+dsbin/2.;
     double binLeft = sbin-dsbin/2.;
-    return (s0/config_.sTau*
+    return (s0/config_.sTau_*
             (
              (w.wD(binLeft/s0) - w.wD(binRight/s0))/
-             (w.wTau(binLeft/config_.sTau) - w.wTau(binRight/config_.sTau))
+             (w.wTau(binLeft/config_.sTau_) - w.wTau(binRight/config_.sTau_))
              )
             ).real();
   }
@@ -73,7 +73,7 @@ class ExperimentalMoments {
   double expMom(const double &s0, const Weight &w) const {
     double mom = 0;
     for(int j = 0; j <= closestBinToS0(s0); j++) {
-      mom += config_.sTau/s0/config_.be*data_.sfm2s[j]
+      mom += config_.sTau_/s0/config_.be_*data_.sfm2s[j]
         *wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
     }
     return mom;
@@ -83,7 +83,7 @@ class ExperimentalMoments {
     double axialMoment = 0;
     double pseudoMoment = 0;
     axialMoment += kPiFac()/s0*w.wR(pow(config_.kPionMinusMass, 2)/s0).real();
-    pseudoMoment += axialMoment*(-2.*pow(config_.kPionMinusMass, 2)/(config_.sTau + 2.*pow(config_.kPionMinusMass, 2)));
+    pseudoMoment += axialMoment*(-2.*pow(config_.kPionMinusMass, 2)/(config_.sTau_ + 2.*pow(config_.kPionMinusMass, 2)));
     return axialMoment + pseudoMoment;
   }
 
@@ -119,14 +119,14 @@ class ExperimentalMoments {
         }
       }
     }
-    errMat(data_.binCount, data_.binCount) = pow(config_.dBe, 2);
+    errMat(data_.binCount, data_.binCount) = pow(config_.dBe_, 2);
     errMat(data_.binCount+1, data_.binCount+1) = pow(kDPiFac(), 2);
     return errMat;
   }
 
   // returns the Jacobian Matrix
   mat jacMat() const {
-    mat jac(data_.binCount+2, config_.momCount);
+    mat jac(data_.binCount+2, config_.momCount_);
     int xMom = 0;
     for(auto const &input: inputs_) {
       vec s0s = input.s0s;
@@ -134,12 +134,12 @@ class ExperimentalMoments {
       for(auto const &s0: s0s) {
         for (int j = 0; j < data_.binCount+2; j++) {
           if (j <= closestBinToS0(s0)) {
-            jac(j, xMom) = config_.sTau/s0/config_.be*wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
+            jac(j, xMom) = config_.sTau_/s0/config_.be_*wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
           } else {
             jac(j, xMom) = 0.;
           }
           jac(data_.binCount, xMom) = (pionPoleMoment(s0, w)
-                                          - expPlusPionMom(s0, w))/config_.be;
+                                          - expPlusPionMom(s0, w))/config_.be_;
           jac(data_.binCount+1, xMom) = pionPoleMoment(s0, w)/kPiFac();
         }
         xMom++;
@@ -152,8 +152,8 @@ class ExperimentalMoments {
   void initCovMat() {
     mat jac = jacMat();
     mat err = errMat();
-    for(uint i = 0; i < config_.momCount; i++) {
-      for(uint j = 0; j < config_.momCount; j++) {
+    for(uint i = 0; i < config_.momCount_; i++) {
+      for(uint j = 0; j < config_.momCount_; j++) {
         covMat(i, j) = 0.0;
         for (int k = 0; k < data_.binCount+2; k++) {
           for (int l = 0; l < data_.binCount+2; l++) {

@@ -55,8 +55,8 @@ cmplx AdlerFunction::D2(const cmplx &s, const cmplx mu2, const double &astau,
   const int i = 0, j = 1;
 
   cmplx L = log(-s/mu2);
-  cmplx amu = amu_(mu2, config_.sTau, astau/M_PI);
-  cmplx rmq = mq_(mu2, config_.sTau, astau/M_PI);
+  cmplx amu = amu_(mu2, config_.sTau_, astau/M_PI);
+  cmplx rmq = mq_(mu2, config_.sTau_, astau/M_PI);
 
   cmplx m2a = (pow(config_.mq[i], 2) + pow(config_.mq[j], 2))*pow(rmq, 2);
   cmplx m2b = r*config_.mq[i]*config_.mq[j]*pow(rmq, 2);
@@ -133,7 +133,7 @@ cmplx AdlerFunction::D4(const cmplx &s, const cmplx &mu2, const double &sTau,
 
   // m4
   cmplx m4(0.0, 0.0);
-  cmplx rmq = mq_(mu2, config_.sTau, astau/M_PI);
+  cmplx rmq = mq_(mu2, config_.sTau_, astau/M_PI);
 
   cmplx m4a = (pow(config_.mq[i], 4) + pow(config_.mq[j], 4))*pow(rmq, 4);
   cmplx m4b = r*(config_.mq[i]*pow(config_.mq[j], 3) + config_.mq[j]*pow(config_.mq[i], 3))*pow(rmq, 4);
