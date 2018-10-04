@@ -20,4 +20,8 @@ using std::endl;
 void writeOutput(const string outputFilePath, Minimizer* min, const Configuration config);
 void writeOutput(const string text, const string outputFilePath);
 
+namespace utils {
+  int momCount(std::vector<Input> inputs);
+}
+
 #endif

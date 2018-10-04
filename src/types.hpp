@@ -10,7 +10,6 @@
 #include <fstream>
 #include <string>
 
-
 // vectors
 typedef std::vector<double> vec;
 typedef std::vector<int> intVec;

@@ -183,3 +183,13 @@ void writeOutput(const string text, const string outputFilePath)
   outputFile.open(outputFilePath, std::ios::app);
   outputFile << text << endl;
 }
+
+int utils::momCount(std::vector<Input> inputs)
+{
+  int momCount = 0;
+  for(auto const &input: inputs) {
+    momCount += input.s0s.size();
+  }
+  return momCount;
+}
+

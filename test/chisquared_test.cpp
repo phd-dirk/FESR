@@ -7,6 +7,7 @@
 class ChisquaredTest : public ::testing::Test {
  protected:
   Chisquared *chi_;
+  Chisquared *chi2_;
   Configuration *config;
 
   virtual void SetUp() {
@@ -15,6 +16,7 @@ class ChisquaredTest : public ::testing::Test {
 
     config = new Configuration("./test/configuration_test.json");
     chi_ = new Chisquared(*config);
+    chi2_ = new Chisquared(Configuration("./test/configuration_test.json"));
   }
 
   virtual void TearDown() {
@@ -31,7 +33,7 @@ TEST_F(ChisquaredTest, inverseCovarianceMatrix) {
 
 TEST_F(ChisquaredTest, chi2) {
   Chisquared chi = *chi_;
-  EXPECT_NEAR(chi(0.31927, 0.021, -0.1894, 0.16315, 0.0, 0.0, 0.0, 0.0,
+  EXPECT_NEAR(chi(config->inputs, 0.31927, 0.021, -0.1894, 0.16315, 0.0, 0.0, 0.0, 0.0,
                   0.0, 0.0, 0.0, 0.0), 31701.49710037827, 1e-5);
   // EXPECT_NEAR(chi({ 3.0, 2.0 }, 0.31927, 0.021, -0.1894, 0.16315), 1.4619737304634208, 1e-11);
 }
