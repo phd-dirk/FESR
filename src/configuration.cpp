@@ -86,7 +86,7 @@ Configuration::Configuration(string configFilePath) {
   for(auto const& input : jsonConfig["parameters"]["input"]) {
     Weight w(input["weight"].get<int>());
     vec s0s = input["s0s"].get<vec>();
-    inputs.push_back({ w, s0s });
+    inputs_.push_back({ w, s0s });
     momCount_ += s0s.size();
   }
 
@@ -108,6 +108,8 @@ Configuration::Configuration(
   const double &RVANormalization,
   const string &scheme
 ) {
+  inputs_ = inputs;
+
   order_ = order;
   RVANormalization_ = RVANormalization;
 
@@ -134,7 +136,7 @@ int Configuration::dof() const {
   // model: [{w_1, [s1, s2, s3, ...]}, {w_2, [s1, s_2, ...]}, ...]
   // sum_i sum_j s_{ij}, where i is index of weight and j is the index of the corresponding s0
   int dof = 0;
-  for(auto const &input: inputs) {
+  for(auto const &input: inputs_) {
     vec s0s = input.s0s;
     dof += s0s.size();
   }

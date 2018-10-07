@@ -44,7 +44,7 @@ class Configuration {
 
   int order_;
   double RVANormalization_;
-  std::vector<Input> inputs;
+  std::vector<Input> inputs_;
   uint momCount_ = 0;
 
  // OPE

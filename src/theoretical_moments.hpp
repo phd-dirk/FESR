@@ -25,7 +25,7 @@ class TheoreticalMoments:
 {
  public:
   TheoreticalMoments(const Configuration &config) :
-    AdlerFunction(config), config_(config), inputs_(config_.inputs) {}
+    AdlerFunction(config), config_(config), inputs_(config_.inputs_) {}
 
   // vec operator ()(const double &astau,
   //                    const double &aGGinv, const double &rhoVpA, const double &c8VpA,

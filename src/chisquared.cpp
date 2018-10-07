@@ -1,13 +1,12 @@
 #include "./chisquared.hpp"
 
+
 // Public
 Chisquared::Chisquared(Configuration config)
-  :config_(config), inputs_(config.inputs),
+  :config_(config),
    expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config))
 {
-  invCovMat_(config.momCount_, config.momCount_);
-  std::cout << "mhmm" << std::endl;
-  initInvCovMat();
+  invCovMat_ = invCovMat();
 }
 
 double Chisquared::operator() ( const double *xx) const {
@@ -26,7 +25,7 @@ double Chisquared::operator() ( const double *xx) const {
   double beA = xx[11];
 
   return chi2(
-    config_.inputs, astau, aGGinv, rhoD6VpA, c8D8VpA,
+    config_.inputs_, astau, aGGinv, rhoD6VpA, c8D8VpA,
     deV, gaV, alV, beV,
     deA, gaA, alA, alA
   );
@@ -73,15 +72,16 @@ double Chisquared::chi2(
 {
   double chi = 0;
 
-  vec momDiff(config_.momCount_);
   vec thMoms = calcThMoms(
     inputs, astau, aGGinv, rho, c8, config_.order_,
     deV, gaV, alV, beV, deA, gaA, alA, beA
   );
 
+  vec momDiff(config_.momCount_);
   for(uint i = 0; i < config_.momCount_; i++) {
     momDiff[i] = expMom_()[i] - thMoms[i];
   }
+
 
   for(uint k = 0; k < config_.momCount_; k++) {
     for(uint l = 0; l < config_.momCount_; l++) {
@@ -112,7 +112,7 @@ vec Chisquared::calcThMoms(
   std::vector<std::future<double>> ftrs(config_.momCount_);
   TheoreticalMoments th(config_);
   int i = 0;
-  for(auto const& input: inputs_) {
+  for(auto const& input: config_.inputs_) {
     vec s0s = input.s0s;
     Weight w = input.weight;
     for(auto const& s0: s0s) {
@@ -132,18 +132,20 @@ vec Chisquared::calcThMoms(
   return thMoms;
 }
 
-void Chisquared::initInvCovMat() {
+mat Chisquared::invCovMat() {
   mat covMat = expMom_.getCovMat();
+  const int momCount = covMat.size1();
+  mat invCovMat(momCount, momCount);
 
-  std::cout << "jo" << std::endl;
-  std::cout << config_.momCount_ << endl;
   // Remove correlations with R_tau,V+A in Aleph fit
-  for (uint i = 1; i < config_.momCount_; i++) {
+  for (uint i = 1; i < momCount; i++) {
     covMat(0, i) = 0.;
     covMat(i, 0) = 0.;
   }
+
   // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
   covMat(0, 0) = pow(0.0072, 2);
 
-  Numerics::invertMatrix(covMat, invCovMat_);
+  Numerics::invertMatrix(covMat, invCovMat);
+  return invCovMat;
 }

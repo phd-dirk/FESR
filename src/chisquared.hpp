@@ -16,8 +16,6 @@
 #include <chrono>
 
 using std::function;
-using std::cout;
-using std::endl;
 
 class Chisquared: Numerics {
  public:
@@ -75,10 +73,9 @@ private:
     const double &beA
   ) const;
 
-  void initInvCovMat();
+  mat invCovMat();
 
   const Configuration config_;
-  const std::vector<Input> inputs_;
   const ExperimentalMoments expMom_;
 };
 
