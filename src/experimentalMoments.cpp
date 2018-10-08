@@ -26,6 +26,15 @@ void ExperimentalMoments::initExpMoms() {
   }
 }
 
+double ExperimentalMoments::expMom(const double &s0, const Weight &w) const {
+  double mom = 0;
+  for(int j = 0; j <= closestBinToS0(s0); j++) {
+    mom += config_.sTau_/s0/config_.be_*data_.sfm2s[j]
+      *wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
+  }
+  return mom;
+}
+
 int ExperimentalMoments::closestBinToS0(const double &s0) const {
   int i = data_.dsbins.size()-1;
   if (s0 > data_.sbins.back())
@@ -53,14 +62,6 @@ double ExperimentalMoments::wRatio(
   ).real();
 }
 
-double ExperimentalMoments::expMom(const double &s0, const Weight &w) const {
-  double mom = 0;
-  for(int j = 0; j <= closestBinToS0(s0); j++) {
-    mom += config_.sTau_/s0/config_.be_*data_.sfm2s[j]
-      *wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
-  }
-  return mom;
-}
 
 double ExperimentalMoments::pionPoleMoment(
   const double &s0, const Weight &w

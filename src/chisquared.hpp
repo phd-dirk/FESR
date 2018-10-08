@@ -23,7 +23,6 @@ class Chisquared: Numerics {
 
   double operator ()( const double *xx) const;
   double operator ()(
-    std::vector<Input> inputs,
     const double &astau,
     const double &aGGinv,
     const double &rho,
@@ -41,7 +40,6 @@ class Chisquared: Numerics {
   mat invCovMat_;
 private:
   double chi2(
-    std::vector<Input> inputs,
     const double &astau,
     const double &aGGinv,
     const double &rho,
@@ -57,7 +55,6 @@ private:
   ) const;
 
   vec calcThMoms(
-    std::vector<Input> inputs,
     const double &astau,
     const double &aGGinv,
     const double &rhoVpA,

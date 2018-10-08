@@ -22,6 +22,13 @@ class ExperimentalMoments {
 
   void initExpMoms();
 
+  // return the experimental spectral moment
+  double expMom(const double &s0, const Weight &w) const;
+  double pionPoleMoment(const double &s0, const Weight &w) const;
+  double expPlusPionMom(const double &s0, const Weight &w) const {
+    return expMom(s0, w) + pionPoleMoment(s0, w);
+  }
+
   // Selects the closest bin number from s0
   // If s0 is exactly between two bins we select the smaller one
   int closestBinToS0(const double &s0) const;
@@ -32,14 +39,6 @@ class ExperimentalMoments {
     const double &dsbin
   ) const;
 
-  // return the experimental spectral moment
-  double expMom(const double &s0, const Weight &w) const;
-
-  double pionPoleMoment(const double &s0, const Weight &w) const;
-
-  double expPlusPionMom(const double &s0, const Weight &w) const {
-    return expMom(s0, w) + pionPoleMoment(s0, w);
-  }
 
   void log() const {
     // cout << "s0 \t" << s0s[0] << endl;
@@ -52,9 +51,11 @@ class ExperimentalMoments {
     return 24.*pow(M_PI*config_.kVud*config_.kFPi, 2)*config_.kSEW;
   }
   double kDPiFac() const {
-    return kPiFac()*sqrt(4.*pow(config_.kDVud/config_.kVud, 2)
-                         + pow(config_.kDSEW/config_.kSEW, 2)
-                         + 4.*pow(config_.kDFPi/config_.kFPi, 2));
+    return kPiFac()*sqrt(
+      4.*pow(config_.kDVud/config_.kVud, 2)
+      + pow(config_.kDSEW/config_.kSEW, 2)
+      + 4.*pow(config_.kDFPi/config_.kFPi, 2)
+    );
   }
 
   // returns the error matrix
@@ -88,8 +89,9 @@ class ExperimentalMoments {
           } else {
             jac(j, xMom) = 0.;
           }
-          jac(data_.binCount, xMom) = (pionPoleMoment(s0, w)
-                                          - expPlusPionMom(s0, w))/config_.be_;
+          jac(data_.binCount, xMom) = (
+            pionPoleMoment(s0, w) - expPlusPionMom(s0, w)
+          )/config_.be_;
           jac(data_.binCount+1, xMom) = pionPoleMoment(s0, w)/kPiFac();
         }
         xMom++;

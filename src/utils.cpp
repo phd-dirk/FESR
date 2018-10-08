@@ -127,8 +127,9 @@ void writeToOutputFile(
     Minimizer* min,
     const Configuration &config
 ) {
-  std::size_t pos = configFilePath.find_last_of("/\\");
-  std::string outputFilePath = configFilePath.substr(0,pos) + "/fit_summary.txt";
+  // std::size_t pos = configFilePath.find_last_of("/\\");
+  std::size_t pos = configFilePath.find_last_of(".");
+  std::string outputFilePath = configFilePath.substr(0,pos) + ".txt";
 
   ofstream outputFile;
   outputFile.open(outputFilePath);

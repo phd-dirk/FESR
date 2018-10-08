@@ -25,14 +25,13 @@ double Chisquared::operator() ( const double *xx) const {
   double beA = xx[11];
 
   return chi2(
-    config_.inputs_, astau, aGGinv, rhoD6VpA, c8D8VpA,
+    astau, aGGinv, rhoD6VpA, c8D8VpA,
     deV, gaV, alV, beV,
     deA, gaA, alA, alA
   );
 }
 
 double Chisquared::operator ()(
-  std::vector<Input> inputs,
   const double &astau,
   const double &aGGinv,
   const double &rho,
@@ -48,14 +47,13 @@ double Chisquared::operator ()(
 ) const
 {
   return chi2(
-    inputs, astau, aGGinv, rho, c8,
+    astau, aGGinv, rho, c8,
     vKappa, vGamma, vAlpha, vBeta, aKappa, aGamma, aAlpha, aBeta
   );
 }
 
 // Private
 double Chisquared::chi2(
-  std::vector<Input> inputs,
   const double &astau,
   const double &aGGinv,
   const double &rho,
@@ -73,7 +71,7 @@ double Chisquared::chi2(
   double chi = 0;
 
   vec thMoms = calcThMoms(
-    inputs, astau, aGGinv, rho, c8, config_.order_,
+    astau, aGGinv, rho, c8, config_.order_,
     deV, gaV, alV, beV, deA, gaA, alA, beA
   );
 
@@ -81,7 +79,6 @@ double Chisquared::chi2(
   for(uint i = 0; i < config_.momCount_; i++) {
     momDiff[i] = expMom_()[i] - thMoms[i];
   }
-
 
   for(uint k = 0; k < config_.momCount_; k++) {
     for(uint l = 0; l < config_.momCount_; l++) {
@@ -92,7 +89,6 @@ double Chisquared::chi2(
 }
 
 vec Chisquared::calcThMoms(
-  std::vector<Input> inputs,
   const double &astau,
   const double &aGGinv,
   const double &rhoVpA,

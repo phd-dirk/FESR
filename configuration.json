@@ -21,7 +21,7 @@
   "variables": {
     "astau": {
       "fixed": false,
-      "value": 0.32307,
+      "value": 0.3179,
       "stepSize": 0.002
     },
     "aGGInv": {
