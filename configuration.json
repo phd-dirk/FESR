@@ -21,7 +21,7 @@
   "variables": {
     "astau": {
       "fixed": false,
-      "value": 0.3179,
+      "value": 0.31927,
       "stepSize": 0.002
     },
     "aGGInv": {
@@ -46,37 +46,37 @@
     },
     "gammaV": {
       "fixed": true,
-      "value": 0.59,
+      "value": 0.58,
       "stepSize": 0.1
     },
     "alphaV": {
       "fixed": true,
-      "value": -2.0,
+      "value": -1.92,
       "stepSize": 0.1
     },
     "betaV": {
       "fixed": true,
-      "value": 4.1,
+      "value": 4.07,
       "stepSize": 0.1
     },
     "deltaA": {
       "fixed": true,
-      "value": 1.41,
+      "value": 1.68,
       "stepSize": 0.1
     },
     "gammaA": {
       "fixed": true,
-      "value": 1.52,
+      "value": 1.41,
       "stepSize": 0.1
     },
     "alphaA": {
       "fixed": true,
-      "value": 5.4,
+      "value": 5.16,
       "stepSize": 0.1
     },
     "betaA": {
       "fixed": true,
-      "value": 2.01,
+      "value": 2.13,
       "stepSize": 0.1
     }
   },
@@ -85,7 +85,7 @@
     "D2": false,
     "D4": true,
     "D68": true,
-    "DV": false,
+    "DV": true,
     "PionPole": true
   }
 }

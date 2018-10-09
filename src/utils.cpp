@@ -143,6 +143,8 @@ void writeToOutputFile(
     outputFile << "Minuit2Minimizer\t Status:\t" << min->Status() << endl;
     outputFile << "FVAL\t=\t" << min->MinValue() << endl;
     outputFile << "Edm\t=\t" << min->Edm() << endl;
+    outputFile << "dof = \t" << config.dof() << std::endl;
+    outputFile << "chi2/dof = \t" << min->MinValue()/config.dof() << std::endl;
     outputFile << "Nfcn\t=\t" << min->NCalls() << endl;
 
     const double *xs = min->X();
@@ -156,6 +158,7 @@ void writeToOutputFile(
 
     // deltas
     outputFile << deltaOutput(min, config);
+
 
     // add configFile
     outputFile << configFile.rdbuf();
