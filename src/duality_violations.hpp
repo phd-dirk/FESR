@@ -13,8 +13,9 @@ class DualityViolations : Numerics
                 cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA) const
   {
     return -12.0*pow(M_PI, 2)*(
-        cintDVp_VA(s0, w, deV, gaV, alV, beV)
-        +cintDVp_VA(s0, w, deA, gaA, alA, beA));
+      cintDVp_VA(s0, w, deV, gaV, alV, beV)
+      +cintDVp_VA(s0, w, deA, gaA, alA, beA)
+    );
   }
 
   double cintDVp_VA(cDbl &s0, const Weight &w, cDbl &de, cDbl &ga, cDbl &al, cDbl &be) const
@@ -50,7 +51,7 @@ class DualityViolations : Numerics
   double intDVp3(cDbl &s0, cDbl &delta, cDbl &gamma, cDbl &alpha, cDbl &beta) const
   {
     return (exp(-delta - gamma*s0)*(beta*(pow(beta,6)*pow(s0,3) + 3*pow(beta,4)*s0*(-2 + 2*gamma*s0 + pow(gamma,2)*pow(s0,2)) + 
-                                              3*pow(beta,2)*gamma*(-8 + 4*gamma*s0 + 4*pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)) + 
+                                          3*pow(beta,2)*gamma*(-8 + 4*gamma*s0 + 4*pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)) + 
                                               pow(gamma,3)*(24 + 18*gamma*s0 + 6*pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)))*cos(alpha + beta*s0) + 
                                         (pow(beta,6)*pow(s0,2)*(-3 + gamma*s0) + 3*pow(beta,4)*(2 - 6*gamma*s0 - pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)) + 
                                          3*pow(beta,2)*pow(gamma,2)*(-12 - 4*gamma*s0 + pow(gamma,2)*pow(s0,2) + pow(gamma,3)*pow(s0,3)) + 

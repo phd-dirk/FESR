@@ -28,8 +28,7 @@ if(test)
   include_directories(${GTEST_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS})
 
   set (TEST_DIR test)
-  set (TEST_SOURCES ${TEST_DIR}/configuration_test.cpp ${TEST_DIR}/weights_test.cpp
-    ${TEST_DIR}/data_test.cpp ${TEST_DIR}/experimental_moments_test.cpp ${TEST_DIR}/numerics_test.cpp ${TEST_DIR}/alpha_s_test.cpp test/mq_run_test.cpp ${TEST_DIR}/chisquared_test.cpp test/adler_function_test.cpp ${TEST_DIR}/theoretical_moments_test.cpp)
+  file(GLOB TEST_SOURCES test/*cpp)
 
   #################
   # Unit Tests
