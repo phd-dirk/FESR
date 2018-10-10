@@ -9,7 +9,7 @@ Configuration::Configuration(string configFilePath) {
   RVANormalization_ = jsonConfig["parameters"]["RVANormalization"];
 
 
-  thMomContribs = {
+  thMomContribs_ = {
     jsonConfig["scheme"], jsonConfig["thMomContribs"]["D0"], jsonConfig["thMomContribs"]["D4"],
     jsonConfig["thMomContribs"]["D68"], jsonConfig["thMomContribs"]["DV"], jsonConfig["thMomContribs"]["PionPole"]
   };
@@ -106,16 +106,14 @@ Configuration::Configuration(
   const int &nf,
   const int &order,
   const double &RVANormalization,
-  const string &scheme
+  const ThMomContribs &thMomContribs
 ) {
   inputs_ = inputs;
 
   order_ = order;
   RVANormalization_ = RVANormalization;
 
-  thMomContribs = {
-    scheme, true, true, true, false, true
-  };
+  thMomContribs_ = thMomContribs;
 
   mTau_ = mTau;
   sTau_ = pow(mTau, 2);

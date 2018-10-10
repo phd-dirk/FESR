@@ -37,7 +37,7 @@ class Configuration {
     const int &nf,
     const int &order,
     const double &RVANormalization,
-    const string &scheme
+    const ThMomContribs &thMomContribs
   );
 
   int dof() const;
@@ -48,7 +48,7 @@ class Configuration {
   uint momCount_ = 0;
 
  // OPE
-  ThMomContribs thMomContribs;
+  ThMomContribs thMomContribs_;
   Variable astau, aGGInv, rhoVpA, c8VpA, deltaV, gammaV, alphaV, betaV, deltaA, gammaA, alphaA, betaA;
 
   // masses

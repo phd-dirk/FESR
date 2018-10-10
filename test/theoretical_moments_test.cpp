@@ -52,6 +52,39 @@ TEST_F(TheoreticalMomentsTest, IntegralMoment) {
               3.1129921630758908, config->tolerance);
 }
 
+TEST_F(TheoreticalMomentsTest, ThMomDV) {
+  std::vector<Input> inputs = {{
+      Weight(1),
+      {
+        3.15709, 3.0, 2.800, 2.600, 2.400,
+        2.300, 2.200, 2.100, 2.000
+      }
+    }};
+  ThMomContribs thMomContribs = { "FO", false, false, false, true, false };
+  TheoreticalMoments th = TheoreticalMoments(
+    Configuration(
+      17.815, //be
+      0.023, //dBe
+      inputs,
+      1.77682, // mTau
+      3, // nc
+      3, //nf
+      5, // order
+      0.99743669, // RVANormalization
+      thMomContribs
+    ));
+
+  EXPECT_NEAR(
+      th.thMom(
+        3.0, Weight(1),
+        0.31927, 0.021, -0.1894, 0.16315, 5,
+        3.56, 0.58, -1.92, 4.07,
+        1.68, 1.41, 5.16, 2.13
+      ),
+      0.0, 1e-15
+  );
+}
+
 TEST_F(TheoreticalMomentsTest, Delta0) {
   const double astau = 0.31927;
   const int order = 5;
@@ -75,4 +108,3 @@ TEST_F(TheoreticalMomentsTest, Delta68) {
 TEST_F(TheoreticalMomentsTest, DeltaP) {
   EXPECT_NEAR(thMom_->deltaP(sTau_, *weight_), -2.63897241291510083e-3, 1e-13);
 }
-

@@ -36,11 +36,11 @@ double Chisquared::operator ()(
   const double &aGGinv,
   const double &rho,
   const double &c8,
-  const double &vKappa,
+  const double &vDelta,
   const double &vGamma,
   const double &vAlpha,
   const double &vBeta,
-  const double &aKappa,
+  const double &aDelta,
   const double &aGamma,
   const double &aAlpha,
   const double &aBeta
@@ -48,7 +48,7 @@ double Chisquared::operator ()(
 {
   return chi2(
     astau, aGGinv, rho, c8,
-    vKappa, vGamma, vAlpha, vBeta, aKappa, aGamma, aAlpha, aBeta
+    vDelta, vGamma, vAlpha, vBeta, aDelta, aGamma, aAlpha, aBeta
   );
 }
 

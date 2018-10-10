@@ -27,11 +27,11 @@ class Chisquared: Numerics {
     const double &aGGinv,
     const double &rho,
     const double &c8,
-    const double &vKappa,
+    const double &vDelta,
     const double &vGamma,
     const double &vAlpha,
     const double &vBeta,
-    const double &aKappa,
+    const double &aDelta,
     const double &aGamma,
     const double &aAlpha,
     const double &aBeta
