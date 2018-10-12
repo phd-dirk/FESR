@@ -1,5 +1,5 @@
 {
-  "version": 0.5,
+  "version": 0.6,
   "scheme": "FO",
   "tolerance": 1e-9,
   "parameters": {
@@ -10,6 +10,8 @@
     "mTau": 1.77682,
     "be": 17.815,
     "dBe": 0.023,
+    "vud": 0.97425,
+    "dVud": 0.00022,
     "input": [{
       "weight": 1,
       "s0s": [3.0, 2.0, 1.0]
