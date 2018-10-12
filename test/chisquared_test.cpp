@@ -24,16 +24,16 @@ TEST_F(ChisquaredTest, inverseCovarianceMatrix) {
 }
 
 
-TEST_F(ChisquaredTest, chi2) {
-  Chisquared chi = *chi_;
-  EXPECT_NEAR(
-    chi(
-      0.32307, 0.021, -0.30949, -0.030869,
-      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-    )
-    , 31701.49710037827, 1e-5
-  );
-}
+// TEST_F(ChisquaredTest, chi2) {
+//   Chisquared chi = *chi_;
+//   EXPECT_NEAR(
+//     chi(
+//       0.32307, 0.021, -0.30949, -0.030869,
+//       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+//     )
+//     , 31701.49710037827, 1e-5
+//   );
+// }
 
 // TEST_F(ChisquaredTest, chi2DV) {
 //   std::vector<Input> inputs = {{

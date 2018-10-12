@@ -103,9 +103,3 @@ TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
   EXPECT_NEAR(covMat(1, 3), 9.5344778533946512e-6, 1.e-15);
   EXPECT_NEAR(covMat(2, 2), 2.5799227204695101e-4, 1.e-15);
 }
-
-// TEST_F(ExperimentalMomentsTest, inverseCovarianceMatrix) {
-//   EXPECT_NEAR(expMom->inverseCovarianceMatrix(0, 0), 19290.123456790123, 1.e-12);
-//   EXPECT_NEAR(expMom->inverseCovarianceMatrix(1, 1), 4358547.9558245243, 1.e-2);
-//   EXPECT_NEAR(expMom->inverseCovarianceMatrix(6, 7), -5610057155.6616163, 1e1);
-// }

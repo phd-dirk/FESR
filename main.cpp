@@ -1,4 +1,4 @@
-#define BOOST_UBLAS_NDEBUG 1 // numerical issues with ublas matrix inverse
+// #define BOOST_UBLAS_NDEBUG 1 // numerical issues with ublas matrix inverse
 
 #include <chrono>
 #include <iostream>

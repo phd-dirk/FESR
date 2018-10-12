@@ -19,11 +19,11 @@ class DualityViolationTest : public ::testing::Test {
 //   );
 // }
 
-TEST_F(DualityViolationTest, cintDV) {
-  DualityViolations dv;
-  EXPECT_NEAR(dv.cintDVp_VA(1.0, Weight(1), 0.0, 1.0, 1.0, 1.0), -1.73494103008802, 1e-15);
-  EXPECT_NEAR(dv.cintDVp_VA(3.15709, Weight(1), -log(3), 3.7, 4.2, 7.1), -0.00572861, 1e-15);
-}
+// TEST_F(DualityViolationTest, cintDV) {
+//   DualityViolations dv;
+//   EXPECT_NEAR(dv.cintDVp_VA(1.0, Weight(1), 0.0, 1.0, 1.0, 1.0), -1.73494103008802, 1e-15);
+//   EXPECT_NEAR(dv.cintDVp_VA(3.15709, Weight(1), -log(3), 3.7, 4.2, 7.1), -0.00572861, 1e-15);
+// }
 
 TEST_F(DualityViolationTest, intDVp0) {
   DualityViolations dv;

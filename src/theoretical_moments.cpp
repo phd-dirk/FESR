@@ -35,3 +35,57 @@ double TheoreticalMoments::thMom(
 
   return pow(config_.vud_, 2)*config_.kSEW*rTauTh;
 }
+
+double TheoreticalMoments::cIntVpAD0FO(
+  const double &s0, const Weight &weight, const double &sTau,
+  const double &astau, const int &order
+) const {
+  return 2.*D0CIntFO(s0, weight, sTau, astau, order);
+}
+
+double TheoreticalMoments::cIntVpAD0CI(
+  const double &s0, const Weight &weight, const double &sTau,
+  const double &astau, const int &order
+) const {
+  return 2.*D0CIntCI(s0, weight, sTau, astau, order);
+}
+
+double TheoreticalMoments::cIntVpAD4FO(
+  const double &s0, const Weight &weight, const double &sTau,
+  const double &astau, const double &aGGinv
+) const {
+  return  D4CInt(s0, weight, sTau, astau, aGGinv, 1) + D4CInt(s0, weight, sTau, astau, aGGinv, -1);
+}
+
+double TheoreticalMoments::del0(
+  const double &s0, const Weight &weight,
+  const double &sTau, const double &astau, const int &order
+) const {
+  return (cIntVpAD0FO(s0, weight, sTau, astau, order)
+          - cIntVpAD0FO(s0, weight, sTau, astau, 0)
+  )/3.0;
+}
+double TheoreticalMoments::del4(
+  const double &s0, const Weight &weight, const double &sTau,
+  const double &astau, const double &aGGinv
+) const {
+  return cIntVpAD4FO(s0, weight, sTau, astau, aGGinv)/3.;
+}
+double TheoreticalMoments::del6(
+  const double &s0, const Weight &weight,
+  const double &rhoVpA
+) const {
+  return D68CInt(s0, weight, rhoVpA, 0.0)/3.;
+}
+double TheoreticalMoments::del8(
+  const double &s0, const Weight &weight,
+  const double &c8VpA
+) const {
+  return D68CInt(s0, weight, 0.0, c8VpA)/3.;
+}
+double TheoreticalMoments::del68(
+  const double &s0, const Weight &weight,
+  const double &rhoVpA, const double &c8VpA
+) const {
+  return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
+}
