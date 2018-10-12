@@ -11,12 +11,28 @@ class ExperimentalMomentsTest : public ::testing::Test {
 
 
   virtual void SetUp() {
-    Weight weight(1);
+    std::vector<Input> inputs = {
+      { Weight(1), { 3.0, 2.0, 1.0 } },
+      { Weight(6), { 2.8, 1.8 } },
+    };
+    ThMomContribs thMomContribs = { "FO", true, true, true, false, true };
 
     expMom = new ExperimentalMoments(
-        "/Users/knowledge/Developer/PhD/FESR/aleph.json",
-        Configuration("./test/configuration_test.json")
-                                     );
+      "/Users/knowledge/Developer/PhD/FESR/aleph.json",
+      Configuration(
+        17.815,
+        0.023,
+        0.97425,
+        0.00022,
+        inputs,
+        1.77682,
+        3,
+        3,
+        5,
+        0.99743669,
+        thMomContribs
+      )
+    );
   }
 
   virtual void TearDown() {
