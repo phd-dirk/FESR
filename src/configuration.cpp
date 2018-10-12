@@ -81,6 +81,9 @@ Configuration::Configuration(string configFilePath) {
 
   be_ = jsonConfig["parameters"]["be"];
   dBe_ = jsonConfig["parameters"]["dBe"];
+  vud_ = jsonConfig["parameters"]["vud"];
+  dVud_ = jsonConfig["parameters"]["dVud"];
+
 
   // add weights & s0s
   for(auto const& input : jsonConfig["parameters"]["input"]) {
@@ -100,6 +103,8 @@ Configuration::Configuration(string configFilePath) {
 Configuration::Configuration(
   const double &be,
   const double &dBe,
+  const double &vud,
+  const double &dVud,
   const std::vector<Input> &inputs,
   const double &mTau,
   const int &nc,
@@ -120,6 +125,8 @@ Configuration::Configuration(
 
   be_ = be;
   dBe_ = dBe;
+  vud_ = vud;
+  dVud_ = dVud;
 
   initializeBetaCoefficients(nc, nf);
   initializeAdlerCoefficients(nf);

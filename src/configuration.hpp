@@ -31,6 +31,8 @@ class Configuration {
   Configuration(
     const double &be,
     const double &dBe,
+    const double &vud,
+    const double &dVud,
     const std::vector<Input> &inputs,
     const double &mTau,
     const int &nc,
@@ -95,7 +97,7 @@ class Configuration {
   const double kF2P = 0.19e-3, kM2P = 1.8, kG2P = 0.21;
 
   // Various
-  const double kVud = 0.97425, kDVud = 0.00022; // Towner, Hardy 2009
+  double vud_, dVud_;
   const double kSEW = 1.0198, kDSEW = 0.0006; // EW radiative corr.
   double be_, dBe_; // HFAG
   const double kDFPi = 0.14e-3;

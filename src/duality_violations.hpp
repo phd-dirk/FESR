@@ -21,7 +21,7 @@ class DualityViolations : Numerics
   double cintDVp_VA(cDbl &s0, const Weight &w, cDbl &de, cDbl &ga, cDbl &al, cDbl &be) const
   {
     return w.poli().x0*intDVp0(s0, de, ga, al, be)
-        + w.poli().x1*intDVp0(s0, de, ga, al, be)
+        + w.poli().x1*intDVp1(s0, de, ga, al, be)
         + w.poli().x2*intDVp2(s0, de, ga, al, be)
         + w.poli().x3*intDVp3(s0, de, ga, al, be);
   }

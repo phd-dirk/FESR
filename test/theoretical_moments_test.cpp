@@ -65,10 +65,12 @@ TEST_F(TheoreticalMomentsTest, ThMomDV) {
     Configuration(
       17.815, //be
       0.023, //dBe
+      0.97425, // Vud
+      0.0022, // dVud
       inputs,
       1.77682, // mTau
       3, // nc
-      3, //nf
+      3, // nf
       5, // order
       0.99743669, // RVANormalization
       thMomContribs
@@ -76,12 +78,12 @@ TEST_F(TheoreticalMomentsTest, ThMomDV) {
 
   EXPECT_NEAR(
       th.thMom(
-        3.0, Weight(1),
+        3.15709, Weight(1),
         0.31927, 0.021, -0.1894, 0.16315, 5,
-        3.56, 0.58, -1.92, 4.07,
-        1.68, 1.41, 5.16, 2.13
+        0.0, 1.0, 1.0, 1.0,
+        0.0, 1.0, 1.0, 1.0
       ),
-      0.0, 1e-15
+      -1.749, 1e-15
   );
 }
 

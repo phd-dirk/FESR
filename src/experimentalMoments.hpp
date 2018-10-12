@@ -48,11 +48,11 @@ class ExperimentalMoments {
   }
 
   double kPiFac() const {
-    return 24.*pow(M_PI*config_.kVud*config_.kFPi, 2)*config_.kSEW;
+    return 24.*pow(M_PI*config_.vud_*config_.kFPi, 2)*config_.kSEW;
   }
   double kDPiFac() const {
     return kPiFac()*sqrt(
-      4.*pow(config_.kDVud/config_.kVud, 2)
+      4.*pow(config_.dVud_/config_.vud_, 2)
       + pow(config_.kDSEW/config_.kSEW, 2)
       + 4.*pow(config_.kDFPi/config_.kFPi, 2)
     );

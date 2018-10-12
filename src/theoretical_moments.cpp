@@ -33,5 +33,5 @@ double TheoreticalMoments::thMom(
   if ( config_.thMomContribs_.PionPole )
     rTauTh += 3.*deltaP(s0, w);
 
-  return pow(config_.kVud, 2)*config_.kSEW*rTauTh;
+  return pow(config_.vud_, 2)*config_.kSEW*rTauTh;
 }

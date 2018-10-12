@@ -1,5 +1,5 @@
 {
-  "version": 0.5,
+  "version": 0.6,
   "scheme": "FO",
   "tolerance": 1e-6,
   "parameters": {
@@ -7,9 +7,11 @@
     "nf": 3,
     "order": 5,
     "RVANormalization": 0.99743669,
-    "mTau": 1.77682,
+    "mTau": 1.77686,
     "be": 17.815,
     "dBe": 0.023,
+    "vud": 0.97420,
+    "dVud": 0.00021,
     "input": [{
       "weight": 1,
       "s0s": [
@@ -20,8 +22,8 @@
   },
   "variables": {
     "astau": {
-      "fixed": false,
-      "value": 0.31927,
+      "fixed": true,
+      "value": 0.3179,
       "stepSize": 0.002
     },
     "aGGInv": {
@@ -85,7 +87,7 @@
     "D2": false,
     "D4": true,
     "D68": true,
-    "DV": true,
+    "DV": false,
     "PionPole": true
   }
 }
