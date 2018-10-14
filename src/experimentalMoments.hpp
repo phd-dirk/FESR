@@ -56,10 +56,16 @@ class ExpMoms {
   double kPiFac() const;
   double kDPiFac() const;
 
-  Configuration config_;
   std::vector<Input> inputs_;
   double sTau_;
   double be_;
+  double dBe_;
+  double vud_;
+  double dVud_;
+  double SEW_;
+  double dSEW_;
+  double fPi_;
+  double dFPi_;
   double pionMinusMass_;
   int momCount_;
   const Data data_;

@@ -155,7 +155,7 @@ double AdlerFunction::D68CInt(
 
 double AdlerFunction::deltaP(const double &s0, const Weight &weight) const {
   double spi = pow(config_.kPionMinusMass, 2);
-  double pionPole = -4.*pow(config_.kFPi, 2)/s0*spi/(config_.sTau_ + 2.*spi)
+  double pionPole = -4.*pow(config_.fPi_, 2)/s0*spi/(config_.sTau_ + 2.*spi)
     *weight.wR(spi/s0).real();
   double xth = 9.*spi/s0;
 

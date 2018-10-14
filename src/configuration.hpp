@@ -57,7 +57,6 @@ class Configuration {
   double mTau_, sTau_;
   const double mumtau = 2.8e-3, mdmtau = 5.e-3, msmtau = 97e-3;
   const double kPionMinusMass = 0.13957018; // M_pi^-
-  const double kFPi = 92.21e-3; // PDG 2010
   const vec mq = {mumtau, mdmtau, msmtau};
   const double kTauMass = 1.77682; // PDF 2012
 
@@ -98,9 +97,10 @@ class Configuration {
 
   // Various
   double vud_, dVud_;
-  const double kSEW = 1.0198, kDSEW = 0.0006; // EW radiative corr.
+  const double SEW_ = 1.0198, dSEW_ = 0.0006; // EW radiative corr.
   double be_, dBe_; // HFAG
-  const double kDFPi = 0.14e-3;
+  const double fPi_ = 92.21e-3; // PDG 2010
+  const double dFPi_ = 0.14e-3;
   const double kDRTauVex = 0.0;
   const double deltaEW = 0.001;
 

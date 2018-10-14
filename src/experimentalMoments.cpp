@@ -2,12 +2,19 @@
 
 
 ExpMoms::ExpMoms(const string &filename, const Configuration &config)
-  :config_(config), data_(Data(filename, config.RVANormalization_)),
-  covMat(config_.momCount_, config_.momCount_)
+  :data_(Data(filename, config.RVANormalization_)),
+  covMat(config.momCount_, config.momCount_)
 {
   inputs_ = config.inputs_;
   sTau_ = config.sTau_;
   be_ = config.be_;
+  dBe_ = config.dBe_;
+  vud_ = config.vud_;
+  dVud_ = config.dVud_;
+  SEW_ = config.SEW_;
+  dSEW_ = config.dSEW_;
+  fPi_ = config.fPi_;
+  dFPi_ = config.dFPi_;
   pionMinusMass_ = config.kPionMinusMass;
 
   momCount_ = config.momCount_;
@@ -114,7 +121,7 @@ mat ExpMoms::errMat() const {
       }
     }
   }
-  errMat(data_.binCount, data_.binCount) = pow(config_.dBe_, 2);
+  errMat(data_.binCount, data_.binCount) = pow(dBe_, 2);
   errMat(data_.binCount+1, data_.binCount+1) = pow(kDPiFac(), 2);
   return errMat;
 }
@@ -159,12 +166,12 @@ void ExpMoms::initCovMat() {
 }
 
 double ExpMoms::kPiFac() const {
-  return 24.*pow(M_PI*config_.vud_*config_.kFPi, 2)*config_.kSEW;
+  return 24.*pow(M_PI*vud_*fPi_, 2)*SEW_;
 }
 double ExpMoms::kDPiFac() const {
   return kPiFac()*sqrt(
-    4.*pow(config_.dVud_/config_.vud_, 2)
-    + pow(config_.kDSEW/config_.kSEW, 2)
-    + 4.*pow(config_.kDFPi/config_.kFPi, 2)
+    4.*pow(dVud_/vud_, 2)
+    + pow(dSEW_/SEW_, 2)
+    + 4.*pow(dFPi_/fPi_, 2)
   );
 }
