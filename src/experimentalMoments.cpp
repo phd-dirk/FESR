@@ -82,7 +82,7 @@ double ExpMoms::expMom(const double &s0, const Weight &w) const {
   double mom = 0;
   for(int j = 0; j <= closestBinToS0(s0); j++) {
     mom += sTau_/s0/be_*data_.sfm2s[j]
-      *wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
+      *wRatio(s0, w, j);
   }
   return mom;
 }
@@ -98,20 +98,6 @@ int ExpMoms::closestBinToS0(const double &s0) const {
     i--;
 
   return i;
-}
-
-double ExpMoms::wRatio(
-  const double &s0, const Weight &w, const double &sbin,
-  const double &dsbin
-) const {
-  double binRight = sbin+dsbin/2.;
-  double binLeft = sbin-dsbin/2.;
-  return (
-    s0/sTau_*(
-      (w.wD(binLeft/s0) - w.wD(binRight/s0))/
-      (w.wTau(binLeft/sTau_) - w.wTau(binRight/sTau_))
-    )
-  ).real();
 }
 
 double ExpMoms::wRatio(
@@ -134,7 +120,7 @@ double ExpMoms::pionPoleMoment(
 {
   double axialMoment = 0;
   double pseudoMoment = 0;
-  axialMoment += kPiFac()/s0*w.wR(pow(pionMinusMass_, 2)/s0).real();
+  axialMoment += piFac()/s0*w.wR(pow(pionMinusMass_, 2)/s0).real();
   pseudoMoment += axialMoment*(-2.*pow(pionMinusMass_, 2)/(sTau_ + 2.*pow(pionMinusMass_, 2)));
   return axialMoment + pseudoMoment;
 }
@@ -156,7 +142,7 @@ mat ExpMoms::errMat() const {
     }
   }
   errMat(data_.binCount, data_.binCount) = pow(dBe_, 2);
-  errMat(data_.binCount+1, data_.binCount+1) = pow(kDPiFac(), 2);
+  errMat(data_.binCount+1, data_.binCount+1) = pow(dPiFac(), 2);
   return errMat;
 }
 
@@ -166,20 +152,22 @@ mat ExpMoms::jacMat() const {
   for(auto const &input: inputs_) {
     vec s0s = input.s0s;
     Weight w = input.weight;
+
     for(auto const &s0: s0s) {
-      for (int j = 0; j < data_.binCount+2; j++) {
+      for (int j = 0; j < data_.binCount; j++) {
         if (j <= closestBinToS0(s0)) {
-          jac(j, xMom) = sTau_/s0/be_*wRatio(s0, w, data_.sbins[j], data_.dsbins[j]);
+          jac(j, xMom) = sTau_/s0/be_*wRatio(s0, w, j);
         } else {
           jac(j, xMom) = 0.;
         }
-        jac(data_.binCount, xMom) = (
-          pionPoleMoment(s0, w) - expPlusPionMom(s0, w)
-        )/be_;
-        jac(data_.binCount+1, xMom) = pionPoleMoment(s0, w)/kPiFac();
       }
+      jac(data_.binCount, xMom) = (
+        pionPoleMoment(s0, w) - expPlusPionMom(s0, w)
+      )/be_;
+      jac(data_.binCount+1, xMom) = pionPoleMoment(s0, w)/piFac();
       xMom++;
     }
+
   }
   return jac;
 }
@@ -199,11 +187,11 @@ void ExpMoms::initCovMat() {
   }
 }
 
-double ExpMoms::kPiFac() const {
+double ExpMoms::piFac() const {
   return 24.*pow(M_PI*vud_*fPi_, 2)*SEW_;
 }
-double ExpMoms::kDPiFac() const {
-  return kPiFac()*sqrt(
+double ExpMoms::dPiFac() const {
+  return piFac()*sqrt(
     4.*pow(dVud_/vud_, 2)
     + pow(dSEW_/SEW_, 2)
     + 4.*pow(dFPi_/fPi_, 2)

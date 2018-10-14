@@ -48,8 +48,8 @@ class ExperimentalMomentsTest : public ::testing::Test {
       3.1572314596000002, // sTau
       17.815, // be
       0.023, // dBe
-      0.97425, // Vud
-      0.00022, // dVud
+      0.97420, // Vud
+      0.00021, // dVud
       1.0198, // SEW
       0.0006, // dSEW
       92.21e-3, // fPi
@@ -88,13 +88,6 @@ TEST_F(ExperimentalMomentsTest, weightRatios) {
   );
 }
 
-// TEST_F(ExperimentalMomentsTest, ExperimentalMoments) {
-//   vector<double> expMoments = expMom->getExperimentalMoments();
-//   EXPECT_NEAR(expMoments[0], 2.8673485909014409, 1.e-15);
-//   EXPECT_NEAR(expMoments[3], 2.7726476698371396, 1.e-15);
-//   EXPECT_NEAR(expMoments[7], 2.6421766712865162, 1.e-14);
-// }
-
 TEST_F(ExperimentalMomentsTest, expMom) {
   vec expMoms = (*expMom)();
   EXPECT_NEAR(expMoms[0], 3.4801214322769858, 1.e-14);
@@ -104,8 +97,11 @@ TEST_F(ExperimentalMomentsTest, expMom) {
   EXPECT_NEAR(expMoms[4], 0.54867716084362927, 1.e-14);
 }
 
-TEST_F(ExperimentalMomentsTest, kPiFac) {
-  EXPECT_NEAR(expMom->kDPiFac(), 6.0937786116003652e-3  ,1.e-14);
+TEST_F(ExperimentalMomentsTest, piFac) {
+  EXPECT_NEAR(expMom->dPiFac(), 6.0937786116003652e-3, 1.e-14);
+
+  EXPECT_NEAR(expMom2->piFac(),  1.9492982336116860, 1.e-14);
+  EXPECT_NEAR(expMom2->dPiFac(), 6.0875061675025877E-003, 1.e-14);
 }
 
 TEST_F(ExperimentalMomentsTest, errorMatrix) {
@@ -117,6 +113,13 @@ TEST_F(ExperimentalMomentsTest, errorMatrix) {
 
   mat errMat2 = expMom2->errMat();
   EXPECT_NEAR(errMat(0, 0), 2.2154942818661503E-007, 1.e-15);
+  double errMat2Sum = 0;
+  for(int i = 0; i < errMat2.size1(); i++) {
+    for(int j = 0; j < errMat2.size2(); j++) {
+      errMat2Sum += errMat2(i, j);
+    }
+  }
+  EXPECT_NEAR(errMat2Sum, 3.0084246919183249E-002, 1.e-13);
 }
 
 TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
@@ -127,8 +130,18 @@ TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
   EXPECT_NEAR(jacMat(34, 3), 1.3217232991932832e-2, 1.e-14);
   EXPECT_NEAR(jacMat(21, 4), 1.792620664346542e-2, 1.e-14);
 
-  // mat jacMat2 = expMom2->jacMat();
-  // EXPECT_NEAR(jacMat(0, 0), 5.6132472635419588E-002, 1.e-14);
+  mat jacMat2 = expMom2->jacMat();
+  EXPECT_NEAR(jacMat2(0, 0), 5.6132472635419588E-002, 1.e-14);
+  EXPECT_NEAR(jacMat2(27, 4), 6.5891460929989584E-002, 1.e-14);
+  EXPECT_NEAR(jacMat2(80, 7), -0.14803522840184405, 1.e-14);
+  EXPECT_NEAR(jacMat2(81, 3), 0.37986349105621087, 1.e-14);
+  double jacMat2Sum = 0;
+  for(int i = 0; i < jacMat2.size1(); i++) {
+    for(int j = 0; j < jacMat2.size2(); j++) {
+      jacMat2Sum += jacMat2(i, j);
+    }
+  }
+  EXPECT_NEAR(jacMat2Sum, 39.389541422983221, 1.e-13);
 }
 
 TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
@@ -138,7 +151,14 @@ TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
   EXPECT_NEAR(covMat(1, 3), 9.5344778533946512e-6, 1.e-15);
   EXPECT_NEAR(covMat(2, 2), 2.5799227204695101e-4, 1.e-15);
 
-  // mat covMat2 = expMom2.getCovMat();
-  // EXPECT_NEAR(covMat2(0, 0), 1.1028649814955913e-4, 1.e-11);
-  // EXPECT_NEAR(covMat2(1, 1), 8.4560120194554373e-5, 1.e-11);
+  mat covMat2 = expMom2->getCovMat();
+  EXPECT_NEAR(covMat2(0, 0), 1.1028649814955913e-4, 1.e-15);
+  EXPECT_NEAR(covMat2(2, 6), 7.2254964242188837E-005, 1.e-15);
+  double covMat2Sum = 0;
+  for(int i = 0; i < covMat2.size1(); i++) {
+    for(int j = 0; j < covMat2.size2(); j++) {
+      covMat2Sum += covMat2(i, j);
+    }
+  }
+  EXPECT_NEAR(covMat2Sum, 6.3547447523870154E-003, 1.e-14);
 }

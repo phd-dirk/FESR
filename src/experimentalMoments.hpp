@@ -48,10 +48,6 @@ class ExpMoms {
 
   // returns weight ratio
   double wRatio(
-    const double &s0, const Weight &w, const double &sbin,
-    const double &dsbin
-  ) const;
-  double wRatio(
     const double &s0, const Weight &w, const int &bin
   ) const;
 
@@ -64,8 +60,8 @@ class ExpMoms {
   // returns the covariance matrix
   void initCovMat();
 
-  double kPiFac() const;
-  double kDPiFac() const;
+  double piFac() const;
+  double dPiFac() const;
 
   std::vector<Input> inputs_;
   double sTau_;
