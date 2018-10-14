@@ -73,7 +73,7 @@ private:
   mat invCovMat();
 
   const Configuration config_;
-  const ExperimentalMoments expMom_;
+  const ExpMoms expMom_;
 };
 
 #endif

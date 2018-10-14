@@ -4,7 +4,7 @@
 // Public
 Chisquared::Chisquared(Configuration config)
   :config_(config),
-   expMom_(ExperimentalMoments("/Users/knowledge/Developer/PhD/FESR/aleph.json", config))
+   expMom_(ExpMoms("/Users/knowledge/Developer/PhD/FESR/aleph.json", config))
 {
   invCovMat_ = invCovMat();
 }

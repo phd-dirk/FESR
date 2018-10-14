@@ -40,7 +40,7 @@ double TheoreticalMoments::cIntVpAD0FO(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const int &order
 ) const {
-  return 2.*D0CIntFO(s0, weight, sTau, astau, order);
+  return 2.0*D0CIntFO(s0, weight, sTau, astau, order);
 }
 
 double TheoreticalMoments::cIntVpAD0CI(

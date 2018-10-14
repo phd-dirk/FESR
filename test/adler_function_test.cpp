@@ -40,10 +40,18 @@ TEST_F(AdlerFunctionTest, D0) {
 
 TEST_F(AdlerFunctionTest, D0CInt) {
   //D0CIntFO(s0, weight, sTau, aStau, order)
-  EXPECT_NEAR(adler->D0CIntFO(3.0, Weight(1), 3.1570893124000001, 0.31927, 5), 1.8130325533146323, config->tolerance);
-  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(1), 3.1570893124000001, 0.31927, 5), 1.8398156114670496 , config->tolerance);
-  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(6), 3.1570893124000001, 0.31927, 5), 0.28724759227498259, config->tolerance);
-  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(6), 3.1570893124000001, 0.29, 5), 0.28350497970822786, config->tolerance);
+  EXPECT_NEAR(
+    adler->D0CIntFO(
+      3.0, Weight(1), 3.1570893124000001, 0.31927, 5
+    ), 1.8130325533146323, 1e-14
+  );
+  EXPECT_NEAR(
+    adler->D0CIntFO(
+      2.6, Weight(1), 3.1570893124000001, 0.31927, 5
+    ), 1.8398156114670496 , 1e-14
+  );
+  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(6), 3.1570893124000001, 0.31927, 5), 0.28724759227498259, 1e-14);
+  EXPECT_NEAR(adler->D0CIntFO(2.6, Weight(6), 3.1570893124000001, 0.29, 5), 0.28350497970822786, 1e-14);
 
   // CIPT
   EXPECT_NEAR(adler->D0CIntCI(2.6, Weight(1), 3.1570893124000001, 0.31927, 1), 1.7203914169060759, 1e-13);

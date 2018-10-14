@@ -7,8 +7,7 @@ using std::vector;
 
 class ExperimentalMomentsTest : public ::testing::Test {
  protected:
-  ExperimentalMoments *expMom;
-
+  ExpMoms *expMom;
 
   virtual void SetUp() {
     std::vector<Input> inputs = {
@@ -17,7 +16,7 @@ class ExperimentalMomentsTest : public ::testing::Test {
     };
     ThMomContribs thMomContribs = { "FO", true, true, true, false, true };
 
-    expMom = new ExperimentalMoments(
+    expMom = new ExpMoms(
       "/Users/knowledge/Developer/PhD/FESR/aleph.json",
       Configuration(
         17.815,
@@ -102,4 +101,33 @@ TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
   EXPECT_NEAR(covMat(4, 2), 1.9349658295540526e-5, 1.e-15);
   EXPECT_NEAR(covMat(1, 3), 9.5344778533946512e-6, 1.e-15);
   EXPECT_NEAR(covMat(2, 2), 2.5799227204695101e-4, 1.e-15);
+
+  std::vector<Input> inputs = {{
+      Weight(1),
+      {
+        3.15723, 3.0, 2.800, 2.600, 2.400,
+        2.300, 2.200, 2.100, 2.000
+      }
+    }
+  };
+  ThMomContribs thMomContribs = { "FO", true, true, true, false, true };
+  ExpMoms expMom2 = ExpMoms(
+    "/Users/knowledge/Developer/PhD/FESR/aleph.json",
+    Configuration(
+      17.815,
+      0.023,
+      0.97425,
+      0.00022,
+      inputs,
+      1.77682,
+      3,
+      3,
+      5,
+      0.99743669,
+      thMomContribs
+    )
+  );
+  mat covMat2 = expMom2.getCovMat();
+  EXPECT_NEAR(covMat2(0, 0), 5.1839999999999998e-5, 1.e-15);
+  EXPECT_NEAR(covMat2(0, 1), 0.0, 1.e-15);
 }

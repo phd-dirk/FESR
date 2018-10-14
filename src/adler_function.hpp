@@ -21,10 +21,6 @@ public:
     const complex<double> &s, const cmplx &mu2, const double &sTau,
     const double &astau, const double &order
   ) const;
-  complex<double> D0CI(
-    const complex<double> &s, const cmplx &mu2, const double &sTau,
-    const double &astau, const double &order
-  ) const;
 
   // Contour integral for D_V+A(D=0) in FOPT
   double D0CIntFO(
