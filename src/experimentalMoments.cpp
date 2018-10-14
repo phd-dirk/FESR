@@ -2,8 +2,7 @@
 
 
 ExpMoms::ExpMoms(const string &filename, const Configuration &config)
-  :data_(Data(filename, config.RVANormalization_)),
-  covMat(config.momCount_, config.momCount_)
+  :data_(Data(filename, config.RVANormalization_))
 {
   inputs_ = config.inputs_;
   sTau_ = config.sTau_;
@@ -16,32 +15,54 @@ ExpMoms::ExpMoms(const string &filename, const Configuration &config)
   fPi_ = config.fPi_;
   dFPi_ = config.dFPi_;
   pionMinusMass_ = config.kPionMinusMass;
-
   momCount_ = config.momCount_;
 
   // cache experimental moments
   initExpMoms();
 
   // cache covariance matrix
+  covMat = mat(config.momCount_, config.momCount_);
+  initCovMat();
+};
+ExpMoms::ExpMoms(
+  const string &filename,
+  const std::vector<Input> &inputs,
+  const double &sTau,
+  const double &be,
+  const double &dBe,
+  const double &vud,
+  const double &dVud,
+  const double &SEW,
+  const double &dSEW,
+  const double &fPi,
+  const double &dFPi,
+  const double &pionMinusMass,
+  const double &RVANormalization
+) : data_(Data(filename, RVANormalization)) {
+  inputs_ = inputs;
+  sTau_ = sTau;
+  be_ = be;
+  dBe_ = dBe;
+  vud_ = vud;
+  dVud_ = dVud;
+  SEW_ = SEW;
+  dSEW_ = dSEW;
+  fPi_ = fPi;
+  dFPi_ = dFPi;
+  pionMinusMass_ = pionMinusMass;
+
+  momCount_ = 0;
+  for(const auto &input : inputs) {
+    momCount_ += input.s0s.size();
+  }
+
+  // cache experimental moments
+  initExpMoms();
+
+  // cache covariance matrix
+  covMat = mat(momCount_, momCount_);
   initCovMat();
 }
-// ExpMoms::ExpMoms(
-//   const string &filename,
-//   const std::vector<Input> &inputs,
-//   const double &sTau,
-//   const double &be,
-//   const double &RVANormalization
-// ) : data_(Data(filename, RVANormalization)) {
-//   inputs_ = inputs;
-//   sTau_ = sTau;
-//   be_ = be;
-
-//   // cache experimental moments
-//   initExpMoms();
-
-//   // cache covariance matrix
-//   initCovMat();
-// }
 
 vec ExpMoms::operator () () const {
   return expMoms;
@@ -85,6 +106,19 @@ double ExpMoms::wRatio(
 ) const {
   double binRight = sbin+dsbin/2.;
   double binLeft = sbin-dsbin/2.;
+  return (
+    s0/sTau_*(
+      (w.wD(binLeft/s0) - w.wD(binRight/s0))/
+      (w.wTau(binLeft/sTau_) - w.wTau(binRight/sTau_))
+    )
+  ).real();
+}
+
+double ExpMoms::wRatio(
+  const double &s0, const Weight &w, const int &bin
+) const {
+  double binRight = data_.sbins[bin]+data_.dsbins[bin]/2.;
+  double binLeft = data_.sbins[bin]-data_.dsbins[bin]/2.;
   return (
     s0/sTau_*(
       (w.wD(binLeft/s0) - w.wD(binRight/s0))/
@@ -153,8 +187,8 @@ mat ExpMoms::jacMat() const {
 void ExpMoms::initCovMat() {
   mat jac = jacMat();
   mat err = errMat();
-  for(uint i = 0; i < momCount_; i++) {
-    for(uint j = 0; j < momCount_; j++) {
+  for(int i = 0; i < momCount_; i++) {
+    for(int j = 0; j < momCount_; j++) {
       covMat(i, j) = 0.0;
       for (int k = 0; k < data_.binCount+2; k++) {
         for (int l = 0; l < data_.binCount+2; l++) {

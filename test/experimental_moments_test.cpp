@@ -8,6 +8,7 @@ using std::vector;
 class ExperimentalMomentsTest : public ::testing::Test {
  protected:
   ExpMoms *expMom;
+  ExpMoms *expMom2;
 
   virtual void SetUp() {
     std::vector<Input> inputs = {
@@ -32,10 +33,35 @@ class ExperimentalMomentsTest : public ::testing::Test {
         thMomContribs
       )
     );
+
+    std::vector<Input> inputs2 = {{
+        Weight(1),
+        {
+          3.1572314596000002, 3.0, 2.800, 2.600, 2.400,
+          2.300, 2.200, 2.100, 2.000
+        }
+      }
+    };
+    expMom2 = new ExpMoms(
+      "/Users/knowledge/Developer/PhD/FESR/aleph.json",
+      inputs2,
+      3.1572314596000002, // sTau
+      17.815, // be
+      0.023, // dBe
+      0.97425, // Vud
+      0.00022, // dVud
+      1.0198, // SEW
+      0.0006, // dSEW
+      92.21e-3, // fPi
+      0.14e-3, // dFPi
+      0.13957018, // pionMinusMass
+      0.99743669 // RVANormalization
+    );
   }
 
   virtual void TearDown() {
     delete expMom;
+    delete expMom2;
   }
 };
 
@@ -50,13 +76,17 @@ TEST_F(ExperimentalMomentsTest, closestBinToS0) {
   EXPECT_EQ(expMom->closestBinToS0(2.1), 71); // Matthias 72
 }
 
-// TEST_F(ExperimentalMomentsTest, weightRatios) {
-//   matrix<double> weightRatios = expMom->weightRatios;
-//   EXPECT_NEAR(weightRatios(0, 0), 1., 1.e-15);
-//   EXPECT_NEAR(weightRatios(1, 1), 0.99968000816184477, 1.e-14);
-//   EXPECT_NEAR(weightRatios(2, 2), 0.99851573355014112, 1.e-14);
-//   EXPECT_NEAR(weightRatios(1, 0), 0.99994042624850787, 1.e-14);
-// }
+TEST_F(ExperimentalMomentsTest, weightRatios) {
+  EXPECT_NEAR(
+    expMom2->wRatio(3.1572314596000002, Weight(1), 0), 1., 1.e-15
+  );
+  EXPECT_NEAR(
+    expMom2->wRatio(3.0, Weight(1), 53), 0.93963444985821865, 1.e-14
+  );
+  EXPECT_NEAR(
+    expMom2->wRatio(2.0, Weight(1), 20), 0.87108121877135736, 1.e-14
+  );
+}
 
 // TEST_F(ExperimentalMomentsTest, ExperimentalMoments) {
 //   vector<double> expMoments = expMom->getExperimentalMoments();
@@ -84,6 +114,9 @@ TEST_F(ExperimentalMomentsTest, errorMatrix) {
   EXPECT_NEAR(errMat(21, 48), -1.6735241745083317e-5, 1.e-15);
   EXPECT_NEAR(errMat(80, 80), 5.28999999999999999e-4, 1.e-15);
   EXPECT_NEAR(errMat(81, 81), 3.7134137767198075e-5, 1.e-15);
+
+  mat errMat2 = expMom2->errMat();
+  EXPECT_NEAR(errMat(0, 0), 2.2154942818661503E-007, 1.e-15);
 }
 
 TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
@@ -93,6 +126,9 @@ TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
   EXPECT_NEAR(jacMat(50, 2), 0.0, 1.e-14);
   EXPECT_NEAR(jacMat(34, 3), 1.3217232991932832e-2, 1.e-14);
   EXPECT_NEAR(jacMat(21, 4), 1.792620664346542e-2, 1.e-14);
+
+  // mat jacMat2 = expMom2->jacMat();
+  // EXPECT_NEAR(jacMat(0, 0), 5.6132472635419588E-002, 1.e-14);
 }
 
 TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
@@ -102,32 +138,7 @@ TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
   EXPECT_NEAR(covMat(1, 3), 9.5344778533946512e-6, 1.e-15);
   EXPECT_NEAR(covMat(2, 2), 2.5799227204695101e-4, 1.e-15);
 
-  std::vector<Input> inputs = {{
-      Weight(1),
-      {
-        3.15723, 3.0, 2.800, 2.600, 2.400,
-        2.300, 2.200, 2.100, 2.000
-      }
-    }
-  };
-  ThMomContribs thMomContribs = { "FO", true, true, true, false, true };
-  ExpMoms expMom2 = ExpMoms(
-    "/Users/knowledge/Developer/PhD/FESR/aleph.json",
-    Configuration(
-      17.815,
-      0.023,
-      0.97425,
-      0.00022,
-      inputs,
-      1.77682,
-      3,
-      3,
-      5,
-      0.99743669,
-      thMomContribs
-    )
-  );
-  mat covMat2 = expMom2.getCovMat();
-  EXPECT_NEAR(covMat2(0, 0), 5.1839999999999998e-5, 1.e-15);
-  EXPECT_NEAR(covMat2(0, 1), 0.0, 1.e-15);
+  // mat covMat2 = expMom2.getCovMat();
+  // EXPECT_NEAR(covMat2(0, 0), 1.1028649814955913e-4, 1.e-11);
+  // EXPECT_NEAR(covMat2(1, 1), 8.4560120194554373e-5, 1.e-11);
 }

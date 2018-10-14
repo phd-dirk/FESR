@@ -18,6 +18,14 @@ class ExpMoms {
     const std::vector<Input> &inputs,
     const double &sTau,
     const double &be,
+    const double &dBe,
+    const double &vud,
+    const double &dVud,
+    const double &SEW,
+    const double &dSEW,
+    const double &fPi,
+    const double &dFPi,
+    const double &pionMinusMass,
     const double &RVANormalization
   );
 
@@ -42,6 +50,9 @@ class ExpMoms {
   double wRatio(
     const double &s0, const Weight &w, const double &sbin,
     const double &dsbin
+  ) const;
+  double wRatio(
+    const double &s0, const Weight &w, const int &bin
   ) const;
 
   // returns the error matrix
