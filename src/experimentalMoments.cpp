@@ -1,4 +1,5 @@
 #include "./experimentalMoments.hpp"
+#include "./numerics.hpp"
 
 
 ExpMoms::ExpMoms(const string &filename, const Configuration &config)
@@ -21,9 +22,12 @@ ExpMoms::ExpMoms(const string &filename, const Configuration &config)
   initExpMoms();
 
   // cache covariance matrix
-  covMat = mat(config.momCount_, config.momCount_);
+  covMat_ = mat(config.momCount_, config.momCount_);
+  invCovMat_ = mat(momCount_, momCount_);
   initCovMat();
+  initInvCovMat(covMat_);
 };
+
 ExpMoms::ExpMoms(
   const string &filename,
   const std::vector<Input> &inputs,
@@ -60,8 +64,10 @@ ExpMoms::ExpMoms(
   initExpMoms();
 
   // cache covariance matrix
-  covMat = mat(momCount_, momCount_);
+  covMat_ = mat(momCount_, momCount_);
+  invCovMat_ = mat(momCount_, momCount_);
   initCovMat();
+  initInvCovMat(covMat_);
 }
 
 vec ExpMoms::operator () () const {
@@ -177,14 +183,44 @@ void ExpMoms::initCovMat() {
   mat err = errMat();
   for(int i = 0; i < momCount_; i++) {
     for(int j = 0; j < momCount_; j++) {
-      covMat(i, j) = 0.0;
+      covMat_(i, j) = 0.0;
       for (int k = 0; k < data_.binCount+2; k++) {
         for (int l = 0; l < data_.binCount+2; l++) {
-          covMat(i, j) += jac(k, i)*err(k, l)*jac(l, j);
+          covMat_(i, j) += jac(k, i)*err(k, l)*jac(l, j);
         }
       }
     }
   }
+}
+
+void ExpMoms::initInvCovMat(mat covMat) {
+  // Remove correlations with R_tau,V+A in Aleph fit
+  for (int i = 1; i < momCount_; i++) {
+    covMat(0, i) = 0.;
+    covMat(i, 0) = 0.;
+  }
+
+  // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
+  covMat(0, 0) = pow(0.0072, 2);
+
+  double sum = 0.0;
+  std::cout << "mat" << std::endl << std::setprecision(15);
+  for(int i = 0; i < covMat.size1(); i++) {
+    for(int j = 0; j < covMat.size2(); j++) {
+      sum += covMat(i, j);
+    }
+  }
+  std::cout << "sum : " << sum << std::endl;
+   Numerics::invertMatrix(covMat, invCovMat_);
+  // Numerics::invMat(covMat, invCovMat_);
+   mat test = prod(covMat, invCovMat_);
+   std::cout << "mat" << std::endl << std::setprecision(15);
+   for(int i = 0; i < test.size1(); i++) {
+     for(int j = 0; j < test.size2(); j++) {
+       std::cout << test(i,j) << "\t";
+     }
+     std::cout << std::endl;
+   }
 }
 
 double ExpMoms::piFac() const {

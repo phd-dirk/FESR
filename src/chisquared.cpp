@@ -6,7 +6,6 @@ Chisquared::Chisquared(Configuration config)
   :config_(config),
    expMom_(ExpMoms("/Users/knowledge/Developer/PhD/FESR/aleph.json", config))
 {
-  invCovMat_ = invCovMat();
 }
 
 double Chisquared::operator() ( const double *xx) const {
@@ -82,7 +81,7 @@ double Chisquared::chi2(
 
   for(uint k = 0; k < config_.momCount_; k++) {
     for(uint l = 0; l < config_.momCount_; l++) {
-      chi += momDiff[k] * invCovMat_(k, l) * momDiff[l];
+      chi += momDiff[k] * expMom_.invCovMat_(k, l) * momDiff[l];
     }
   }
   return chi;
@@ -126,22 +125,4 @@ vec Chisquared::calcThMoms(
   }
 
   return thMoms;
-}
-
-mat Chisquared::invCovMat() {
-  mat covMat = expMom_.getCovMat();
-  const int momCount = covMat.size1();
-  mat invCovMat(momCount, momCount);
-
-  // Remove correlations with R_tau,V+A in Aleph fit
-  for (uint i = 1; i < momCount; i++) {
-    covMat(0, i) = 0.;
-    covMat(i, 0) = 0.;
-  }
-
-  // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
-  covMat(0, 0) = pow(0.0072, 2);
-
-  Numerics::invertMatrix(covMat, invCovMat);
-  return invCovMat;
 }

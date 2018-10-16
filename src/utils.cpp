@@ -196,4 +196,3 @@ int utils::momCount(std::vector<Input> inputs)
   }
   return momCount;
 }
-

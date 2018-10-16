@@ -1,7 +1,7 @@
 #ifndef SRC_NUMERICS_H
 #define SRC_NUMERICS_H
 
-#include "types.hpp"
+#include "./types.hpp"
 #include <gsl/gsl_integration.h>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
@@ -21,7 +21,6 @@ using std::function;
 using std::complex;
 using std::cos;
 using std::abs;
-
 
 
 class Numerics {
@@ -224,28 +223,14 @@ class Numerics {
   }
 
   // from https://gist.github.com/lilac/2464434
-  template<class T>
-  static bool invertMatrix (const ublas::matrix<T>& input, ublas::matrix<T>& inverse) {
-    using namespace boost::numeric::ublas;
-    typedef permutation_matrix<std::size_t> pmatrix;
-    // create a working copy of the input
-    matrix<T> A(input);
-    // create a permutation matrix for the LU-factorization
-    pmatrix pm(A.size1());
-
-    // perform LU-factorization
-    int res = lu_factorize(A,pm);
-    if( res != 0 ) return false;
-
-    // create identity matrix of "inverse"
-    inverse.assign(ublas::identity_matrix<T>(A.size1()));
-
-    // backsubstitute to get the inverse
-    lu_substitute(A, pm, inverse);
-
-    return true;
-  }
-
+  static bool invertMatrix (
+    const ublas::matrix<double>& input,
+    ublas::matrix<double>& inverse
+  );
+  static bool invMat(
+    const ublas::matrix<double> &matrix,
+    ublas::matrix<double> &inverse
+  );
 
 
  private:

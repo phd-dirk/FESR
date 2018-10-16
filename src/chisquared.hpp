@@ -5,7 +5,6 @@
 #include "./configuration.hpp"
 #include "./experimentalMoments.hpp"
 #include "./theoretical_moments.hpp"
-#include "./numerics.hpp"
 #include "./weights.hpp"
 #include "./utils.hpp"
 #include <nlohmann/json.hpp>
@@ -17,7 +16,7 @@
 
 using std::function;
 
-class Chisquared: Numerics {
+class Chisquared {
  public:
   Chisquared(Configuration config);
 
@@ -37,7 +36,6 @@ class Chisquared: Numerics {
     const double &aBeta
   ) const;
 
-  mat invCovMat_;
 private:
   double chi2(
     const double &astau,
@@ -69,8 +67,6 @@ private:
     const double &alA,
     const double &beA
   ) const;
-
-  mat invCovMat();
 
   const Configuration config_;
   const ExpMoms expMom_;

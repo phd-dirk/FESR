@@ -31,10 +31,6 @@ class ExpMoms {
 
   vec operator ()() const;
 
-  mat getCovMat () const {
-    return covMat;
-  }
-
   void initExpMoms();
 
   // return the experimental spectral moment
@@ -59,6 +55,7 @@ class ExpMoms {
 
   // returns the covariance matrix
   void initCovMat();
+  void initInvCovMat(mat covMat);
 
   double piFac() const;
   double dPiFac() const;
@@ -77,7 +74,8 @@ class ExpMoms {
   int momCount_;
   const Data data_;
   vec expMoms;
-  mat covMat;
+  mat covMat_;
+  mat invCovMat_;
 }; // END ExpMoms
 
 #endif

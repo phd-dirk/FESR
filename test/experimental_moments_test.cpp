@@ -145,13 +145,13 @@ TEST_F(ExperimentalMomentsTest, jacobianMatrix) {
 }
 
 TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
-  mat covMat = expMom->getCovMat();
+  mat covMat = expMom->covMat_;
   EXPECT_NEAR(covMat(0, 0), 8.4576517915615828e-5, 1.e-15);
   EXPECT_NEAR(covMat(4, 2), 1.9349658295540526e-5, 1.e-15);
   EXPECT_NEAR(covMat(1, 3), 9.5344778533946512e-6, 1.e-15);
   EXPECT_NEAR(covMat(2, 2), 2.5799227204695101e-4, 1.e-15);
 
-  mat covMat2 = expMom2->getCovMat();
+  mat covMat2 = expMom2->covMat_;
   EXPECT_NEAR(covMat2(0, 0), 1.1028649814955913e-4, 1.e-15);
   EXPECT_NEAR(covMat2(2, 6), 7.2254964242188837E-005, 1.e-15);
   double covMat2Sum = 0;
@@ -161,4 +161,19 @@ TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
     }
   }
   EXPECT_NEAR(covMat2Sum, 6.3547447523870154E-003, 1.e-14);
+}
+
+TEST_F(ExperimentalMomentsTest, inverseCovarianceMatrix) {
+  mat invCov = expMom2->invCovMat_;
+  std::cout << std::setprecision(15);
+
+  for(int i = 0; i < 9; i++) {
+    for(int j = 0; j < 9; j++) {
+      std::cout << invCov(i,j) << "\t";
+    }
+    std::cout << std::endl;
+  }
+  EXPECT_NEAR(invCov(0, 0), 19290.123456790123 , 1e-15);
+  EXPECT_NEAR(invCov(1, 1), 4380565.4450900145 , 1e-15);
+  // EXPECT_NEAR(invCov(4, 4), 2392765.2394170612, 1e-6);
 }

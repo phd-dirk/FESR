@@ -123,10 +123,10 @@ TEST_F(TheoreticalMomentsTest, Delta0) {
   EXPECT_NEAR(thMom_->del0(sTau_, Weight(1), sTau_, astau, order), 0.20298958142552484, 1e-14);
 }
 
-TEST_F(TheoreticalMomentsTest, Delta4) {
-  EXPECT_NEAR(thMom_->del4(sTau_, Weight(1), sTau_, astau_, aGGinv_), 7.93483938348380651e-4, 1.e-14);
-  EXPECT_NEAR(thMom_->del4(3.0, Weight(1), 3.0,  0.32307, 0.021), 2.41777114013837419e-4, 1.e-14);
-}
+// TEST_F(TheoreticalMomentsTest, Delta4) {
+//   EXPECT_NEAR(thMom_->del4(sTau_, Weight(1), sTau_, astau_, aGGinv_), 7.93483938348380651e-4, 1.e-14);
+//   EXPECT_NEAR(thMom_->del4(3.0, Weight(1), 3.0,  0.32307, 0.021), 2.41777114013837419e-4, 1.e-14);
+// }
 
 TEST_F(TheoreticalMomentsTest, Delta68) {
   const double rho = -0.1893979224795759;
