@@ -37,6 +37,7 @@ using ROOT::Math::Functor;
 // UBLAS
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <boost/spirit/include/karma.hpp>
 using ublas::matrix;
 using ublas::prod;
 
@@ -54,11 +55,7 @@ int main (int argc, char* argv[]) {
     const Configuration config(configFilePath);
     const Chisquared chisquared(config);
 
-    // const DualityViolations dv;
-    // cout << "lol" << endl;
-    // cout << dv.moment(1., Weight(1), 3.0, 0.0018963380072094527, -2.2, 3.9) << endl;
-
-    // MINUIT
+    MINUIT
     Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
     // set tolerances

@@ -211,16 +211,8 @@ void ExpMoms::initInvCovMat(mat covMat) {
     }
   }
   std::cout << "sum : " << sum << std::endl;
-   Numerics::invertMatrix(covMat, invCovMat_);
-  // Numerics::invMat(covMat, invCovMat_);
-   mat test = prod(covMat, invCovMat_);
-   std::cout << "mat" << std::endl << std::setprecision(15);
-   for(int i = 0; i < test.size1(); i++) {
-     for(int j = 0; j < test.size2(); j++) {
-       std::cout << test(i,j) << "\t";
-     }
-     std::cout << std::endl;
-   }
+   // Numerics::invertMatrix(covMat, invCovMat_);
+  Numerics::invMat(covMat, invCovMat_);
 }
 
 double ExpMoms::piFac() const {

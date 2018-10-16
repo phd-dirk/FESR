@@ -9,12 +9,14 @@
 #include <boost/numeric/ublas/triangular.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <boost/spirit/include/karma.hpp>
 #include <functional>
 #include <complex>
 #include <iostream>
 #include <cmath>
 
 namespace ublas = boost::numeric::ublas;
+namespace karma = boost::spirit::karma;
 using std::cout;
 using std::endl;
 using std::function;
