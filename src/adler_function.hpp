@@ -18,6 +18,21 @@ using boost::numeric::ublas::matrix;
 class AdlerFunction : Numerics {
 public:
   AdlerFunction(const Configuration &config);
+  AdlerFunction(
+    const int &nc,
+    const int &nf,
+    const std::vector<double> &mq,
+    const std::vector<double> &qqInv,
+    const double &sTau,
+    const double &pionMinusMass,
+    const double &fPi,
+    const double &f1P,
+    const double &m1P,
+    const double &g1P,
+    const double &f2P,
+    const double &m2P,
+    const double &g2P
+  );
 
   complex<double> D0(
     const complex<double> &s, const cmplx &mu2, const double &sTau,
@@ -57,6 +72,7 @@ public:
   AlphaS amuRun_;
   MQRun mqRun_;
   matrix<double> c_;
+  std::vector<double> beta_;
   std::vector<double> mq_;
   std::vector<double> qqInv_;
   double sTau_;

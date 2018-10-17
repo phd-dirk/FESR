@@ -27,7 +27,6 @@ struct Input {
   std::vector<double> s0s;
 };
 
-
 using boost::numeric::ublas::matrix;
 
 class Configuration {

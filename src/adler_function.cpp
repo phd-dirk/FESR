@@ -5,7 +5,8 @@ typedef std::function<complex<double>(complex<double>)> cmplxFunc;
 AdlerFunction::AdlerFunction(const Configuration &config)
   :Numerics(), amuRun_(), mqRun_(config.sTau_)
 {
-  c_ = Configuration::adlerCoefficients(config.nf_, config.beta_);
+  beta_ = Configuration::betaCoefficients(config.nc_, config.nf_);
+  c_ = Configuration::adlerCoefficients(config.nf_, beta_);
   mq_ = config.mq_;
   qqInv_ = config.qqInv_;
   sTau_ = config.sTau_;
@@ -13,6 +14,30 @@ AdlerFunction::AdlerFunction(const Configuration &config)
   fPi_ = config.fPi_;
   f1P_ = config.f1P_; m1P_ = config.m1P_; g1P_=config.g1P_;
   f2P_ = config.f2P_; m2P_ = config.m2P_; g2P_=config.g2P_;
+}
+AdlerFunction::AdlerFunction(
+  const int &nc,
+  const int &nf,
+  const std::vector<double> &mq,
+  const std::vector<double> &qqInv,
+  const double &sTau,
+  const double &pionMinusMass,
+  const double &fPi,
+  const double &f1P,
+  const double &m1P,
+  const double &g1P,
+  const double &f2P,
+  const double &m2P,
+  const double &g2P
+) : mqRun_(sTau) {
+  beta_ = Configuration::betaCoefficients(nc, nf);
+  c_ = Configuration::adlerCoefficients(nf, beta_);
+  qqInv_ = qqInv;
+  sTau_ = sTau;
+  pionMinusMass_ = pionMinusMass;
+  fPi_ = fPi;
+  f1P_ = f1P; m1P_ = m1P; g1P_ = g1P;
+  f2P_ = f2P; m2P_ = m2P; g2P_ = g2P;
 }
 
 complex<double> AdlerFunction::D0(

@@ -12,7 +12,8 @@ double TheoreticalMoments::thMom(
   cDbl &s0, const Weight &w,
   cDbl &astau, cDbl &aGGinv, cDbl &rhoVpA, cDbl &c8VpA, cDbl &order,
   cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,
-  cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA) const
+  cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA
+) const
 {
   double rTauTh = 0.;
   // D0
