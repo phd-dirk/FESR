@@ -10,6 +10,7 @@ class TheoreticalMoments:
 {
  public:
   TheoreticalMoments(const Configuration &config);
+  TheoreticalMoments();
 
   double thMom(
     cDbl &s0, const Weight &w, cDbl &astau,

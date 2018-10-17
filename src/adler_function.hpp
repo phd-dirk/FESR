@@ -11,11 +11,13 @@
 #include <cmath>
 #include <iostream>
 #include <exception>
+#include <boost/numeric/ublas/matrix.hpp>
+
+using boost::numeric::ublas::matrix;
 
 class AdlerFunction : Numerics {
 public:
-  AdlerFunction(const Configuration &config) :
-    Numerics(), config_(config), amu_(), mq_(config.sTau_) {}
+  AdlerFunction(const Configuration &config);
 
   complex<double> D0(
     const complex<double> &s, const cmplx &mu2, const double &sTau,
@@ -56,6 +58,7 @@ public:
   Configuration config_;
   AlphaS amu_;
   MQRun mq_;
+  matrix<double> c_;
 }; // end AdlerFunction
 
 #endif

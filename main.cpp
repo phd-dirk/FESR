@@ -55,7 +55,7 @@ int main (int argc, char* argv[]) {
     const Configuration config(configFilePath);
     const Chisquared chisquared(config);
 
-    MINUIT
+    // MINUIT
     Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
     // set tolerances

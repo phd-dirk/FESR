@@ -3,7 +3,9 @@
 
 #include "./types.hpp"
 #include "./weights.hpp"
+#include "./numerics.hpp"
 #include <string>
+#include <boost/numeric/ublas/matrix.hpp>
 
 struct Variable {
   bool isFixed;
@@ -24,6 +26,8 @@ struct Input {
   Weight weight;
   std::vector<double> s0s;
 };
+
+using boost::numeric::ublas::matrix;
 
 class Configuration {
  public:
@@ -49,6 +53,9 @@ class Configuration {
   std::vector<Input> inputs_;
   uint momCount_ = 0;
 
+  // QCD
+  int nf_, nc_;
+
  // OPE
   ThMomContribs thMomContribs_;
   Variable astau, aGGInv, rhoVpA, c8VpA, deltaV, gammaV, alphaV, betaV, deltaA, gammaA, alphaA, betaA;
@@ -61,19 +68,7 @@ class Configuration {
   const double kTauMass = 1.77682; // PDF 2012
 
   // RGE
-  double beta[5], c[6][6];
-
-  // math
-  const vec zeta = {
-    0,
-    0,
-    0,
-    1.2020569031595942,
-    0,
-    1.036927755143369926,
-    0,
-    1.008349277381922827
-  };
+  std::vector<double> beta_;
 
   // alpha_s
   const double kAsTauBJ = 0.3156;
@@ -107,9 +102,8 @@ class Configuration {
   // minuit
   double tolerance;
 
- private:
-  void initializeBetaCoefficients(const int &nc, const int &nf);
-  void initializeAdlerCoefficients(const int &nf);
+  static std::vector<double> betaCoefficients(const int &nc, const int &nf);
+  static matrix<double> adlerCoefficients(const int &nf, const std::vector<double> &beta);
 };
 
 #endif

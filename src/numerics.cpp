@@ -18,6 +18,7 @@ bool Numerics::invertMatrix (const ublas::matrix<double>& input, ublas::matrix<d
 
   // backsubstitute to get the inverse
   lu_substitute(A, pm, inverse);
+  testInvMat(input, inverse);
 
   return true;
 }
@@ -67,9 +68,39 @@ bool Numerics::invMat(const ublas::matrix<double> &mat, ublas::matrix<double> &i
     }
   }
 
-  namespace karma = boost::spirit::karma;
-  using namespace karma;
-  std::cout << format_delimited(columns(invMat.size2()) [auto_], '\t', invMat.data()) << std::endl;
+  testInvMat(mat, invMat);
+
 
   return true;
 }
+
+void Numerics::testInvMat(
+  const ublas::matrix<double> &mat,
+  const ublas::matrix<double> &invMat
+) {
+  const int n = mat.size1();
+  ublas::matrix<double> onemat(n, n);
+  for(int i=0; i<n; i++) {
+    for(int j=0; j<n; j++) {
+      for(int k=0; k<n; k++) {
+        onemat(i,j) += invMat(i,k)*mat(k,j);
+      }
+    }
+  }
+
+  namespace karma = boost::spirit::karma;
+  using namespace karma;
+  std::cout << "inverse Matrix test:" << std::endl;
+  std::cout << format_delimited(columns(onemat.size2()) [auto_], '\t', onemat.data()) << std::endl;
+};
+
+const std::vector<double> Numerics::zeta_ = {
+  0,
+  0,
+  0,
+  1.2020569031595942,
+  0,
+  1.036927755143369926,
+  0,
+  1.008349277381922827
+};

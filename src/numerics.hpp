@@ -230,11 +230,15 @@ class Numerics {
     ublas::matrix<double>& inverse
   );
   static bool invMat(
-    const ublas::matrix<double> &matrix,
-    ublas::matrix<double> &inverse
+    const ublas::matrix<double> &mat,
+    ublas::matrix<double> &invMat
+  );
+  static void testInvMat(
+    const ublas::matrix<double> &mat,
+    const ublas::matrix<double> &invMat
   );
 
-
+  static const vec zeta_;
  private:
   const double epsrel_ = 0.; // relative error
   const double epsabs_ = 1e-10; // absolute error

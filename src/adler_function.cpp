@@ -1,6 +1,12 @@
 #include "./adler_function.hpp"
 
+
 typedef std::function<complex<double>(complex<double>)> cmplxFunc;
+
+AdlerFunction::AdlerFunction(const Configuration &config) :
+  Numerics(), config_(config), amu_(), mq_(config.sTau_) {
+  c_ = Configuration::adlerCoefficients(config.nf_, config_.beta_);
+}
 
 complex<double> AdlerFunction::D0(
   const complex<double> &s, const complex<double> &mu2, const double &sTau,
@@ -14,11 +20,11 @@ complex<double> AdlerFunction::D0(
     for (int k = 1; k <= n; k++) {
       // cout << "c(" << n << ", " << k << ") \t" << config_.c[n][k] << endl;
       complex<double> powL = ( k-1 == 0 ) ? 1.0 : pow(L, k-1);
-      sum += pow(amu, n)*(double)k*config_.c[n][k]*powL;
+      sum += pow(amu, n)*(double)k*c_(n, k)*powL;
     }
   }
 
-  return 1/4./pow(M_PI, 2)*(config_.c[0][1] + sum);
+  return 1/4./pow(M_PI, 2)*(c_(0, 1) + sum);
 }
 
 double AdlerFunction::D0CIntFO(
@@ -81,15 +87,15 @@ cmplx AdlerFunction::D4(
     quarkCondensate += (
       (4.5*L - 131./12.)*mqqa
       + (-6.*L + 68./3.)*mqqb
-      + (-2./3.*L - 176./243. + 8./3.*config_.zeta[3])*mqqs
+      + (-2./3.*L - 176./243. + 8./3.*Numerics::zeta_[3])*mqqs
     )*pow(amu, 2);
   if (order > 2)
     quarkCondensate += (
       (-81./8.*pow(L, 2) + 457./8.*L + 2.*qLT3)*mqqa
       + (27./2.*pow(L, 2) - 338/3.*L + 8./3.*tLT3)*mqqb
       + (
-        1.5*pow(L, 2) + (56./27. -12.*config_.zeta[3])*L
-        + 50407./17496. + 8./27.*pLT3 + rLT3 -20./27.*config_.zeta[3]
+        1.5*pow(L, 2) + (56./27. -12.*Numerics::zeta_[3])*L
+        + 50407./17496. + 8./27.*pLT3 + rLT3 -20./27.*Numerics::zeta_[3]
       )*mqqs
     )*pow(amu, 3);
   quarkCondensate /= pow(s, 2);

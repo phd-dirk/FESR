@@ -165,14 +165,7 @@ TEST_F(ExperimentalMomentsTest, covarianceMatrix) {
 
 TEST_F(ExperimentalMomentsTest, inverseCovarianceMatrix) {
   mat invCov = expMom2->invCovMat_;
-  std::cout << std::setprecision(15);
 
-  for(int i = 0; i < 9; i++) {
-    for(int j = 0; j < 9; j++) {
-      std::cout << invCov(i,j) << "\t";
-    }
-    std::cout << std::endl;
-  }
   EXPECT_NEAR(invCov(0, 0), 19290.123456790123 , 1e-15);
   EXPECT_NEAR(invCov(1, 1), 4380565.4450900145 , 1e-15);
   // EXPECT_NEAR(invCov(4, 4), 2392765.2394170612, 1e-6);
