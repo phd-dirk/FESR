@@ -7,6 +7,45 @@ TheoreticalMoments::TheoreticalMoments(const Configuration &config)
   vud_ = config.vud_;
   SEW_ = config.SEW_;
 }
+TheoreticalMoments::TheoreticalMoments(
+  const int &nc,
+  const int &nf,
+  const std::vector<double> &mq,
+  const std::vector<double> &qqInv,
+  const double &sTau,
+  const double &pionMinusMass,
+  const double &fPi,
+  const double &f1P,
+  const double &m1P,
+  const double &g1P,
+  const double &f2P,
+  const double &m2P,
+  const double &g2P,
+  const std::vector<Input> &inputs,
+  const ThMomContribs &thMomContribs,
+  const double &vud,
+  const double &SEW
+) : AdlerFunction
+    (
+      nc,
+      nf,
+      mq,
+      qqInv,
+      sTau,
+      pionMinusMass,
+      fPi,
+      f1P,
+      m1P,
+      g1P,
+      f2P,
+      m2P,
+      g2P
+    ), inputs_(inputs)
+{
+  thMomContribs_ = thMomContribs;
+  vud_ = vud;
+  SEW_ = SEW;
+}
 
 double TheoreticalMoments::thMom(
   cDbl &s0, const Weight &w,

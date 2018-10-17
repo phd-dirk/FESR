@@ -10,7 +10,25 @@ class TheoreticalMoments:
 {
  public:
   TheoreticalMoments(const Configuration &config);
-  TheoreticalMoments();
+  TheoreticalMoments(
+    const int &nc,
+    const int &nf,
+    const std::vector<double> &mq,
+    const std::vector<double> &qqInv,
+    const double &sTau,
+    const double &pionMinusMass,
+    const double &fPi,
+    const double &f1P,
+    const double &m1P,
+    const double &g1P,
+    const double &f2P,
+    const double &m2P,
+    const double &g2P,
+    const std::vector<Input> &inputs,
+    const ThMomContribs &thMomContribs,
+    const double &vud,
+    const double &SEW
+  );
 
   double thMom(
     cDbl &s0, const Weight &w, cDbl &astau,
