@@ -3,9 +3,17 @@
 
 typedef std::function<complex<double>(complex<double>)> cmplxFunc;
 
-AdlerFunction::AdlerFunction(const Configuration &config) :
-  Numerics(), config_(config), amu_(), mq_(config.sTau_) {
+AdlerFunction::AdlerFunction(const Configuration &config)
+  :Numerics(), amuRun_(), mqRun_(config.sTau_)
+{
   c_ = Configuration::adlerCoefficients(config.nf_, config_.beta_);
+  mq_ = config.mq_;
+  qqInv_ = config.qqInv_;
+  sTau_ = config.sTau_;
+  pionMinusMass_ = config.pionMinusMass_;
+  fPi_ = config.fPi_;
+  f1P_ = config.f1P_; m1P_ = config.m1P_; g1P_=config.g1P_;
+  f2P_ = config.f2P_; m2P_ = config.m2P_; g2P_=config.g2P_;
 }
 
 complex<double> AdlerFunction::D0(
@@ -13,12 +21,11 @@ complex<double> AdlerFunction::D0(
   const double &astau, const double &order
 ) const {
   complex<double> L = log(-s/mu2);
-  complex<double> amu = amu_(mu2, sTau, astau/M_PI);
+  complex<double> amu = amuRun_(mu2, sTau, astau/M_PI);
 
   complex<double> sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
-      // cout << "c(" << n << ", " << k << ") \t" << config_.c[n][k] << endl;
       complex<double> powL = ( k-1 == 0 ) ? 1.0 : pow(L, k-1);
       sum += pow(amu, n)*(double)k*c_(n, k)*powL;
     }
@@ -58,7 +65,7 @@ cmplx AdlerFunction::D4(
 ) const {
   const int i = 0, j = 1;
   cmplx L = log(-s/mu2);
-  cmplx amu = amu_(mu2, sTau, astau/M_PI);
+  cmplx amu = amuRun_(mu2, sTau, astau/M_PI);
 
   cmplx gluonCondensate(0.0, 0.0);
   const double pLT3 = 0; // the coefficient is not yet known
@@ -75,9 +82,9 @@ cmplx AdlerFunction::D4(
   complex<double> quarkCondensate(0.0, 0.0);
   const double qLT3 = 0., rLT3 = 0., tLT3 = 0.;
 
-  const double mqqa = config_.mq[i]*config_.qqinv[i] + config_.mq[j]*config_.qqinv[j];
-  const double mqqb = r*(config_.mq[i]*config_.qqinv[j] + config_.mq[j]*config_.qqinv[i]);
-  const double mqqs = config_.mq[0]*config_.qqinv[0] + config_.mq[1]*config_.qqinv[1] + config_.mq[2]*config_.qqinv[2];
+  const double mqqa = mq_[i]*qqInv_[i] + mq_[j]*qqInv_[j];
+  const double mqqb = r*(mq_[i]*qqInv_[j] + mq_[j]*qqInv_[i]);
+  const double mqqs = mq_[0]*qqInv_[0] + mq_[1]*qqInv_[1] + mq_[2]*qqInv_[2];
 
   if (order > -1)
     quarkCondensate += 2.*mqqa;
@@ -102,12 +109,12 @@ cmplx AdlerFunction::D4(
 
   // m4
   cmplx m4(0.0, 0.0);
-  cmplx rmq = mq_(mu2, config_.sTau_, astau/M_PI);
+  cmplx rmq = mqRun_(mu2, sTau_, astau/M_PI);
 
-  cmplx m4a = (pow(config_.mq[i], 4) + pow(config_.mq[j], 4))*pow(rmq, 4);
-  cmplx m4b = r*(config_.mq[i]*pow(config_.mq[j], 3) + config_.mq[j]*pow(config_.mq[i], 3))*pow(rmq, 4);
-  cmplx m4c = (pow(config_.mq[i], 2)*pow(config_.mq[j], 2))*pow(rmq, 4);
-  cmplx m4d = (pow(config_.mq[0], 4) + pow(config_.mq[1], 4) + pow(config_.mq[2], 4))*pow(rmq, 4);
+  cmplx m4a = (pow(mq_[i], 4) + pow(mq_[j], 4))*pow(rmq, 4);
+  cmplx m4b = r*(mq_[i]*pow(mq_[j], 3) + mq_[j]*pow(mq_[i], 3))*pow(rmq, 4);
+  cmplx m4c = (pow(mq_[i], 2)*pow(mq_[j], 2))*pow(rmq, 4);
+  cmplx m4d = (pow(mq_[0], 4) + pow(mq_[1], 4) + pow(mq_[2], 4))*pow(rmq, 4);
 
   if ( order > 1)
     m4 += (-6./7./amu + 1.5*L - 0.25)*m4a - 8./7.*m4b + 3.*m4c - m4d/14.;
@@ -160,8 +167,8 @@ double AdlerFunction::D68CInt(
 };
 
 double AdlerFunction::deltaP(const double &s0, const Weight &weight) const {
-  double spi = pow(config_.kPionMinusMass, 2);
-  double pionPole = -4.*pow(config_.fPi_, 2)/s0*spi/(config_.sTau_ + 2.*spi)
+  double spi = pow(pionMinusMass_, 2);
+  double pionPole = -4.*pow(fPi_, 2)/s0*spi/(sTau_ + 2.*spi)
     *weight.wR(spi/s0).real();
   double xth = 9.*spi/s0;
 
@@ -170,10 +177,10 @@ double AdlerFunction::deltaP(const double &s0, const Weight &weight) const {
       double x = s0*s;
       double rhores =  2./pow(x, 2)
         *(
-          pow(config_.kF1P, 2)*pow(config_.kM1P, 4)*breitwigner(x, config_.kM1P, config_.kG1P)
-          + pow(config_.kF2P, 2)*pow(config_.kM2P, 4)*breitwigner(x, config_.kM2P, config_.kG2P)
+          pow(f1P_, 2)*pow(m1P_, 4)*breitwigner(x, m1P_, g1P_)
+          + pow(f2P_, 2)*pow(m2P_, 4)*breitwigner(x, m2P_, g2P_)
         );
-      return weight.wR(s).real()*2.*x/(config_.sTau_ + 2.*x)*rhores;
+      return weight.wR(s).real()*2.*x/(sTau_ + 2.*x)*rhores;
     };
 
   return 4.*pow(M_PI, 2)*( pionPole - adaptiveIntegrate(f, xth, 1.));

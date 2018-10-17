@@ -27,6 +27,7 @@ struct Input {
   std::vector<double> s0s;
 };
 
+
 using boost::numeric::ublas::matrix;
 
 class Configuration {
@@ -63,8 +64,8 @@ class Configuration {
   // masses
   double mTau_, sTau_;
   const double mumtau = 2.8e-3, mdmtau = 5.e-3, msmtau = 97e-3;
-  const double kPionMinusMass = 0.13957018; // M_pi^-
-  const vec mq = {mumtau, mdmtau, msmtau};
+  const double pionMinusMass_ = 0.13957018; // M_pi^-
+  const std::vector<double> mq_ = {mumtau, mdmtau, msmtau};
   const double kTauMass = 1.77682; // PDF 2012
 
   // RGE
@@ -80,15 +81,15 @@ class Configuration {
   const double kappa = 0.8;
   const double ssmtau = kappa*uumtau;
 
-  const vec qqinv = {
+  const std::vector<double> qqInv_ = {
     uumtau + 3.*pow(mumtau, 3)/(7.*pow(M_PI, 2))*(1./kATauBJ - 53./24.),
     ddmtau + 3.*pow(mdmtau, 3)/(7.*pow(M_PI, 2))*(1./kATauBJ - 53./24.),
     ssmtau + 3.*pow(msmtau, 3)/(7.*pow(M_PI, 2))*(1./kATauBJ - 53./24.)
   };
 
   // Excited resonance parameters
-  const double kF1P = 2.2e-3, kM1P = 1.3, kG1P = 0.4;
-  const double kF2P = 0.19e-3, kM2P = 1.8, kG2P = 0.21;
+  const double f1P_ = 2.2e-3, m1P_ = 1.3, g1P_ = 0.4;
+  const double f2P_ = 0.19e-3, m2P_ = 1.8, g2P_ = 0.21;
 
   // Various
   double vud_, dVud_;

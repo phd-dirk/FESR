@@ -15,7 +15,7 @@ ExpMoms::ExpMoms(const string &filename, const Configuration &config)
   dSEW_ = config.dSEW_;
   fPi_ = config.fPi_;
   dFPi_ = config.dFPi_;
-  pionMinusMass_ = config.kPionMinusMass;
+  pionMinusMass_ = config.pionMinusMass_;
   momCount_ = config.momCount_;
 
   // cache experimental moments

@@ -55,10 +55,14 @@ public:
   double breitwigner(const double &s, const double &mbw, const double &gbw) const;
 
  private:
-  Configuration config_;
-  AlphaS amu_;
-  MQRun mq_;
+  AlphaS amuRun_;
+  MQRun mqRun_;
   matrix<double> c_;
+  std::vector<double> mq_;
+  std::vector<double> qqInv_;
+  double sTau_;
+  double pionMinusMass_;
+  double fPi_, f1P_, m1P_, g1P_, f2P_, m2P_, g2P_;
 }; // end AdlerFunction
 
 #endif
