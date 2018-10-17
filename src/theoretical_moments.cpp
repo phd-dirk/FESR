@@ -1,7 +1,12 @@
 #include "./theoretical_moments.hpp"
 
 TheoreticalMoments::TheoreticalMoments(const Configuration &config)
-  : AdlerFunction(config), config_(config), inputs_(config_.inputs_) {}
+  : AdlerFunction(config), inputs_(config.inputs_)
+{
+  thMomContribs_ = config.thMomContribs_;
+  vud_ = config.vud_;
+  SEW_ = config.SEW_;
+}
 
 double TheoreticalMoments::thMom(
   cDbl &s0, const Weight &w,
@@ -11,29 +16,29 @@ double TheoreticalMoments::thMom(
 {
   double rTauTh = 0.;
   // D0
-  if ( config_.thMomContribs_.D0 ) {
+  if ( thMomContribs_.D0 ) {
     // check if FOPT or CIPT
-    if ( config_.thMomContribs_.scheme == "FO" ) {
-      rTauTh += cIntVpAD0FO(s0, w, config_.sTau_, astau, order);
+    if ( thMomContribs_.scheme == "FO" ) {
+      rTauTh += cIntVpAD0FO(s0, w, sTau_, astau, order);
     }
-    if ( config_.thMomContribs_.scheme == "CI") {
-      rTauTh += cIntVpAD0CI(s0, w, config_.sTau_, astau, order);
+    if ( thMomContribs_.scheme == "CI") {
+      rTauTh += cIntVpAD0CI(s0, w, sTau_, astau, order);
     }
   }
   // D4
-  if ( config_.thMomContribs_.D4 )
-    rTauTh += cIntVpAD4FO(s0, w, config_.sTau_, astau, aGGinv);
+  if ( thMomContribs_.D4 )
+    rTauTh += cIntVpAD4FO(s0, w, sTau_, astau, aGGinv);
   // D68
-  if ( config_.thMomContribs_.D68 )
+  if ( thMomContribs_.D68 )
     rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
   // DV
-  if ( config_.thMomContribs_.DV )
+  if ( thMomContribs_.DV )
     rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
   // PionPole
-  if ( config_.thMomContribs_.PionPole )
+  if ( thMomContribs_.PionPole )
     rTauTh += 3.*deltaP(s0, w);
 
-  return pow(config_.vud_, 2)*config_.SEW_*rTauTh;
+  return pow(vud_, 2)*SEW_*rTauTh;
 }
 
 double TheoreticalMoments::cIntVpAD0FO(

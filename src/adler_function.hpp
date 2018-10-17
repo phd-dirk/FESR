@@ -54,7 +54,6 @@ public:
   double deltaP(const double &s0, const Weight &weight) const;
   double breitwigner(const double &s, const double &mbw, const double &gbw) const;
 
- private:
   AlphaS amuRun_;
   MQRun mqRun_;
   matrix<double> c_;

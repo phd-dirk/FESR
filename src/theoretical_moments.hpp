@@ -51,8 +51,10 @@ class TheoreticalMoments:
   ) const;
 
  private:
-  Configuration config_;
   std::vector<Input> inputs_;
+  ThMomContribs thMomContribs_;
+  double vud_, SEW_;
+
 };
 
 #endif

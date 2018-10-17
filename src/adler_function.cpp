@@ -1,12 +1,11 @@
 #include "./adler_function.hpp"
 
-
 typedef std::function<complex<double>(complex<double>)> cmplxFunc;
 
 AdlerFunction::AdlerFunction(const Configuration &config)
   :Numerics(), amuRun_(), mqRun_(config.sTau_)
 {
-  c_ = Configuration::adlerCoefficients(config.nf_, config_.beta_);
+  c_ = Configuration::adlerCoefficients(config.nf_, config.beta_);
   mq_ = config.mq_;
   qqInv_ = config.qqInv_;
   sTau_ = config.sTau_;
