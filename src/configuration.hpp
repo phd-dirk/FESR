@@ -34,10 +34,13 @@ class Configuration {
  public:
   Configuration(string configFilePath);
   Configuration(
+    const double &asTau,
     const double &be,
     const double &dBe,
     const double &vud,
     const double &dVud,
+    const std::vector<double> &mq,
+    const std::vector<double> &qqMTau,
     const std::vector<Input> &inputs,
     const double &mTau,
     const int &nc,

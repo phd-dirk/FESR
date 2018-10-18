@@ -23,10 +23,13 @@ protected:
 
     thMom_ = new TheoreticalMoments(
       Configuration(
+        0.3156,
         17.815,
         0.023,
         0.97425,
         0.00022,
+        { 2.8e-3, 5.0e-3, 97.0e-3 },
+        { 0.0201236, 0.021236, 0.0160989 },
         inputs,
         1.77682,
         3,

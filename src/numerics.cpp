@@ -88,10 +88,10 @@ void Numerics::testInvMat(
     }
   }
 
-  namespace karma = boost::spirit::karma;
-  using namespace karma;
-  std::cout << "inverse Matrix test:" << std::endl;
-  std::cout << format_delimited(columns(onemat.size2()) [auto_], '\t', onemat.data()) << std::endl;
+  // namespace karma = boost::spirit::karma;
+  // using namespace karma;
+  // std::cout << "inverse Matrix test:" << std::endl;
+  // std::cout << format_delimited(columns(onemat.size2()) [auto_], '\t', onemat.data()) << std::endl;
 };
 
 const std::vector<double> Numerics::zeta_ = {

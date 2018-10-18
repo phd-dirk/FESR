@@ -82,9 +82,9 @@ Configuration::Configuration(string configFilePath)
   mTau_ = jsonConfig["parameters"]["mTau"];
   sTau_ = pow(mTau_, 2);
   mq_ = {
-    jsonConfig["parameters"]["muMtau"],
-    jsonConfig["parameters"]["mdMtau"],
-    jsonConfig["parameters"]["msMtau"],
+    jsonConfig["parameters"]["muMTau"],
+    jsonConfig["parameters"]["mdMTau"],
+    jsonConfig["parameters"]["msMTau"],
   };
 
   asTau_ = jsonConfig["parameters"]["asTau"];
@@ -93,7 +93,6 @@ Configuration::Configuration(string configFilePath)
   dBe_ = jsonConfig["parameters"]["dBe"];
   vud_ = jsonConfig["parameters"]["vud"];
   dVud_ = jsonConfig["parameters"]["dVud"];
-
 
   // add weights & s0s
   for(auto const& input : jsonConfig["parameters"]["input"]) {
@@ -117,10 +116,13 @@ Configuration::Configuration(string configFilePath)
 }
 
 Configuration::Configuration (
+  const double &asTau,
   const double &be,
   const double &dBe,
   const double &vud,
   const double &dVud,
+  const std::vector<double> &mq,
+  const std::vector<double> &qqMTau,
   const std::vector<Input> &inputs,
   const double &mTau,
   const int &nc,
@@ -142,12 +144,18 @@ Configuration::Configuration (
   mTau_ = mTau;
   sTau_ = pow(mTau, 2);
 
+  mq_ = mq;
+
+  asTau_ = asTau;
+
   be_ = be;
   dBe_ = dBe;
   vud_ = vud;
   dVud_ = dVud;
 
   beta_ = betaCoefficients(nc, nf);
+
+  condensates_ = Condensates(asTau_, qqMTau);
 
   // moment count
   for(auto const &input: inputs) {

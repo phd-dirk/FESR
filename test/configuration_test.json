@@ -3,11 +3,15 @@
   "scheme": "FO",
   "tolerance": 1e-9,
   "parameters": {
+    "asTau": 0.3156,
     "nc": 3,
     "nf": 3,
     "order": 5,
     "RVANormalization": 0.99743669,
     "mTau": 1.77682,
+    "muMTau": 2.8e-3,
+    "mdMTau": 5.0e-3,
+    "msMTau": 97.0e-3,
     "be": 17.815,
     "dBe": 0.023,
     "vud": 0.97425,
@@ -19,6 +23,11 @@
       "weight": 6,
       "s0s": [2.8, 1.8]
     }]
+  },
+  "condensates": {
+    "uuMTau": 0.0201236,
+    "ddMTau": 0.0201236,
+    "ssMTau": 0.0160989
   },
   "variables": {
     "astau": {
