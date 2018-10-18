@@ -4,6 +4,7 @@
 #include "./types.hpp"
 #include "./weights.hpp"
 #include "./numerics.hpp"
+#include "./condensates.hpp"
 #include <string>
 #include <boost/numeric/ublas/matrix.hpp>
 
@@ -62,29 +63,18 @@ class Configuration {
 
   // masses
   double mTau_, sTau_;
-  const double mumtau = 2.8e-3, mdmtau = 5.e-3, msmtau = 97e-3;
   const double pionMinusMass_ = 0.13957018; // M_pi^-
-  const std::vector<double> mq_ = {mumtau, mdmtau, msmtau};
+  std::vector<double> mq_;
   const double kTauMass = 1.77682; // PDF 2012
+
+  // alpha_s(mTau)
+  double asTau_;
+
+  // condensates
+  Condensates condensates_;
 
   // RGE
   std::vector<double> beta_;
-
-  // alpha_s
-  const double kAsTauBJ = 0.3156;
-  const double kATauBJ = kAsTauBJ/M_PI;
-
-  // condensates
-  const double uumtau = -pow(0.272, 3);
-  const double ddmtau = -pow(0.272, 3);
-  const double kappa = 0.8;
-  const double ssmtau = kappa*uumtau;
-
-  const std::vector<double> qqInv_ = {
-    uumtau + 3.*pow(mumtau, 3)/(7.*pow(M_PI, 2))*(1./kATauBJ - 53./24.),
-    ddmtau + 3.*pow(mdmtau, 3)/(7.*pow(M_PI, 2))*(1./kATauBJ - 53./24.),
-    ssmtau + 3.*pow(msmtau, 3)/(7.*pow(M_PI, 2))*(1./kATauBJ - 53./24.)
-  };
 
   // Excited resonance parameters
   const double f1P_ = 2.2e-3, m1P_ = 1.3, g1P_ = 0.4;

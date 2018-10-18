@@ -81,6 +81,13 @@ Configuration::Configuration(string configFilePath)
 
   mTau_ = jsonConfig["parameters"]["mTau"];
   sTau_ = pow(mTau_, 2);
+  mq_ = {
+    jsonConfig["parameters"]["muMtau"],
+    jsonConfig["parameters"]["mdMtau"],
+    jsonConfig["parameters"]["msMtau"],
+  };
+
+  asTau_ = jsonConfig["parameters"]["asTau"];
 
   be_ = jsonConfig["parameters"]["be"];
   dBe_ = jsonConfig["parameters"]["dBe"];
@@ -97,6 +104,13 @@ Configuration::Configuration(string configFilePath)
   }
 
   beta_ = betaCoefficients(jsonConfig["parameters"]["nc"], jsonConfig["parameters"]["nf"]);
+
+  std::vector<double> qqMTau = {
+    jsonConfig["condensates"]["uuMTau"],
+    jsonConfig["condensates"]["ddMTau"],
+    jsonConfig["condensates"]["ssMTau"]
+  };
+  condensates_ = Condensates(asTau_, qqMTau);
 
   // minuit
   tolerance = jsonConfig["tolerance"];

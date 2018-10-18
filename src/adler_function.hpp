@@ -7,6 +7,7 @@
 #include "./mq_run.hpp"
 #include "./alpha_s.hpp"
 #include "./weights.hpp"
+#include "./condensates.hpp"
 #include <stdexcept>
 #include <cmath>
 #include <iostream>
@@ -22,7 +23,7 @@ public:
     const int &nc,
     const int &nf,
     const std::vector<double> &mq,
-    const std::vector<double> &qqInv,
+    const Condensates &condensates,
     const double &sTau,
     const double &pionMinusMass,
     const double &fPi,
@@ -74,7 +75,7 @@ public:
   matrix<double> c_;
   std::vector<double> beta_;
   std::vector<double> mq_;
-  std::vector<double> qqInv_;
+  Condensates condensates_;
   double sTau_;
   double pionMinusMass_;
   double fPi_, f1P_, m1P_, g1P_, f2P_, m2P_, g2P_;

@@ -4,6 +4,7 @@
 #include "./configuration.hpp"
 #include "./adler_function.hpp"
 #include "./duality_violations.hpp"
+#include "./condensates.hpp"
 
 class TheoreticalMoments:
     public AdlerFunction, DualityViolations
@@ -14,7 +15,7 @@ class TheoreticalMoments:
     const int &nc,
     const int &nf,
     const std::vector<double> &mq,
-    const std::vector<double> &qqInv,
+    const Condensates &condensates,
     const double &sTau,
     const double &pionMinusMass,
     const double &fPi,

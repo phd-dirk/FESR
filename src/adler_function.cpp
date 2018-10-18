@@ -3,12 +3,11 @@
 typedef std::function<complex<double>(complex<double>)> cmplxFunc;
 
 AdlerFunction::AdlerFunction(const Configuration &config)
-  :Numerics(), amuRun_(), mqRun_(config.sTau_)
+  :Numerics(), condensates_(config.condensates_), amuRun_(), mqRun_(config.sTau_)
 {
   beta_ = Configuration::betaCoefficients(config.nc_, config.nf_);
   c_ = Configuration::adlerCoefficients(config.nf_, beta_);
   mq_ = config.mq_;
-  qqInv_ = config.qqInv_;
   sTau_ = config.sTau_;
   pionMinusMass_ = config.pionMinusMass_;
   fPi_ = config.fPi_;
@@ -19,7 +18,7 @@ AdlerFunction::AdlerFunction(
   const int &nc,
   const int &nf,
   const std::vector<double> &mq,
-  const std::vector<double> &qqInv,
+  const Condensates &condensates,
   const double &sTau,
   const double &pionMinusMass,
   const double &fPi,
@@ -29,10 +28,9 @@ AdlerFunction::AdlerFunction(
   const double &f2P,
   const double &m2P,
   const double &g2P
-) : mqRun_(sTau) {
+) : condensates_(condensates), mqRun_(sTau) {
   beta_ = Configuration::betaCoefficients(nc, nf);
   c_ = Configuration::adlerCoefficients(nf, beta_);
-  qqInv_ = qqInv;
   sTau_ = sTau;
   pionMinusMass_ = pionMinusMass;
   fPi_ = fPi;
@@ -106,9 +104,9 @@ cmplx AdlerFunction::D4(
   complex<double> quarkCondensate(0.0, 0.0);
   const double qLT3 = 0., rLT3 = 0., tLT3 = 0.;
 
-  const double mqqa = mq_[i]*qqInv_[i] + mq_[j]*qqInv_[j];
-  const double mqqb = r*(mq_[i]*qqInv_[j] + mq_[j]*qqInv_[i]);
-  const double mqqs = mq_[0]*qqInv_[0] + mq_[1]*qqInv_[1] + mq_[2]*qqInv_[2];
+  const double mqqa = mq_[i]*condensates_.qqInv_[i] + mq_[j]*condensates_.qqInv_[j];
+  const double mqqb = r*(mq_[i]*condensates_.qqInv_[j] + mq_[j]*condensates_.qqInv_[i]);
+  const double mqqs = mq_[0]*condensates_.qqInv_[0] + mq_[1]*condensates_.qqInv_[1] + mq_[2]*condensates_.qqInv_[2];
 
   if (order > -1)
     quarkCondensate += 2.*mqqa;

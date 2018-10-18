@@ -43,6 +43,16 @@ protected:
   }
 };
 
+TEST_F(TheoreticalMomentsTest, ThMom) {
+  // TheoreticalMoments(
+  //   3,
+  //   3,
+  //   { 2.8e-3, 5e-3, 97e-3 },
+
+
+  // )
+}
+
 TEST_F(TheoreticalMomentsTest, IntegralMoment) {
   // thMom(const int &i, const double &astau, const double &aGGinv,
   // const double &rhoVpA, const double &c8VpA, const double &order)
