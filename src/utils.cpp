@@ -57,7 +57,11 @@ string deltaOutput(Minimizer* min, const Configuration &config) {
   out += "delta_V+A^(0) \t" +
       std::to_string(
           thMom.del0(
-              config.sTau_, Weight(1), config.sTau_, xs[0], config.order_
+              config.sTau_, Weight(1), config.sTau_, xs[0],
+              Configuration::adlerCoefficients(
+                3, Configuration::betaCoefficients(3, 3)
+              ),
+              config.order_
           )
       ) + "\n";
   out += "delta_V+A^(4) \t" +

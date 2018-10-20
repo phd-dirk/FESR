@@ -127,7 +127,7 @@ class Numerics {
     return result;
   }
 
-  double adaptiveIntegrate(func f, double from, double to) const {
+  static double adaptiveIntegrate(func f, double from, double to) {
     double result, error;
     gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1100);
     gsl_function F;
@@ -138,7 +138,7 @@ class Numerics {
       },
       &f
     };
-    gsl_integration_qag(&F, from, to, epsabs_, epsrel_, 1100, 6, w_, &result, &error);
+    gsl_integration_qag(&F, from, to, 1e-10, 0.0, 1100, 6, w_, &result, &error);
     // size_t fCalls = 1100;
     // gsl_integration_qng(&F, from, to, epsabs_, epsrel_, &result, &error, &fCalls);
     // cout << "error \t" << error << endl;
@@ -195,7 +195,7 @@ class Numerics {
     return result;
   }
 
-  cmplx integrateComplex(function<complex<double>(double)> func, double from, double to) const {
+  static cmplx integrateComplex(function<complex<double>(double)> func, double from, double to) {
     auto funcReal = [func](double t) {
       return func(t).real();
     };
@@ -211,7 +211,7 @@ class Numerics {
     return complex<double>(cintReal, cintImag);
   }
 
-  complex<double> complexContourIntegral(function<complex<double>(complex<double>)> f) const {
+  static complex<double> complexContourIntegral(function<complex<double>(complex<double>)> f) {
     auto gamma = [](double t) {
       complex<double> I(0., 1.);
       return exp(I*t);

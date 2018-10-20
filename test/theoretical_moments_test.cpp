@@ -13,7 +13,9 @@ protected:
   const double aGGinv_ = 2.1e-2;
   const double rhoVpA_ = -0.1894;
   const double c8VpA_ = 0.16315;
+  matrix<double> c;
   virtual void SetUp() {
+    c = Configuration::adlerCoefficients(3, Configuration::betaCoefficients(3, 3));
 
     std::vector<Input> inputs = {
       { Weight(1), { 3.0, 2.0, 1.0 } },
@@ -175,7 +177,11 @@ protected:
 TEST_F(TheoreticalMomentsTest, Delta0) {
   const double astau = 0.31927;
   const int order = 5;
-  EXPECT_NEAR(thMom_->del0(sTau_, Weight(1), sTau_, astau, order), 0.20298958142552484, 1e-14);
+  EXPECT_NEAR(
+    thMom_->del0(
+      sTau_, Weight(1), sTau_, astau, c, order
+    ), 0.20298958142552484, 1e-14
+  );
 }
 
 // TEST_F(TheoreticalMomentsTest, Delta4) {

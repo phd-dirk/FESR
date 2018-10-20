@@ -45,6 +45,8 @@ TheoreticalMoments::TheoreticalMoments(
   thMomContribs_ = thMomContribs;
   vud_ = vud;
   SEW_ = SEW;
+  nc_ = nc;
+  nf_ = nf;
 }
 
 double TheoreticalMoments::thMom(
@@ -55,11 +57,15 @@ double TheoreticalMoments::thMom(
 ) const
 {
   double rTauTh = 0.;
+  matrix<double> c = Configuration::adlerCoefficients(
+    nf_, Configuration::betaCoefficients(nc_, nf_)
+  );
+
   // D0
   if ( thMomContribs_.D0 ) {
     // check if FOPT or CIPT
     if ( thMomContribs_.scheme == "FO" ) {
-      rTauTh += cIntVpAD0FO(s0, w, sTau_, astau, order);
+      rTauTh += cIntVpAD0FO(s0, w, sTau_, astau, c, order);
     }
     if ( thMomContribs_.scheme == "CI") {
       rTauTh += cIntVpAD0CI(s0, w, sTau_, astau, order);
@@ -83,9 +89,9 @@ double TheoreticalMoments::thMom(
 
 double TheoreticalMoments::cIntVpAD0FO(
   const double &s0, const Weight &weight, const double &sTau,
-  const double &astau, const int &order
+  const double &astau, const matrix<double> &c, const int &order
 ) const {
-  return 2.0*D0CIntFO(s0, weight, sTau, astau, order);
+  return 2.0*D0CIntFO(s0, weight, sTau, astau, c, order);
 }
 
 double TheoreticalMoments::cIntVpAD0CI(
@@ -103,11 +109,12 @@ double TheoreticalMoments::cIntVpAD4FO(
 }
 
 double TheoreticalMoments::del0(
-  const double &s0, const Weight &weight,
-  const double &sTau, const double &astau, const int &order
+  const double &s0, const Weight &weight, const double &sTau,
+  const double &astau, const matrix<double> &c, const int &order
 ) const {
-  return (cIntVpAD0FO(s0, weight, sTau, astau, order)
-          - cIntVpAD0FO(s0, weight, sTau, astau, 0)
+  return (
+    cIntVpAD0FO(s0, weight, sTau, astau, c, order)
+    - cIntVpAD0FO(s0, weight, sTau, astau, c, 0)
   )/3.0;
 }
 double TheoreticalMoments::del4(

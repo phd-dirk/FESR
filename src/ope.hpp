@@ -41,10 +41,10 @@ public:
   );
 
   // Contour integral for D_V+A(D=0) in FOPT
-  double D0CIntFO(
+  static double D0CIntFO(
     const double &s0, const Weight weight, const double &sTau,
-    const double &astau, const double &order
-  ) const;
+    const double &astau, const matrix<double> &c, const double &order
+  );
   double D0CIntCI(
     const double &s0, const Weight weight, const double &sTau,
     const double &astau, const double &order

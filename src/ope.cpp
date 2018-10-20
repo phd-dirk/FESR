@@ -57,14 +57,13 @@ complex<double> OPE::D0(
 }
 
 double OPE::D0CIntFO(
-  const double &s0, const Weight weight,
-  const double &sTau, const double &astau,
-  const double &order
-) const {
+  const double &s0, const Weight weight, const double &sTau,
+  const double &astau, const matrix<double> &c, const double &order
+) {
    cmplxFunc f =
      [&](cmplx s) -> cmplx {
        cmplx mu2(s0, 0.);
-       return weight.wD(s)*D0(s0*s, mu2, sTau, astau, c_, order);
+       return weight.wD(s)*D0(s0*s, mu2, sTau, astau, c, order);
      };
   return (3*M_PI*complexContourIntegral(f)).real();
 };
