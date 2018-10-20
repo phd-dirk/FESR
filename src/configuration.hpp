@@ -39,6 +39,15 @@ class Configuration {
     const double &dBe,
     const double &vud,
     const double &dVud,
+    const double &SEW,
+    const double &pionMinusMass_,
+    const double &fPi,
+    const double &f1P,
+    const double &m1P,
+    const double &g1P,
+    const double &f2P,
+    const double &m2P,
+    const double &g2P,
     const std::vector<double> &mq,
     const std::vector<double> &qqMTau,
     const std::vector<Input> &inputs,
@@ -66,7 +75,7 @@ class Configuration {
 
   // masses
   double mTau_, sTau_;
-  const double pionMinusMass_ = 0.13957018; // M_pi^-
+  double pionMinusMass_; // M_pi^-
   std::vector<double> mq_;
   const double kTauMass = 1.77682; // PDF 2012
 
@@ -80,14 +89,14 @@ class Configuration {
   std::vector<double> beta_;
 
   // Excited resonance parameters
-  const double f1P_ = 2.2e-3, m1P_ = 1.3, g1P_ = 0.4;
-  const double f2P_ = 0.19e-3, m2P_ = 1.8, g2P_ = 0.21;
+  double f1P_, m1P_, g1P_;
+  double f2P_, m2P_, g2P_;
 
   // Various
   double vud_, dVud_;
-  const double SEW_ = 1.0198, dSEW_ = 0.0006; // EW radiative corr.
+  double SEW_, dSEW_ = 0.0006; // EW radiative corr.
   double be_, dBe_; // HFAG
-  const double fPi_ = 92.21e-3; // PDG 2010
+  double fPi_;
   const double dFPi_ = 0.14e-3;
   const double kDRTauVex = 0.0;
   const double deltaEW = 0.001;

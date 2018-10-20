@@ -93,6 +93,15 @@ Configuration::Configuration(string configFilePath)
   dBe_ = jsonConfig["parameters"]["dBe"];
   vud_ = jsonConfig["parameters"]["vud"];
   dVud_ = jsonConfig["parameters"]["dVud"];
+  SEW_ = jsonConfig["parameters"]["SEW"];
+  pionMinusMass_ = jsonConfig["parameters"]["pionMinusMass"];
+  fPi_ = jsonConfig["parameters"]["fPi"];
+  f1P_ = jsonConfig["parameters"]["f1P"];
+  m1P_ = jsonConfig["parameters"]["m1P"];
+  g1P_ = jsonConfig["parameters"]["g1P"];
+  f2P_ = jsonConfig["parameters"]["f2P"];
+  m2P_ = jsonConfig["parameters"]["m2P"];
+  g2P_ = jsonConfig["parameters"]["g2P"];
 
   // add weights & s0s
   for(auto const& input : jsonConfig["parameters"]["input"]) {
@@ -121,6 +130,15 @@ Configuration::Configuration (
   const double &dBe,
   const double &vud,
   const double &dVud,
+  const double &SEW,
+  const double &pionMinusMass,
+  const double &fPi,
+  const double &f1P,
+  const double &m1P,
+  const double &g1P,
+  const double &f2P,
+  const double &m2P,
+  const double &g2P,
   const std::vector<double> &mq,
   const std::vector<double> &qqMTau,
   const std::vector<Input> &inputs,
@@ -152,6 +170,10 @@ Configuration::Configuration (
   dBe_ = dBe;
   vud_ = vud;
   dVud_ = dVud;
+  SEW_ = SEW;
+  pionMinusMass_ = pionMinusMass;
+  fPi_ = fPi;
+  f2P_ = f2P, m2P_ = m2P, g2P_ = g2P;
 
   beta_ = betaCoefficients(nc, nf);
 

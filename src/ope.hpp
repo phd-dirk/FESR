@@ -1,5 +1,5 @@
-#ifndef SRC_ADLER_FUNCTION_H
-#define SRC_ADLER_FUNCTION_H
+#ifndef SRC_OPE_H
+#define SRC_OPE_H
 
 #include "./configuration.hpp"
 #include "./numerics.hpp"
@@ -16,10 +16,10 @@
 
 using boost::numeric::ublas::matrix;
 
-class AdlerFunction : Numerics {
+class OPE : Numerics {
 public:
-  AdlerFunction(const Configuration &config);
-  AdlerFunction(
+  OPE(const Configuration &config);
+  OPE(
     const int &nc,
     const int &nf,
     const std::vector<double> &mq,
@@ -35,10 +35,10 @@ public:
     const double &g2P
   );
 
-  complex<double> D0(
+  static complex<double> D0(
     const complex<double> &s, const cmplx &mu2, const double &sTau,
-    const double &astau, const double &order
-  ) const;
+    const double &astau, const matrix<double> &c, const double &order
+  );
 
   // Contour integral for D_V+A(D=0) in FOPT
   double D0CIntFO(
@@ -70,7 +70,6 @@ public:
   double deltaP(const double &s0, const Weight &weight) const;
   double breitwigner(const double &s, const double &mbw, const double &gbw) const;
 
-  AlphaS amuRun_;
   MQRun mqRun_;
   matrix<double> c_;
   std::vector<double> beta_;

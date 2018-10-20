@@ -1,7 +1,7 @@
 #include "./theoretical_moments.hpp"
 
 TheoreticalMoments::TheoreticalMoments(const Configuration &config)
-  : AdlerFunction(config), inputs_(config.inputs_)
+  : OPE(config), inputs_(config.inputs_)
 {
   thMomContribs_ = config.thMomContribs_;
   vud_ = config.vud_;
@@ -25,7 +25,7 @@ TheoreticalMoments::TheoreticalMoments(
   const ThMomContribs &thMomContribs,
   const double &vud,
   const double &SEW
-) : AdlerFunction
+) : OPE
     (
       nc,
       nf,

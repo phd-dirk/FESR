@@ -1,9 +1,9 @@
-#include "./adler_function.hpp"
+#include "./ope.hpp"
 
 typedef std::function<complex<double>(complex<double>)> cmplxFunc;
 
-AdlerFunction::AdlerFunction(const Configuration &config)
-  :Numerics(), condensates_(config.condensates_), amuRun_(), mqRun_(config.sTau_)
+OPE::OPE(const Configuration &config)
+  :Numerics(), condensates_(config.condensates_), mqRun_(config.sTau_)
 {
   beta_ = Configuration::betaCoefficients(config.nc_, config.nf_);
   c_ = Configuration::adlerCoefficients(config.nf_, beta_);
@@ -14,7 +14,7 @@ AdlerFunction::AdlerFunction(const Configuration &config)
   f1P_ = config.f1P_; m1P_ = config.m1P_; g1P_=config.g1P_;
   f2P_ = config.f2P_; m2P_ = config.m2P_; g2P_=config.g2P_;
 }
-AdlerFunction::AdlerFunction(
+OPE::OPE(
   const int &nc,
   const int &nf,
   const std::vector<double> &mq,
@@ -38,25 +38,25 @@ AdlerFunction::AdlerFunction(
   f2P_ = f2P; m2P_ = m2P; g2P_ = g2P;
 }
 
-complex<double> AdlerFunction::D0(
+complex<double> OPE::D0(
   const complex<double> &s, const complex<double> &mu2, const double &sTau,
-  const double &astau, const double &order
-) const {
+  const double &astau, const matrix<double> &c, const double &order
+) {
   complex<double> L = log(-s/mu2);
-  complex<double> amu = amuRun_(mu2, sTau, astau/M_PI);
+  complex<double> amu = AlphaS::run(mu2, sTau, astau/M_PI);
 
   complex<double> sum(0., 0.);
   for (int n = 1; n <= order; n++) {
     for (int k = 1; k <= n; k++) {
       complex<double> powL = ( k-1 == 0 ) ? 1.0 : pow(L, k-1);
-      sum += pow(amu, n)*(double)k*c_(n, k)*powL;
+      sum += pow(amu, n)*(double)k*c(n, k)*powL;
     }
   }
 
-  return 1/4./pow(M_PI, 2)*(c_(0, 1) + sum);
+  return 1/4./pow(M_PI, 2)*(c(0, 1) + sum);
 }
 
-double AdlerFunction::D0CIntFO(
+double OPE::D0CIntFO(
   const double &s0, const Weight weight,
   const double &sTau, const double &astau,
   const double &order
@@ -64,30 +64,30 @@ double AdlerFunction::D0CIntFO(
    cmplxFunc f =
      [&](cmplx s) -> cmplx {
        cmplx mu2(s0, 0.);
-       return weight.wD(s)*D0(s0*s, mu2, sTau, astau, order);
+       return weight.wD(s)*D0(s0*s, mu2, sTau, astau, c_, order);
      };
   return (3*M_PI*complexContourIntegral(f)).real();
 };
 
-double AdlerFunction::D0CIntCI(
+double OPE::D0CIntCI(
   const double &s0, const Weight weight, const double &sTau, const double &astau,
   const double &order
 ) const {
   cmplxFunc f =
     [&](complex<double> x) -> complex<double> {
-    return weight.wD(x)*D0(s0*x, -x*s0, sTau, astau, order);
+    return weight.wD(x)*D0(s0*x, -x*s0, sTau, astau, c_, order);
   };
 
   return (3*M_PI*gaussIntegration(f)).real();
 };
 
-cmplx AdlerFunction::D4(
+cmplx OPE::D4(
   const cmplx &s, const cmplx &mu2, const double &sTau, const double &astau,
   const double &aGGinv, const int &order, const int &r
 ) const {
   const int i = 0, j = 1;
   cmplx L = log(-s/mu2);
-  cmplx amu = amuRun_(mu2, sTau, astau/M_PI);
+  cmplx amu = AlphaS::run(mu2, sTau, astau/M_PI);
 
   cmplx gluonCondensate(0.0, 0.0);
   const double pLT3 = 0; // the coefficient is not yet known
@@ -148,7 +148,7 @@ cmplx AdlerFunction::D4(
   return gluonCondensate + quarkCondensate + m4;
 }
 
-double AdlerFunction::D4CInt(
+double OPE::D4CInt(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const double &aGGinv, const int &r
 ) const {
@@ -171,13 +171,13 @@ double AdlerFunction::D4CInt(
   return (3*M_PI*complexContourIntegral(f)).real();
 };
 
-complex<double> AdlerFunction::D68(
+complex<double> OPE::D68(
   const complex<double> &s, const double &rho, const double &c8
 ) const {
   return 0.03*rho/pow(s, 3) + 0.04*c8/pow(s, 4);
 }
 
-double AdlerFunction::D68CInt(
+double OPE::D68CInt(
   const double &s0, const Weight &weight, const double &rho, const double &c8
 ) const {
   cmplxFunc f =
@@ -188,7 +188,7 @@ double AdlerFunction::D68CInt(
   return (3*M_PI*complexContourIntegral(f)).real();
 };
 
-double AdlerFunction::deltaP(const double &s0, const Weight &weight) const {
+double OPE::deltaP(const double &s0, const Weight &weight) const {
   double spi = pow(pionMinusMass_, 2);
   double pionPole = -4.*pow(fPi_, 2)/s0*spi/(sTau_ + 2.*spi)
     *weight.wR(spi/s0).real();
@@ -208,7 +208,7 @@ double AdlerFunction::deltaP(const double &s0, const Weight &weight) const {
   return 4.*pow(M_PI, 2)*( pionPole - adaptiveIntegrate(f, xth, 1.));
 }
 
-double AdlerFunction::breitwigner(
+double OPE::breitwigner(
   const double &s, const double &mbw, const double &gbw
 ) const {
   return mbw*gbw/M_PI/(pow(s - pow(mbw, 2), 2)+ pow(mbw, 2)*pow(gbw, 2));

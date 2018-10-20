@@ -2,12 +2,12 @@
 #define SRC_THEORETICAL_MOMENTS_H
 
 #include "./configuration.hpp"
-#include "./adler_function.hpp"
+#include "./ope.hpp"
 #include "./duality_violations.hpp"
 #include "./condensates.hpp"
 
 class TheoreticalMoments:
-    public AdlerFunction, DualityViolations
+    public OPE, DualityViolations
 {
  public:
   TheoreticalMoments(const Configuration &config);

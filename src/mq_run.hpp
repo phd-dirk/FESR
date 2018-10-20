@@ -6,15 +6,15 @@
 
 class MQRun {
  public:
-  MQRun(const double &sTau) : sTau_(sTau), amu_() {}
+  MQRun(const double &sTau) : sTau_(sTau) {}
 
   /*
     Calculates the ratio m(q^2)/m(p^2) from integrating the RG-equation in the complex
     q^2 plane from a given a(p^2) at p(^2)
   */
   cmplx operator ()(const cmplx &q2, const cmplx &p2, const double &atau) const {
-    cmplx ap = amu_(p2, sTau_, atau);
-    cmplx aq = amu_(q2, sTau_, atau);
+    cmplx ap = AlphaS::run(p2, sTau_, atau);
+    cmplx aq = AlphaS::run(q2, sTau_, atau);
 
     auto f = [](cmplx ap, cmplx aq) {
       return 0.25000289589113*atan(0.195762247334686 - 2.77752091706421*ap)
@@ -33,7 +33,6 @@ class MQRun {
 
  private:
   const double sTau_;
-  AlphaS amu_;
 };
 
 #endif
