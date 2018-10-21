@@ -16,12 +16,19 @@
 
 class AlphaS {
  public:
-  static cmplx runAlpha(const cmplx &mup, const cmplx &muq, const cmplx &aq);
-  // Computes ap(mup) from integrating the \beta function in the complex plane in
-  // Mathematica (runAlpha.nb). The initial condition a(muq)=aq is used.
+  // Computes ap(p^2) from integrating the \beta function in the complex plane
+  // The initial condition a(q^2)=aq is used.
+  // Mathematica (runAlpha.nb).
+  // !!! take in mind that this uses the momentum squared! (q^2, p^2)
+  // is equal to matthias zarg runner
   static cmplx run(
     const cmplx &q2, const cmplx &p2, const cmplx &ap
   );
+
+  // Computes ap(mup) from integrating the \beta function in the complex plane
+  // The initial condition a(muq)=aq is used.
+  // Mathematica (runAlpha.nb).
+  static cmplx runAlpha(const cmplx &mup, const cmplx &muq, const cmplx &aq);
 
  private:
   static int alpha_f(const gsl_vector *x, void *params, gsl_vector *f);

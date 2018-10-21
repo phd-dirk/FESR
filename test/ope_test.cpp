@@ -38,10 +38,12 @@ TEST_F(OPETest, D0) {
 
   EXPECT_NEAR(OPE::D0(3.0, -3.0, 3.1570893124000001, 0.31927, c, 3).real(), 2.6828728340843492e-2, 1e-15);
   EXPECT_NEAR(OPE::D0(3.0, -3.0, 3.1570893124000001, 0.31927, c, 3).imag(), -1.4849720954483447e-3, 1e-15);
+
+  EXPECT_NEAR(OPE::D0(3.0, 3.0, pow(1.77686, 2), 0.3156, c, 5).real(), 2.5734381131592217E-002, 1e-15);
 }
 
 TEST_F(OPETest, D0CInt) {
-  //D0CIntFO(s0, weight, sTau, aStau, order)
+  //D0CIntFO(s0, weight, sTau, aStau, c, order)
   EXPECT_NEAR(
     OPE::D0CIntFO(
       3.0, Weight(1), 3.1570893124000001, 0.31927, c, 5
@@ -62,6 +64,7 @@ TEST_F(OPETest, D0CInt) {
       2.6, Weight(6), 3.1570893124000001, 0.29, c, 5
     ), 0.28350497970822786, 1e-14
   );
+  EXPECT_NEAR(OPE::D0CIntFO(3.0, Weight(1), 3.1570893124000001, 0.3156, c, 5), 1.8067569476368137, 1e-15);
 
   // CIPT
   EXPECT_NEAR(ope_->D0CIntCI(2.6, Weight(1), 3.1570893124000001, 0.31927, 1), 1.7203914169060759, 1e-13);
@@ -88,7 +91,6 @@ TEST_F(OPETest, D0CInt) {
   //   0.21
   // );
 
-  // EXPECT_NEAR(ope.D0CIntCI(3.0, Weight(1), 3.1570893124000001, 0.31927, 5), 1.8005358682689818, 1e-13);
 }
 
 // TEST_F(OPETest, D2) {

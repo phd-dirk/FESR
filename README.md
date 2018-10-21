@@ -95,3 +95,15 @@ cp .clang_complete ../.clang_complete
 * [ROOT](https://root.cern.ch/)
 * [BOOST](https://www.boost.org/)
 * [GSL](https://www.gnu.org/software/gsl/doc/html/index.html)
+
+# Matthias FESR
+## Running Alpha_s 
+### Usage
+Take in mind that matthias algorithm calculates a(**q^2**) from a given a(**p^2**), consequently
+  static cmplx runAlpha(const cmplx &mup, const cmplx &muq, const cmplx &aq);
+`AlphaS::run(2.0, 3.15, 0.31927)` would be `zarg(3, (2d0, 0)**2, 3.15d0, 0.31927d0)`
+### Change order
+- uncomment zaint5 in alphas_run.f90 line 29
+- uncomment zint5 in alphas_run.f90 line 64
+
+

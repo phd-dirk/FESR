@@ -55,6 +55,14 @@ int main (int argc, char* argv[]) {
     const Configuration config(configFilePath);
     const Chisquared chisquared(config);
 
+    matrix<double> c = Configuration::adlerCoefficients(3, Configuration::betaCoefficients(3, 3));
+
+    complex<double> muq(3.1572314596, 0.0);
+    complex<double> aq(0.31927/M_PI, 0.0);
+    // std::cout << "amu " << AlphaS::runAlpha(2.0, 3.1572314596, 0.31927/M_PI) << std::endl;
+    std::cout << "D0" << OPE::D0(3.0, 3.0, pow(1.77686, 2), 0.3156, c, 5) << std::endl;
+    return 0;
+
     // MINUIT
     Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
 
