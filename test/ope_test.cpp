@@ -70,42 +70,17 @@ TEST_F(OPETest, D0CInt) {
   EXPECT_NEAR(ope_->D0CIntCI(2.6, Weight(1), 3.1570893124000001, 0.31927, 1), 1.7203914169060759, 1e-13);
   EXPECT_NEAR(ope_->D0CIntCI(2.6, Weight(1), 3.1570893124000001, 0.31927, 2), 1.7643779920232532, 1e-13);
   EXPECT_NEAR(ope_->D0CIntCI(2.6, Weight(1), 3.1570893124000001, 0.31927, 5), 1.8005358682689818, 1e-13);
-
-  // OPE ope = OPE(
-  //   3,
-  //   3,
-  //   { 2.8e-3, 5.0e-3, 97.0e-3 },
-  //   Condensates(
-  //     0.3156,
-  //     { 0.0201236, 0.0201236, 0.0160989 },
-  //     { 2.8e-3, 5.0e-3, 97.0e-3 }
-  //   ),
-  //   3.1572314596,
-  //   0.13957018,
-  //   92.21e-3,
-  //   2.2e-3,
-  //   1.3,
-  //   0.4,
-  //   0.19e-3,
-  //   1.8,
-  //   0.21
-  // );
-
 }
 
-// TEST_F(OPETest, D2) {
-//   const complex<double> s(3.1570893123374919, -1.9866720523795795e-5);
-//   const complex<double> mu2(3.1570893124, 0.);
-//   const double astau = 0.31927;
-//   const int order = 2;
-//   const uint r = 1;
-//   EXPECT_NEAR(ope_->D2(s, mu2, astau, order, r).real(), 3.4324915657182825e-7, 1e-09);
-// }
-
-// TEST_F(OPETest, D4) {
-//   // D4(s, mu, astau, aGGinv, order, r)
-//   EXPECT_NEAR(ope_->D4(3.0, 3.0, 3.1570893124000001, 0.31927, 2.1e-2, 5, 1).real(), 3.0462940737588433e-4, 1e-15);
-// }
+TEST_F(OPETest, D4) {
+  // D4(s, mu, astau, aGGinv, order, r)
+  EXPECT_NEAR(
+    OPE::D4(
+      3.0, 3.0, pow(1.77686, 2), 0.3156, 2.1e-2, 5, 1, { 2.8e-3, 5.0e-3, 97.0e-3 },
+      Condensates(0.3156, { 0.0201236, 0.0201236, 0.0160989 }, { 2.8e-3, 5.0e-3, 97.0e-3 })
+    ).real(), 3.0462940737588433e-4, 1e-15
+  );
+}
 
 // TEST_F(OPETest, D4CInt) {
 //   // D4CInt(s0, weight, sTau, astau, aGGinv, r)

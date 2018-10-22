@@ -18,6 +18,7 @@ using std::runtime_error;
 #include "./src/alpha_s.hpp"
 #include "./src/numerics.hpp"
 #include "./src/duality_violations.hpp"
+#include "./src/condensates.hpp"
 
 // Chisquared
 #include "./src/chisquared.hpp"
@@ -55,12 +56,17 @@ int main (int argc, char* argv[]) {
     const Configuration config(configFilePath);
     const Chisquared chisquared(config);
 
-    matrix<double> c = Configuration::adlerCoefficients(3, Configuration::betaCoefficients(3, 3));
+    Condensates cond = Condensates(
+      0.3156,
+      { -pow(0.272, 3), -pow(0.272, 3), 0.8*(-pow(0.272, 3)) },
+      { 2.8e-3, 5.0e-3, 97.0e-3 }
+    );
+    std::cout << "res \t" << cond.qqInv_[0] << std::endl;
 
-    complex<double> muq(3.1572314596, 0.0);
-    complex<double> aq(0.31927/M_PI, 0.0);
-    // std::cout << "amu " << AlphaS::runAlpha(2.0, 3.1572314596, 0.31927/M_PI) << std::endl;
-    std::cout << "D0" << OPE::D0(3.0, 3.0, pow(1.77686, 2), 0.3156, c, 5) << std::endl;
+    // std::cout << "D4 \t" << OPE::D4(
+    //   3.0, 3.0, pow(1.77686, 2), 0.3156, 2.1e-2, 5, 1, { 2.8e-3, 5.0e-3, 97.0e-3 },
+    //   Condensates(0.3156, { 0.0201236, 0.0201236, 0.0160989 }, { 2.8e-3, 5.0e-3, 97.0e-3 })
+    // ) << std::endl;
     return 0;
 
     // MINUIT

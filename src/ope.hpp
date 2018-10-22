@@ -50,11 +50,11 @@ public:
     const double &astau, const double &order
   ) const;
 
-  complex<double> D4(
-    const cmplx &s, const cmplx &mu2, const double &sTau,
-    const double &astau, const double &aGGinv,
-    const int &order, const int &r
-  ) const;
+  static complex<double> D4(
+    const complex<double> &s, const complex<double> &mu2, const double &sTau,
+    const double &astau, const double &aGGinv, const int &order, const int &r,
+    const std::vector<double> &mq, const Condensates &condensates
+  );
   double D4CInt(
     const double &s0, const Weight &weight, const double &sTau,
     const double &astau, const double &aGGinv, const int &r
@@ -70,7 +70,6 @@ public:
   double deltaP(const double &s0, const Weight &weight) const;
   double breitwigner(const double &s, const double &mbw, const double &gbw) const;
 
-  MQRun mqRun_;
   matrix<double> c_;
   std::vector<double> beta_;
   std::vector<double> mq_;

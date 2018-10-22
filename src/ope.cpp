@@ -3,7 +3,7 @@
 typedef std::function<complex<double>(complex<double>)> cmplxFunc;
 
 OPE::OPE(const Configuration &config)
-  :Numerics(), condensates_(config.condensates_), mqRun_(config.sTau_)
+  :Numerics(), condensates_(config.condensates_)
 {
   beta_ = Configuration::betaCoefficients(config.nc_, config.nf_);
   c_ = Configuration::adlerCoefficients(config.nf_, beta_);
@@ -28,7 +28,7 @@ OPE::OPE(
   const double &f2P,
   const double &m2P,
   const double &g2P
-) : condensates_(condensates), mqRun_(sTau) {
+) : condensates_(condensates) {
   beta_ = Configuration::betaCoefficients(nc, nf);
   c_ = Configuration::adlerCoefficients(nf, beta_);
   sTau_ = sTau;
@@ -80,10 +80,11 @@ double OPE::D0CIntCI(
   return (3*M_PI*gaussIntegration(f)).real();
 };
 
-cmplx OPE::D4(
-  const cmplx &s, const cmplx &mu2, const double &sTau, const double &astau,
-  const double &aGGinv, const int &order, const int &r
-) const {
+complex<double> OPE::D4(
+  const complex<double> &s, const complex<double> &mu2, const double &sTau,
+  const double &astau, const double &aGGinv, const int &order, const int &r,
+  const std::vector<double> &mq, const Condensates &condensates
+) {
   const int i = 0, j = 1;
   cmplx L = log(-s/mu2);
   cmplx amu = AlphaS::run(mu2, sTau, astau/M_PI);
@@ -103,9 +104,16 @@ cmplx OPE::D4(
   complex<double> quarkCondensate(0.0, 0.0);
   const double qLT3 = 0., rLT3 = 0., tLT3 = 0.;
 
-  const double mqqa = mq_[i]*condensates_.qqInv_[i] + mq_[j]*condensates_.qqInv_[j];
-  const double mqqb = r*(mq_[i]*condensates_.qqInv_[j] + mq_[j]*condensates_.qqInv_[i]);
-  const double mqqs = mq_[0]*condensates_.qqInv_[0] + mq_[1]*condensates_.qqInv_[1] + mq_[2]*condensates_.qqInv_[2];
+  const double mqqa = mq[i]*condensates.qqInv_[i] + mq[j]*condensates.qqInv_[j];
+  const double mqqb = r*(
+    mq[i]*condensates.qqInv_[j] + mq[j]*condensates.qqInv_[i]
+  );
+  const double mqqs = mq[0]*condensates.qqInv_[0]
+    + mq[1]*condensates.qqInv_[1]
+    + mq[2]*condensates.qqInv_[2];
+
+  std::cout << std::endl;
+  std::cout << mqqa << "\t" << mqqb << "\t" << mqqs << std::endl;
 
   if (order > -1)
     quarkCondensate += 2.*mqqa;
@@ -127,15 +135,16 @@ cmplx OPE::D4(
       )*mqqs
     )*pow(amu, 3);
   quarkCondensate /= pow(s, 2);
+  std::cout << std::endl << "quarkCondensate \t" << quarkCondensate << std::endl;
 
   // m4
   cmplx m4(0.0, 0.0);
-  cmplx rmq = mqRun_(mu2, sTau_, astau/M_PI);
+  cmplx rmq = MQ::run(mu2, sTau, sTau, astau/M_PI);
 
-  cmplx m4a = (pow(mq_[i], 4) + pow(mq_[j], 4))*pow(rmq, 4);
-  cmplx m4b = r*(mq_[i]*pow(mq_[j], 3) + mq_[j]*pow(mq_[i], 3))*pow(rmq, 4);
-  cmplx m4c = (pow(mq_[i], 2)*pow(mq_[j], 2))*pow(rmq, 4);
-  cmplx m4d = (pow(mq_[0], 4) + pow(mq_[1], 4) + pow(mq_[2], 4))*pow(rmq, 4);
+  cmplx m4a = (pow(mq[i], 4) + pow(mq[j], 4))*pow(rmq, 4);
+  cmplx m4b = r*(mq[i]*pow(mq[j], 3) + mq[j]*pow(mq[i], 3))*pow(rmq, 4);
+  cmplx m4c = (pow(mq[i], 2)*pow(mq[j], 2))*pow(rmq, 4);
+  cmplx m4d = (pow(mq[0], 4) + pow(mq[1], 4) + pow(mq[2], 4))*pow(rmq, 4);
 
   if ( order > 1)
     m4 += (-6./7./amu + 1.5*L - 0.25)*m4a - 8./7.*m4b + 3.*m4c - m4d/14.;
@@ -164,7 +173,10 @@ double OPE::D4CInt(
   cmplxFunc f =
     [&](cmplx s) -> cmplx {
     cmplx mu2(s0, 0.);
-    return weight.wD(s)*D4(s0*s, mu2, sTau, astau, aGGinv, norder, r);
+    return weight.wD(s)*D4(
+      s0*s, mu2, sTau, astau, aGGinv, norder, r,
+      mq_, condensates_
+    );
   };
 
   return (3*M_PI*complexContourIntegral(f)).real();
