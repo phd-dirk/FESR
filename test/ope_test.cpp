@@ -77,20 +77,38 @@ TEST_F(OPETest, D4) {
   EXPECT_NEAR(
     OPE::D4(
       3.0, 3.0, pow(1.77686, 2), 0.3156, 2.1e-2, 5, 1, { 2.8e-3, 5.0e-3, 97.0e-3 },
-      Condensates(0.3156, { 0.0201236, 0.0201236, 0.0160989 }, { 2.8e-3, 5.0e-3, 97.0e-3 })
-    ).real(), 3.0462940737588433e-4, 1e-15
+      Condensates(
+        0.3156,
+        { -pow(0.272, 3), -pow(0.272, 3), 0.8*(-pow(0.272, 3)) },
+        { 2.8e-3, 5.0e-3, 97.0e-3 }
+      )
+    ).real(), 3.0537543015491460e-4, 1e-15
   );
+  EXPECT_NEAR(
+    OPE::D4(
+      3.0, 3.0, pow(1.77686, 2), 0.3156, 2.1e-2, 5, 1, { 2.8e-3, 5.0e-3, 97.0e-3 },
+      Condensates(
+        0.3156,
+        { -pow(0.272, 3), -pow(0.272, 3), 0.8*(-pow(0.272, 3)) },
+        { 2.8e-3, 5.0e-3, 97.0e-3 }
+      )
+    ).imag(), 3.3420812507851665e-5, 1e-15
+  ); // imag has minus sign?
 }
 
-// TEST_F(OPETest, D4CInt) {
-//   // D4CInt(s0, weight, sTau, astau, aGGinv, r)
-//   EXPECT_NEAR(ope_->D4CInt(3.0, Weight(1), 3.1570893124000001, 0.31927, 2.1e-2, 1),
-//               1.942350658196885e-3, config->tolerance);
-//   EXPECT_NEAR(ope_->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.31927, 2.1e-2, 1),
-//               -1.8595234733280692e-2 , config->tolerance);
-//   EXPECT_NEAR(ope_->D4CInt(3.0, Weight(6), 3.1570893124000001, 0.28, 2.1e-2, 1),
-//               -1.8945624330502554e-2, config->tolerance);
-// }
+TEST_F(OPETest, D4CInt) {
+  // D4CInt(s0, weight, sTau, astau, aGGinv, r)
+  EXPECT_NEAR(
+    OPE::D4CInt(
+      3.0, Weight(1), pow(1.77686, 2), 0.3156, 2.1e-2, 1, { 2.8e-3, 5.0e-3, 97.0e-3 },
+      Condensates(
+        0.3156,
+        { -pow(0.272, 3), -pow(0.272, 3), 0.8*(-pow(0.272, 3)) },
+        { 2.8e-3, 5.0e-3, 97.0e-3 }
+      )
+    ), 1.889902422930036e-3, 1e-15
+  );
+}
 
 TEST_F(OPETest, D68) {
   // D68(s, rho, c8)

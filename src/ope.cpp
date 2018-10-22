@@ -112,9 +112,6 @@ complex<double> OPE::D4(
     + mq[1]*condensates.qqInv_[1]
     + mq[2]*condensates.qqInv_[2];
 
-  std::cout << std::endl;
-  std::cout << mqqa << "\t" << mqqb << "\t" << mqqs << std::endl;
-
   if (order > -1)
     quarkCondensate += 2.*mqqa;
   if (order > 0)
@@ -135,7 +132,6 @@ complex<double> OPE::D4(
       )*mqqs
     )*pow(amu, 3);
   quarkCondensate /= pow(s, 2);
-  std::cout << std::endl << "quarkCondensate \t" << quarkCondensate << std::endl;
 
   // m4
   cmplx m4(0.0, 0.0);
@@ -158,15 +154,16 @@ complex<double> OPE::D4(
 
 double OPE::D4CInt(
   const double &s0, const Weight &weight, const double &sTau,
-  const double &astau, const double &aGGinv, const int &r
-) const {
+  const double &astau, const double &aGGinv, const int &r,
+  const std::vector<double> &mq, const Condensates &condensates
+) {
   cmplxFunc fTest =
     [&](cmplx s) -> cmplx const {
     return weight.wD(s)/pow(s, 2);
   };
 
   double norder = 2;
-  if ( abs(complexContourIntegral(fTest).real()) < 2.e-14) {
+  if ( abs(Numerics::complexContourIntegral(fTest).real()) < 2.e-14) {
     norder = 3;
   }
 
@@ -175,11 +172,11 @@ double OPE::D4CInt(
     cmplx mu2(s0, 0.);
     return weight.wD(s)*D4(
       s0*s, mu2, sTau, astau, aGGinv, norder, r,
-      mq_, condensates_
+      mq, condensates
     );
   };
 
-  return (3*M_PI*complexContourIntegral(f)).real();
+  return (3*M_PI*Numerics::complexContourIntegral(f)).real();
 };
 
 complex<double> OPE::D68(

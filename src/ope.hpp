@@ -55,10 +55,11 @@ public:
     const double &astau, const double &aGGinv, const int &order, const int &r,
     const std::vector<double> &mq, const Condensates &condensates
   );
-  double D4CInt(
+  static double D4CInt(
     const double &s0, const Weight &weight, const double &sTau,
-    const double &astau, const double &aGGinv, const int &r
-  ) const;
+    const double &astau, const double &aGGinv, const int &r,
+    const std::vector<double> &mq, const Condensates &condensates
+  );
   complex<double> D68(
     const complex<double> &s, const double &rho, const double &c8
   ) const;

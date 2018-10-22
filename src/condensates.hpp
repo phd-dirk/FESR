@@ -28,8 +28,6 @@ class Condensates {
   };
 
   std::vector<double> qqMTau_; // ( <uu>(mTau), <dd>(mTau), <ss>(Mtau) )
-
-
   std::vector<double> qqInv_;
 };
 

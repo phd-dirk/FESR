@@ -6,6 +6,8 @@ TheoreticalMoments::TheoreticalMoments(const Configuration &config)
   thMomContribs_ = config.thMomContribs_;
   vud_ = config.vud_;
   SEW_ = config.SEW_;
+  mq_ = config.mq_;
+  condensates_ = config.condensates_;
 }
 TheoreticalMoments::TheoreticalMoments(
   const int &nc,
@@ -47,6 +49,8 @@ TheoreticalMoments::TheoreticalMoments(
   SEW_ = SEW;
   nc_ = nc;
   nf_ = nf;
+  mq_ = mq;
+  condensates_ = condensates;
 }
 
 double TheoreticalMoments::thMom(
@@ -105,7 +109,8 @@ double TheoreticalMoments::cIntVpAD4FO(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const double &aGGinv
 ) const {
-  return  D4CInt(s0, weight, sTau, astau, aGGinv, 1) + D4CInt(s0, weight, sTau, astau, aGGinv, -1);
+  return  D4CInt(s0, weight, sTau, astau, aGGinv, 1, mq_, condensates_)
+    + D4CInt(s0, weight, sTau, astau, aGGinv, -1, mq_, condensates_);
 }
 
 double TheoreticalMoments::del0(

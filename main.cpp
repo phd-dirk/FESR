@@ -53,21 +53,21 @@ int main (int argc, char* argv[]) {
   }
 
   try {
+    std::cout << "D4 \t" << OPE::D4(
+      3.0, 3.0, pow(1.77686, 2), 0.3156, 2.1e-2, 5, 1, { 2.8e-3, 5.0e-3, 97.0e-3 },
+      Condensates(
+        0.3156,
+        { -pow(0.272, 3), -pow(0.272, 3), 0.8*(-pow(0.272, 3)) },
+        { 2.8e-3, 5.0e-3, 97.0e-3 }
+      )
+    ) << std::endl;
+    return 0;
+
+
     const Configuration config(configFilePath);
     const Chisquared chisquared(config);
 
-    Condensates cond = Condensates(
-      0.3156,
-      { -pow(0.272, 3), -pow(0.272, 3), 0.8*(-pow(0.272, 3)) },
-      { 2.8e-3, 5.0e-3, 97.0e-3 }
-    );
-    std::cout << "res \t" << cond.qqInv_[0] << std::endl;
 
-    // std::cout << "D4 \t" << OPE::D4(
-    //   3.0, 3.0, pow(1.77686, 2), 0.3156, 2.1e-2, 5, 1, { 2.8e-3, 5.0e-3, 97.0e-3 },
-    //   Condensates(0.3156, { 0.0201236, 0.0201236, 0.0160989 }, { 2.8e-3, 5.0e-3, 97.0e-3 })
-    // ) << std::endl;
-    return 0;
 
     // MINUIT
     Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");

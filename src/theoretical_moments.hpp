@@ -73,7 +73,8 @@ class TheoreticalMoments:
   std::vector<Input> inputs_;
   ThMomContribs thMomContribs_;
   double nc_, nf_, vud_, SEW_;
-
+  std::vector<double> mq_;
+  Condensates condensates_;
 };
 
 #endif
