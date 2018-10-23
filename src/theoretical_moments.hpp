@@ -46,10 +46,11 @@ class ThMoms:
     const double &s0, const Weight &weight, const double &sTau,
     const double &astau, const int &order
   ) const;
-  double cIntVpAD4FO(
+  static double cIntVpAD4(
     const double &s0, const Weight &weight, const double &sTau,
-    const double &astau, const double &aGGinv
-  ) const;
+    const double &astau, const double &aGGinv,
+    const std::vector<double> mq, Condensates condensates
+  );
 
   double del0(
     const double &s0, const Weight &weight, const double &sTau,

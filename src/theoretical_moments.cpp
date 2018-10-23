@@ -71,13 +71,13 @@ double ThMoms::operator() (
     if ( thMomContribs_.scheme == "FO" ) {
       rTauTh += cIntVpAD0FO(s0, w, sTau_, astau, c, order);
     }
-    // if ( thMomContribs_.scheme == "CI") {
-    //   rTauTh += cIntVpAD0CI(s0, w, sTau_, astau, order);
-    // }
+    if ( thMomContribs_.scheme == "CI") {
+      rTauTh += cIntVpAD0CI(s0, w, sTau_, astau, order);
+    }
   }
   // // D4
   // if ( thMomContribs_.D4 )
-  //   rTauTh += cIntVpAD4FO(s0, w, sTau_, astau, aGGinv);
+  //   rTauTh += cIntVpAD4(s0, w, sTau_, astau, aGGinv, mq_, condensates_);
   // // D68
   // if ( thMomContribs_.D68 )
   //   rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
@@ -105,12 +105,13 @@ double ThMoms::cIntVpAD0CI(
   return 2.*D0CIntCI(s0, weight, sTau, astau, order);
 }
 
-double ThMoms::cIntVpAD4FO(
+double ThMoms::cIntVpAD4(
   const double &s0, const Weight &weight, const double &sTau,
-  const double &astau, const double &aGGinv
-) const {
-  return  D4CInt(s0, weight, sTau, astau, aGGinv, 1, mq_, condensates_)
-    + D4CInt(s0, weight, sTau, astau, aGGinv, -1, mq_, condensates_);
+  const double &astau, const double &aGGinv,
+  const std::vector<double> mq, Condensates condensates
+) {
+  return  D4CInt(s0, weight, sTau, astau, aGGinv, 1, mq, condensates)
+    + D4CInt(s0, weight, sTau, astau, aGGinv, -1, mq, condensates);
 }
 
 double ThMoms::del0(
@@ -126,7 +127,7 @@ double ThMoms::del4(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const double &aGGinv
 ) const {
-  return cIntVpAD4FO(s0, weight, sTau, astau, aGGinv)/3.;
+  return cIntVpAD4(s0, weight, sTau, astau, aGGinv, mq_, condensates_)/3.;
 }
 double ThMoms::del6(
   const double &s0, const Weight &weight,
