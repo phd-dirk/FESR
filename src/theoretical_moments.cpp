@@ -72,15 +72,15 @@ double ThMoms::operator() (
   if ( thMomContribs_.D0 ) {
     // check if FOPT or CIPT
     if ( thMomContribs_.scheme == "FO" ) {
-      rTauTh += cIntVpAD0FO(s0, w, sTau_, astau, c, order);
+      rTauTh += cIntVpAD0FO(s0, w, sTau, astau, c, order);
     }
     if ( thMomContribs_.scheme == "CI") {
-      rTauTh += cIntVpAD0CI(s0, w, sTau_, astau, order);
+      rTauTh += cIntVpAD0CI(s0, w, sTau, astau, order);
     }
   }
   // D4
   if ( thMomContribs_.D4 )
-    rTauTh += cIntVpAD4(s0, w, sTau_, astau, aGGinv, mq_, condensates_);
+    rTauTh += cIntVpAD4(s0, w, sTau, astau, aGGinv, mq_, condensates_);
   // D68
   if ( thMomContribs_.D68 )
     rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);

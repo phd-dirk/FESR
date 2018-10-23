@@ -55,12 +55,38 @@ int main (int argc, char* argv[]) {
   try {
     const Configuration config(configFilePath);
     const Chisquared chisquared(config);
-    const ThMoms thMoms(config);
+    const ThMoms thMoms(
+      3, 3, { 2.8e-3, 5.0e-3, 97.0e-3 },
+      Condensates(
+        0.3156,
+        { -pow(0.272, 3), -pow(0.272, 3), 0.8*-pow(0.272, 3) },
+        { 2.8e-3, 5.0e-3, 97.0e-3 }
+      ),
+      pow(1.77686, 2),
+      0.13957018,
+      92.21e-3,
+      2.2e-3, 1.3, 0.4,
+      0.19e-3, 1.8, 0.21,
+      {
+        {
+          Weight(1),
+          {
+            3.1572314596000002, 3.0, 2.800, 2.600, 2.400, 2.300,
+            2.200, 2.100, 2.000
+          }
+        }
+      },
+      { "FO", true, true, true, false, true },
+      0.97420,
+      1.0198
+    );
 
-    // std::cout << "thmoms \t" << thMoms(
-    //  2.0, Weight(1), 0.3179, 0.021, -0.15, 0.24, 5,
-    //   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-    // ) << std::endl;
+    std::cout << "thmoms \t" << thMoms(
+      pow(1.77686, 2), Weight(1), 0.3179, 0.021, -0.15, 0.24, 5, pow(1.77686, 2),
+     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+     0.13957018, 92.21e-3,
+     2.2e-3, 1.3, 0.4, 0.19e-3, 1.8, 0.21
+    ) << std::endl;
     return 0;
 
 
