@@ -5,6 +5,7 @@
 #include "./ope.hpp"
 #include "./duality_violations.hpp"
 #include "./condensates.hpp"
+#include "./pseudoscalar_pheno.hpp"
 
 class ThMoms:
     public OPE, DualityViolations
@@ -32,10 +33,14 @@ class ThMoms:
   );
 
   double operator() (
-    cDbl &s0, const Weight &w, cDbl &astau,
-    cDbl &aGGinv, cDbl &rhoVpA, cDbl &c8VpA, cDbl &order,
-    cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,
-    cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA
+    const double &s0, const Weight &w,
+    const double &astau, const double &aGGinv, const double &rhoVpA,
+    const double &c8VpA, const double &order, const double &sTau,
+    const double &deV, const double &gaV, const double &alV, const double &beV,
+    const double &deA, const double &gaA, const double &alA, const double &beA,
+    const double &mPiM, const double &fPi,
+    const double &f1P, const double &m1P, const double &g1P,
+    const double &f2P, const double &m2P, const double &g2P
   ) const;
 
   static double cIntVpAD0FO(
@@ -66,7 +71,8 @@ class ThMoms:
   ) const;
   double del8(
     const double &s0, const Weight &weight,
-    const double &c8VpA) const;
+    const double &c8VpA
+  ) const;
   double del68(
     const double &s0, const Weight &weight,
     const double &rhoVpA, const double &c8VpA

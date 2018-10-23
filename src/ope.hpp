@@ -67,10 +67,6 @@ public:
     const double &s0, const Weight &weight, const double &rho, const double &c8
   );
 
-  // Pseudoscalar contribution from pion pion pole and excited resonances
-  double deltaP(const double &s0, const Weight &weight) const;
-  double breitwigner(const double &s, const double &mbw, const double &gbw) const;
-
   matrix<double> c_;
   std::vector<double> beta_;
   std::vector<double> mq_;

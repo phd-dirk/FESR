@@ -195,29 +195,3 @@ double OPE::D68CInt(
 
   return (3*M_PI*Numerics::complexContourIntegral(f)).real();
 };
-
-double OPE::deltaP(const double &s0, const Weight &weight) const {
-  double spi = pow(pionMinusMass_, 2);
-  double pionPole = -4.*pow(fPi_, 2)/s0*spi/(sTau_ + 2.*spi)
-    *weight.wR(spi/s0).real();
-  double xth = 9.*spi/s0;
-
-  function<double(double)> f =
-    [&](const double &s) -> double {
-      double x = s0*s;
-      double rhores =  2./pow(x, 2)
-        *(
-          pow(f1P_, 2)*pow(m1P_, 4)*breitwigner(x, m1P_, g1P_)
-          + pow(f2P_, 2)*pow(m2P_, 4)*breitwigner(x, m2P_, g2P_)
-        );
-      return weight.wR(s).real()*2.*x/(sTau_ + 2.*x)*rhores;
-    };
-
-  return 4.*pow(M_PI, 2)*( pionPole - adaptiveIntegrate(f, xth, 1.));
-}
-
-double OPE::breitwigner(
-  const double &s, const double &mbw, const double &gbw
-) const {
-  return mbw*gbw/M_PI/(pow(s - pow(mbw, 2), 2)+ pow(mbw, 2)*pow(gbw, 2));
-}

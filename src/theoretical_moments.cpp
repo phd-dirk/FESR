@@ -54,12 +54,15 @@ ThMoms::ThMoms(
 }
 
 double ThMoms::operator() (
-  cDbl &s0, const Weight &w,
-  cDbl &astau, cDbl &aGGinv, cDbl &rhoVpA, cDbl &c8VpA, cDbl &order,
-  cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,
-  cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA
-) const
-{
+  const double &s0, const Weight &w,
+  const double &astau, const double &aGGinv, const double &rhoVpA,
+  const double &c8VpA, const double &order, const double &sTau,
+  const double &deV, const double &gaV, const double &alV, const double &beV,
+  const double &deA, const double &gaA, const double &alA, const double &beA,
+  const double &mPiM, const double &fPi,
+  const double &f1P, const double &m1P, const double &g1P,
+  const double &f2P, const double &m2P, const double &g2P
+) const {
   double rTauTh = 0.;
   matrix<double> c = Configuration::adlerCoefficients(
     nf_, Configuration::betaCoefficients(nc_, nf_)
@@ -75,18 +78,21 @@ double ThMoms::operator() (
       rTauTh += cIntVpAD0CI(s0, w, sTau_, astau, order);
     }
   }
-  // // D4
-  // if ( thMomContribs_.D4 )
-  //   rTauTh += cIntVpAD4(s0, w, sTau_, astau, aGGinv, mq_, condensates_);
-  // // D68
-  // if ( thMomContribs_.D68 )
-  //   rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
-  // // DV
-  // if ( thMomContribs_.DV )
-  //   rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
-  // // PionPole
-  // if ( thMomContribs_.PionPole )
-  //   rTauTh += 3.*deltaP(s0, w);
+  // D4
+  if ( thMomContribs_.D4 )
+    rTauTh += cIntVpAD4(s0, w, sTau_, astau, aGGinv, mq_, condensates_);
+  // D68
+  if ( thMomContribs_.D68 )
+    rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
+  // DV
+  if ( thMomContribs_.DV )
+    rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
+  // PionPole
+  if ( thMomContribs_.PionPole )
+    rTauTh += 3.*PSPheno::deltaP(
+      s0, w, sTau, mPiM,
+      fPi, f1P, m1P, g1P, f2P, m2P, g2P
+    );
 
   return pow(vud_, 2)*SEW_*rTauTh;
 }

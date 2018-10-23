@@ -113,8 +113,11 @@ vec Chisquared::calcThMoms(
     for(auto const& s0: s0s) {
       ftrs[i] = std::async(
         &ThMoms::operator(),
-        &th, s0, w, astau, aGGinv, rhoVpA, c8VpA, order,
-        deV, gaV, alV, beV, deA, gaA, alA, beA
+        &th, s0, w, astau, aGGinv, rhoVpA, c8VpA, order, config_.sTau_,
+        deV, gaV, alV, beV, deA, gaA, alA, beA,
+        config_.pionMinusMass_, config_.fPi_,
+        config_.f1P_, config_.m1P_, config_.g1P_,
+        config_.f2P_, config_.m2P_, config_.g2P_
       );
       i++;
     }

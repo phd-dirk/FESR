@@ -57,13 +57,8 @@ int main (int argc, char* argv[]) {
     const Chisquared chisquared(config);
     const ThMoms thMoms(config);
 
-    std::cout << "cintVpAD0FO \t" << ThMoms::cIntVpAD0FO(
-      2.0, Weight(1), pow(1.77686, 2), 0.3179,
-      Configuration::adlerCoefficients(3, Configuration::betaCoefficients(3, 3)),
-      5
-    ) << std::endl;
     // std::cout << "thmoms \t" << thMoms(
-    //   pow(1.77686, 2), Weight(1), 0.3179, 0.021, -0.15, 0.24, 5,
+    //  2.0, Weight(1), 0.3179, 0.021, -0.15, 0.24, 5,
     //   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
     // ) << std::endl;
     return 0;

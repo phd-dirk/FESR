@@ -132,9 +132,3 @@ TEST_F(OPETest, D68CInt) {
   EXPECT_NEAR(OPE::D68CInt(3.0, Weight(1), -0.5, 0.1), -6.8721689903881375E-002, 1e-15);
 }
 
-TEST_F(OPETest, deltaP) {
-  // deltaP(s0, weight)
-  EXPECT_NEAR(ope_->deltaP(3.0, Weight(1)), -2.7752063630383842e-3, 1e-15);
-  EXPECT_NEAR(ope_->deltaP(2.0, Weight(1)), -4.138431838090359e-3, 1e-15);
-  EXPECT_NEAR(ope_->deltaP(2.0, Weight(6)), -4.809780763096577e-5, 1e-15);
-}
