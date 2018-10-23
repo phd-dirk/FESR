@@ -1,6 +1,6 @@
 #include "./theoretical_moments.hpp"
 
-TheoreticalMoments::TheoreticalMoments(const Configuration &config)
+ThMoms::ThMoms(const Configuration &config)
   : OPE(config), inputs_(config.inputs_)
 {
   thMomContribs_ = config.thMomContribs_;
@@ -9,7 +9,7 @@ TheoreticalMoments::TheoreticalMoments(const Configuration &config)
   mq_ = config.mq_;
   condensates_ = config.condensates_;
 }
-TheoreticalMoments::TheoreticalMoments(
+ThMoms::ThMoms(
   const int &nc,
   const int &nf,
   const std::vector<double> &mq,
@@ -53,7 +53,7 @@ TheoreticalMoments::TheoreticalMoments(
   condensates_ = condensates;
 }
 
-double TheoreticalMoments::thMom(
+double ThMoms::operator() (
   cDbl &s0, const Weight &w,
   cDbl &astau, cDbl &aGGinv, cDbl &rhoVpA, cDbl &c8VpA, cDbl &order,
   cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,
@@ -91,21 +91,21 @@ double TheoreticalMoments::thMom(
   return pow(vud_, 2)*SEW_*rTauTh;
 }
 
-double TheoreticalMoments::cIntVpAD0FO(
+double ThMoms::cIntVpAD0FO(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const matrix<double> &c, const int &order
 ) const {
   return 2.0*D0CIntFO(s0, weight, sTau, astau, c, order);
 }
 
-double TheoreticalMoments::cIntVpAD0CI(
+double ThMoms::cIntVpAD0CI(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const int &order
 ) const {
   return 2.*D0CIntCI(s0, weight, sTau, astau, order);
 }
 
-double TheoreticalMoments::cIntVpAD4FO(
+double ThMoms::cIntVpAD4FO(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const double &aGGinv
 ) const {
@@ -113,7 +113,7 @@ double TheoreticalMoments::cIntVpAD4FO(
     + D4CInt(s0, weight, sTau, astau, aGGinv, -1, mq_, condensates_);
 }
 
-double TheoreticalMoments::del0(
+double ThMoms::del0(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const matrix<double> &c, const int &order
 ) const {
@@ -122,25 +122,25 @@ double TheoreticalMoments::del0(
     - cIntVpAD0FO(s0, weight, sTau, astau, c, 0)
   )/3.0;
 }
-double TheoreticalMoments::del4(
+double ThMoms::del4(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const double &aGGinv
 ) const {
   return cIntVpAD4FO(s0, weight, sTau, astau, aGGinv)/3.;
 }
-double TheoreticalMoments::del6(
+double ThMoms::del6(
   const double &s0, const Weight &weight,
   const double &rhoVpA
 ) const {
   return D68CInt(s0, weight, rhoVpA, 0.0)/3.;
 }
-double TheoreticalMoments::del8(
+double ThMoms::del8(
   const double &s0, const Weight &weight,
   const double &c8VpA
 ) const {
   return D68CInt(s0, weight, 0.0, c8VpA)/3.;
 }
-double TheoreticalMoments::del68(
+double ThMoms::del68(
   const double &s0, const Weight &weight,
   const double &rhoVpA, const double &c8VpA
 ) const {

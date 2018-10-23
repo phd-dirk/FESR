@@ -60,12 +60,12 @@ public:
     const double &astau, const double &aGGinv, const int &r,
     const std::vector<double> &mq, const Condensates &condensates
   );
-  complex<double> D68(
+  static complex<double> D68(
     const complex<double> &s, const double &rho, const double &c8
-  ) const;
-  double D68CInt(
+  );
+  static double D68CInt(
     const double &s0, const Weight &weight, const double &rho, const double &c8
-  ) const;
+  );
 
   // Pseudoscalar contribution from pion pion pole and excited resonances
   double deltaP(const double &s0, const Weight &weight) const;

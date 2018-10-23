@@ -181,19 +181,19 @@ double OPE::D4CInt(
 
 complex<double> OPE::D68(
   const complex<double> &s, const double &rho, const double &c8
-) const {
+) {
   return 0.03*rho/pow(s, 3) + 0.04*c8/pow(s, 4);
 }
 
 double OPE::D68CInt(
   const double &s0, const Weight &weight, const double &rho, const double &c8
-) const {
+) {
   cmplxFunc f =
     [&](cmplx s) -> cmplx {
       return weight.wD(s)*D68(s0*s, rho, c8);
     };
 
-  return (3*M_PI*complexContourIntegral(f)).real();
+  return (3*M_PI*Numerics::complexContourIntegral(f)).real();
 };
 
 double OPE::deltaP(const double &s0, const Weight &weight) const {

@@ -105,14 +105,14 @@ vec Chisquared::calcThMoms(
 {
   vec thMoms(config_.momCount_);
   std::vector<std::future<double>> ftrs(config_.momCount_);
-  TheoreticalMoments th(config_);
+  ThMoms th(config_);
   int i = 0;
   for(auto const& input: config_.inputs_) {
     vec s0s = input.s0s;
     Weight w = input.weight;
     for(auto const& s0: s0s) {
       ftrs[i] = std::async(
-        &TheoreticalMoments::thMom,
+        &ThMoms::operator(),
         &th, s0, w, astau, aGGinv, rhoVpA, c8VpA, order,
         deV, gaV, alV, beV, deA, gaA, alA, beA
       );

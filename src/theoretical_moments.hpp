@@ -6,12 +6,12 @@
 #include "./duality_violations.hpp"
 #include "./condensates.hpp"
 
-class TheoreticalMoments:
+class ThMoms:
     public OPE, DualityViolations
 {
  public:
-  TheoreticalMoments(const Configuration &config);
-  TheoreticalMoments(
+  ThMoms(const Configuration &config);
+  ThMoms(
     const int &nc,
     const int &nf,
     const std::vector<double> &mq,
@@ -31,7 +31,7 @@ class TheoreticalMoments:
     const double &SEW
   );
 
-  double thMom(
+  double operator() (
     cDbl &s0, const Weight &w, cDbl &astau,
     cDbl &aGGinv, cDbl &rhoVpA, cDbl &c8VpA, cDbl &order,
     cDbl &deV, cDbl &gaV, cDbl &alV, cDbl &beV,

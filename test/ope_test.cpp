@@ -13,7 +13,7 @@ using boost::numeric::ublas::matrix;
 
 class OPETest : public ::testing::Test {
 protected:
-  TheoreticalMoments *thMom_;
+  ThMoms *thMom_;
   OPE *ope_;
   Configuration *config;
   matrix<double> c;
@@ -21,7 +21,7 @@ protected:
   virtual void SetUp() {
     config = new Configuration("./test/configuration_test.json");
     ope_ = new OPE(*config);
-    thMom_ = new TheoreticalMoments(*config);
+    thMom_ = new ThMoms(*config);
     c = Configuration::adlerCoefficients(3, Configuration::betaCoefficients(3, 3));
   }
 };
@@ -112,19 +112,24 @@ TEST_F(OPETest, D4CInt) {
 
 TEST_F(OPETest, D68) {
   // D68(s, rho, c8)
-   EXPECT_NEAR(ope_->D68(3.0, -0.1894, 0.16315).real(), -1.2987654320987656e-4, 1e-15);
-   EXPECT_NEAR(ope_->D68(2.0, -0.1894, 0.16315).real(), -3.02375e-4, 1e-15);
-   EXPECT_NEAR(ope_->D68(2.0, -0.5, 0.16315).real(), -1.467124999999999999e-3, 1e-15);
-   EXPECT_NEAR(ope_->D68(2.0, -0.5, 0.1).real(), -1.6249999999999999999999e-3, 1e-15);
+  EXPECT_NEAR(OPE::D68(3.0, -0.1894, 0.16315).real(), -1.2987654320987656e-4, 1e-15);
+  EXPECT_NEAR(OPE::D68(2.0, -0.1894, 0.16315).real(), -3.02375e-4, 1e-15);
+  EXPECT_NEAR(OPE::D68(2.0, -0.5, 0.16315).real(), -1.467124999999999999e-3, 1e-15);
+  EXPECT_NEAR(OPE::D68(2.0, -0.5, 0.1).real(), -1.6249999999999999999999e-3, 1e-15);
+
+  EXPECT_NEAR(OPE::D68(3.0, -0.5, 0.1).real(), -5.0617283950617285E-004, 1e-15);
+  EXPECT_NEAR(OPE::D68(3.0, -0.5, 0.1).imag(), 0.0, 1e-15);
 }
 
 TEST_F(OPETest, D68CInt) {
   // D68CInt(s0, weight, rho, c8)
-  EXPECT_NEAR(ope_->D68CInt(3.0, Weight(1), -0.1894, 0.16315), -2.9695080856551679e-2, config->tolerance);
-  EXPECT_NEAR(ope_->D68CInt(2.0, Weight(1), -0.1894, 0.16315), -0.10827202768105049, config->tolerance);
-  EXPECT_NEAR(ope_->D68CInt(2.0, Weight(6), -0.1894, 0.16315), 8.1905379523540371e-3, config->tolerance);
-  EXPECT_NEAR(ope_->D68CInt(2.0, Weight(6), -0.7, 0.16315), -6.7400762155589364e-2, config->tolerance);
-  EXPECT_NEAR(ope_->D68CInt(2.0, Weight(6), -0.7, 0.9), 9.6228642910621415e-2, config->tolerance);
+  EXPECT_NEAR(OPE::D68CInt(3.0, Weight(1), -0.1894, 0.16315), -2.9695080856551679e-2, 1e-15);
+  EXPECT_NEAR(OPE::D68CInt(2.0, Weight(1), -0.1894, 0.16315), -0.10827202768105049, 1e-15);
+  EXPECT_NEAR(OPE::D68CInt(2.0, Weight(6), -0.1894, 0.16315), 8.1905379523540371e-3, 1e-15);
+  EXPECT_NEAR(OPE::D68CInt(2.0, Weight(6), -0.7, 0.16315), -6.7400762155589364e-2, 1e-15);
+  EXPECT_NEAR(OPE::D68CInt(2.0, Weight(6), -0.7, 0.9), 9.6228642910621415e-2, 1e-15);
+
+  EXPECT_NEAR(OPE::D68CInt(3.0, Weight(1), -0.5, 0.1), -6.8721689903881375E-002, 1e-15);
 }
 
 TEST_F(OPETest, deltaP) {

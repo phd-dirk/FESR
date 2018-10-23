@@ -4,9 +4,9 @@
 #include <cmath>
 #include <complex>
 
-class TheoreticalMomentsTest : public ::testing::Test {
+class ThMomsTest : public ::testing::Test {
 protected:
-  TheoreticalMoments *thMom_;
+  ThMoms *thMom_;
   const uint order_ = 4;
   const double sTau_ = 3.1570893124;
   const double astau_ = 0.31927;
@@ -23,7 +23,7 @@ protected:
     };
     ThMomContribs thMomContribs = { "FO", true, true, true, false, true };
 
-    thMom_ = new TheoreticalMoments(
+    thMom_ = new ThMoms(
       Configuration(
         0.3156,
         17.815,
@@ -57,7 +57,7 @@ protected:
   }
 };
 
-// TEST_F(TheoreticalMomentsTest, ThMom) {
+// TEST_F(ThMomsTest, ThMom) {
 //   TheoreticalMoments thMoms = TheoreticalMoments(
 //     3,
 //     3,
@@ -100,7 +100,7 @@ protected:
 
 // }
 
-// TEST_F(TheoreticalMomentsTest, IntegralMoment) {
+// TEST_F(ThMomsTest, IntegralMoment) {
 //   // thMom(const int &i, const double &astau, const double &aGGinv,
 //   // const double &rhoVpA, const double &c8VpA, const double &order)
 //   TheoreticalMoments th = *thMom_;
@@ -139,7 +139,7 @@ protected:
 //   );
 // }
 
-// TEST_F(TheoreticalMomentsTest, ThMomDV) {
+// TEST_F(ThMomsTest, ThMomDV) {
 //   std::vector<Input> inputs = {{
 //       Weight(1),
 //       {
@@ -174,7 +174,7 @@ protected:
 //   );
 // }
 
-TEST_F(TheoreticalMomentsTest, Delta0) {
+TEST_F(ThMomsTest, Delta0) {
   const double astau = 0.31927;
   const int order = 5;
   EXPECT_NEAR(
@@ -184,12 +184,12 @@ TEST_F(TheoreticalMomentsTest, Delta0) {
   );
 }
 
-// TEST_F(TheoreticalMomentsTest, Delta4) {
+// TEST_F(ThMomsTest, Delta4) {
 //   EXPECT_NEAR(thMom_->del4(sTau_, Weight(1), sTau_, astau_, aGGinv_), 7.93483938348380651e-4, 1.e-14);
 //   EXPECT_NEAR(thMom_->del4(3.0, Weight(1), 3.0,  0.32307, 0.021), 2.41777114013837419e-4, 1.e-14);
 // }
 
-TEST_F(TheoreticalMomentsTest, Delta68) {
+TEST_F(ThMomsTest, Delta68) {
   const double rho = -0.1893979224795759;
   const double c8 = 0.16314594513667133;
   // Test delta_V+A^(8)
@@ -197,6 +197,6 @@ TEST_F(TheoreticalMomentsTest, Delta68) {
   // Test delta_V+A^(6)
   EXPECT_NEAR(thMom_->del68(sTau_, Weight(1), rho, 0.), -7.1284580508113966e-3, 1e-14);
 }
-// TEST_F(TheoreticalMomentsTest, DeltaP) {
+// TEST_F(ThMomsTest, DeltaP) {
 //   EXPECT_NEAR(thMom_->deltaP(sTau_, Weight(1)), -2.63897241291510083e-3, 1e-14);
 // }

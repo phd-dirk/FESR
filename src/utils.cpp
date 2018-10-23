@@ -50,7 +50,7 @@ string correlationOutput(Minimizer* min) {
 
 string deltaOutput(Minimizer* min, const Configuration &config) {
   string out;
-  TheoreticalMoments thMom(config);
+  ThMoms thMom(config);
   const double *xs = min->X();
 
   out += "Deltas (FO): \n";
