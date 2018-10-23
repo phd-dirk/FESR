@@ -71,22 +71,22 @@ double ThMoms::operator() (
     if ( thMomContribs_.scheme == "FO" ) {
       rTauTh += cIntVpAD0FO(s0, w, sTau_, astau, c, order);
     }
-    if ( thMomContribs_.scheme == "CI") {
-      rTauTh += cIntVpAD0CI(s0, w, sTau_, astau, order);
-    }
+    // if ( thMomContribs_.scheme == "CI") {
+    //   rTauTh += cIntVpAD0CI(s0, w, sTau_, astau, order);
+    // }
   }
-  // D4
-  if ( thMomContribs_.D4 )
-    rTauTh += cIntVpAD4FO(s0, w, sTau_, astau, aGGinv);
-  // D68
-  if ( thMomContribs_.D68 )
-    rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
-  // DV
-  if ( thMomContribs_.DV )
-    rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
-  // PionPole
-  if ( thMomContribs_.PionPole )
-    rTauTh += 3.*deltaP(s0, w);
+  // // D4
+  // if ( thMomContribs_.D4 )
+  //   rTauTh += cIntVpAD4FO(s0, w, sTau_, astau, aGGinv);
+  // // D68
+  // if ( thMomContribs_.D68 )
+  //   rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
+  // // DV
+  // if ( thMomContribs_.DV )
+  //   rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
+  // // PionPole
+  // if ( thMomContribs_.PionPole )
+  //   rTauTh += 3.*deltaP(s0, w);
 
   return pow(vud_, 2)*SEW_*rTauTh;
 }
@@ -94,7 +94,7 @@ double ThMoms::operator() (
 double ThMoms::cIntVpAD0FO(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const matrix<double> &c, const int &order
-) const {
+) {
   return 2.0*D0CIntFO(s0, weight, sTau, astau, c, order);
 }
 

@@ -38,12 +38,14 @@ class ThMoms:
     cDbl &deA, cDbl &gaA, cDbl &alA, cDbl &beA
   ) const;
 
-  double cIntVpAD0FO(
+  static double cIntVpAD0FO(
     const double &s0, const Weight &weight, const double &sTau,
-    const double &astau, const matrix<double> &c, const int &order) const;
+    const double &astau, const matrix<double> &c, const int &order
+  );
   double cIntVpAD0CI(
     const double &s0, const Weight &weight, const double &sTau,
-    const double &astau, const int &order) const;
+    const double &astau, const int &order
+  ) const;
   double cIntVpAD4FO(
     const double &s0, const Weight &weight, const double &sTau,
     const double &astau, const double &aGGinv

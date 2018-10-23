@@ -51,12 +51,12 @@
     },
     "rhoVpA": {
       "fixed": false,
-      "value": -0.30949,
+      "value":  -0.15,
       "stepSize": 0.1
     },
     "c8VpA": {
       "fixed": false,
-      "value": -0.30869e-1,
+      "value": 0.24,
       "stepSize": 0.3
     },
     "deltaV": {

@@ -57,49 +57,59 @@ protected:
   }
 };
 
-// TEST_F(ThMomsTest, ThMom) {
-//   TheoreticalMoments thMoms = TheoreticalMoments(
-//     3,
-//     3,
-//     { 2.8e-3, 5e-3, 97e-3 },
-//     Condensates(
-//       0.3156,
-//       { 0.0201236, 0.0201236, 0.0160989 },
-//       { 2.8e-3, 5.0e-3, 97.0e-3 }
-//     ),
-//     3.1572314596,
-//     0.13957018,
-//     92.21e-3,
-//     2.2e-3,
-//     1.3,
-//     0.4,
-//     0.19e-3,
-//     1.8,
-//     0.21,
-//     {
-//       {
-//         Weight(1),
-//         {
-//           3.1572314596000002, 3.0, 2.800, 2.600, 2.400, 2.300,
-//             2.200, 2.100, 2.000
-//         }
-//       }
-//     },
-//     { "FO", true, true, true, false, true },
-//     0.97425,
-//     1.0198
-//   );
+TEST_F(ThMomsTest, ThMom) {
+  ThMoms thMoms = ThMoms(
+    3,
+    3,
+    { 2.8e-3, 5e-3, 97e-3 },
+    Condensates(
+      0.3156,
+      { 0.0201236, 0.0201236, 0.0160989 },
+      { 2.8e-3, 5.0e-3, 97.0e-3 }
+    ),
+    3.1572314596,
+    0.13957018,
+    92.21e-3,
+    2.2e-3,
+    1.3,
+    0.4,
+    0.19e-3,
+    1.8,
+    0.21,
+    {
+      {
+        Weight(1),
+        {
+          3.1572314596000002, 3.0, 2.800, 2.600, 2.400, 2.300,
+            2.200, 2.100, 2.000
+        }
+      }
+    },
+    { "FO", true, true, true, false, true },
+    0.97425,
+    1.0198
+  );
 
-//   EXPECT_NEAR(
-//       thMoms.thMom(
-//           3.0, Weight(1), , aGGinv_, rhoVpA_, c8VpA_, 5,
-//           0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-//       ),
-//       3.4634999665533375, 1e-14
-//   );
+  EXPECT_NEAR(
+    thMoms(
+      pow(1.77686, 2), Weight(1), 0.3179, 0.021, -0.15, 0.24, 5,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+    ),
+    3.4609600058109637, 1e-14
+  );
+}
 
-// }
 
+TEST_F(ThMomsTest, cIntVpAD0FO) {
+  EXPECT_NEAR(
+    ThMoms::cIntVpAD0FO(
+      2.0, Weight(1), pow(1.77686, 2), 0.3179,
+      Configuration::adlerCoefficients(3, Configuration::betaCoefficients(3, 3)),
+      5
+    ),
+    3.7978370066430189, 1e-14
+  );
+}
 // TEST_F(ThMomsTest, IntegralMoment) {
 //   // thMom(const int &i, const double &astau, const double &aGGinv,
 //   // const double &rhoVpA, const double &c8VpA, const double &order)
