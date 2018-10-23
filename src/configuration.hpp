@@ -106,6 +106,8 @@ class Configuration {
 
   static std::vector<double> betaCoefficients(const int &nc, const int &nf);
   static matrix<double> adlerCoefficients(const int &nf, const std::vector<double> &beta);
+
+  void log();
 };
 
 #endif

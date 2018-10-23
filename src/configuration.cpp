@@ -248,3 +248,4 @@ matrix<double> Configuration::adlerCoefficients(const int &nf, const std::vector
   c(5, 5) = 1./80.*pow(beta[1], 4)*c(1, 1);  // rgm06
   return c;
 }
+

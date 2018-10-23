@@ -46,66 +46,10 @@ class Numerics {
     return xNext;
   }
 
-  // cmplx saveNewtonRaphson(cmplxFunc &f, cmplxFunc &df, const cmplx &x1, const cmplx &x2, const double &xacc) const {
-  //   // Using a combination of Netwon-Raphson and bisection, return the root of a function bracketed between x1 and x2.
-  //   // The root will be refined until its accuracy is known within +-xacc. f is the function which has a root, df is
-  //   // the first derivative of f, x1 and x2 boundaries of the interval which will be searched for a root
-
-  //   const int MAXIT = 100;
-  //   cmplx xh, xl;
-  //   cmplx fl = f(x1);
-  //   cmplx fh = f(x2);
-  //   if ((fl > 0.0 && fh > 0.0) || ( fl < 0.0 && fh < 0.0))
-  //     throw("Root must be bracketed.");
-  //   if (fl == 0.0) return x1;
-  //   if (fh == 0.0) return x2;
-  //   if (fl < 0.0) {
-  //     xl = x1;
-  //     xh = x2;
-  //   }
-
-
-  //   return 0.;
-  // }
-
-
-  void gauleg(const double &x1, const double &x2, vec &x, vec &w, const int &n) {
-    double z1, z, pp, p3, p2, p1;
-    int m = (n + 1)/2;
-    double xm = 0.5*(x2+x1);
-    double xl = 0.5*(x2-x1);
-
-    for(int i = 0; i < m; i++) {
-      z = cos(M_PI*(i + 0.75)/(n + 0.5));
-
-      do {
-        p1 = 1.;
-        p2 = 0.;
-        for(int j = 0; j < n; j++){
-          p3 = p2;
-          p2 = p1;
-          p1 = ((2.*j + 1.)*z*p2 - j*p3)/(j+1);
-        }
-        pp = n*(z*p1 - p2)/(z*z - 1.);
-        z1 = z;
-        z = z1 - p1/pp;
-      } while(abs(z - z1) > epsabs_);
-      x[i] = xm - xl*z;
-      x[n-1-i] = xm+xl*z;
-      w[i] = 2.*xl/((1. - z*z)*pp*pp);
-      w[n-1-i] = w[i];
-    }
-  }
-
-  complex<double> gaussIntegration(function<complex<double>(complex<double>)> func) const {
-    complex<double> I(0., 1.);
-    complex<double> sum(0.0, 0.0);
-    for( int i = 0; i < 1201; i++) {
-      complex<double> x = -exp(I*gaulegX[i]);
-      sum += func(x)*gaulegW[i];
-    }
-    return sum;
-  }
+  static void gauleg(const double &x1, const double &x2, vec &x, vec &w, const int &n);
+  static complex<double> gaussIntegration(
+    function<complex<double>(complex<double>)> func
+  );
 
   double gslFixedPointLegendre(function<double(double)> func, double from, double to) {
     double result;

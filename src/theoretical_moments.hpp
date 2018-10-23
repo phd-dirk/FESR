@@ -49,7 +49,7 @@ class ThMoms:
   );
   double cIntVpAD0CI(
     const double &s0, const Weight &weight, const double &sTau,
-    const double &astau, const int &order
+    const double &astau, const matrix<double> &c, const int &order
   ) const;
   static double cIntVpAD4(
     const double &s0, const Weight &weight, const double &sTau,

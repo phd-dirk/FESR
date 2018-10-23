@@ -75,7 +75,7 @@ double ThMoms::operator() (
       rTauTh += cIntVpAD0FO(s0, w, sTau, astau, c, order);
     }
     if ( thMomContribs_.scheme == "CI") {
-      rTauTh += cIntVpAD0CI(s0, w, sTau, astau, order);
+      rTauTh += cIntVpAD0CI(s0, w, sTau, astau, c, order);
     }
   }
   // D4
@@ -106,9 +106,9 @@ double ThMoms::cIntVpAD0FO(
 
 double ThMoms::cIntVpAD0CI(
   const double &s0, const Weight &weight, const double &sTau,
-  const double &astau, const int &order
+  const double &astau, const matrix<double> &c, const int &order
 ) const {
-  return 2.*D0CIntCI(s0, weight, sTau, astau, order);
+  return 2.*D0CIntCI(s0, weight, sTau, astau, c, order);
 }
 
 double ThMoms::cIntVpAD4(

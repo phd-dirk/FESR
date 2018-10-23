@@ -1,5 +1,49 @@
 #include "./numerics.hpp"
 
+void Numerics::gauleg(const double &x1, const double &x2, vec &x, vec &w, const int &n) {
+  double z1, z, pp, p3, p2, p1;
+  int m = (n + 1)/2;
+  double xm = 0.5*(x2+x1);
+  double xl = 0.5*(x2-x1);
+
+  for(int i = 0; i < m; i++) {
+    z = cos(M_PI*(i + 0.75)/(n + 0.5));
+
+    do {
+      p1 = 1.;
+      p2 = 0.;
+      for(int j = 0; j < n; j++){
+        p3 = p2;
+        p2 = p1;
+        p1 = ((2.*j + 1.)*z*p2 - j*p3)/(j+1);
+      }
+      pp = n*(z*p1 - p2)/(z*z - 1.);
+      z1 = z;
+      z = z1 - p1/pp;
+    } while(abs(z - z1) > 1e-15);
+    x[i] = xm - xl*z;
+    x[n-1-i] = xm+xl*z;
+    w[i] = 2.*xl/((1. - z*z)*pp*pp);
+    w[n-1-i] = w[i];
+  }
+}
+
+complex<double> Numerics::gaussIntegration(function<complex<double>(complex<double>)> func) {
+  std::vector<double> gaulegX(1201);
+  std::vector<double> gaulegW(1201);
+
+  gauleg(-M_PI, M_PI, gaulegX, gaulegW, 1201);
+
+  complex<double> I(0., 1.);
+  complex<double> sum(0.0, 0.0);
+  for( int i = 0; i < 1201; i++) {
+    complex<double> x = -exp(I*gaulegX[i]);
+    sum += func(x)*gaulegW[i];
+  }
+  return sum;
+}
+
+
 // from https://gist.github.com/lilac/2464434
 bool Numerics::invertMatrix (const ublas::matrix<double>& input, ublas::matrix<double>& inverse) {
   using namespace boost::numeric::ublas;
@@ -22,6 +66,7 @@ bool Numerics::invertMatrix (const ublas::matrix<double>& input, ublas::matrix<d
 
   return true;
 }
+
 
 // method described in: http://math.uww.edu/~mcfarlat/inverse.htm
 bool Numerics::invMat(const ublas::matrix<double> &mat, ublas::matrix<double> &invMat) {

@@ -70,14 +70,14 @@ double OPE::D0CIntFO(
 
 double OPE::D0CIntCI(
   const double &s0, const Weight weight, const double &sTau, const double &astau,
-  const double &order
-) const {
+  const matrix<double> &c, const double &order
+) {
   cmplxFunc f =
     [&](complex<double> x) -> complex<double> {
-    return weight.wD(x)*D0(s0*x, -x*s0, sTau, astau, c_, order);
+    return weight.wD(x)*D0(s0*x, -x*s0, sTau, astau, c, order);
   };
 
-  return (3*M_PI*gaussIntegration(f)).real();
+  return (3*M_PI*Numerics::gaussIntegration(f)).real();
 };
 
 complex<double> OPE::D4(

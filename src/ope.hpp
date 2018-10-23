@@ -45,10 +45,10 @@ public:
     const double &s0, const Weight weight, const double &sTau,
     const double &astau, const matrix<double> &c, const double &order
   );
-  double D0CIntCI(
-    const double &s0, const Weight weight, const double &sTau,
-    const double &astau, const double &order
-  ) const;
+  static double D0CIntCI(
+    const double &s0, const Weight weight, const double &sTau, const double &astau,
+    const matrix<double> &c, const double &order
+  );
 
   static complex<double> D4(
     const complex<double> &s, const complex<double> &mu2, const double &sTau,
