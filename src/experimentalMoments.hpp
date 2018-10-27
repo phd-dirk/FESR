@@ -70,7 +70,7 @@ class ExpMoms {
   double dSEW_;
   double fPi_;
   double dFPi_;
-  double pionMinusMass_;
+  double mPiM_;
   int momCount_;
   const Data data_;
   vec expMoms;

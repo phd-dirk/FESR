@@ -48,6 +48,7 @@ complex<double> Numerics::gaussIntegration(function<complex<double>(complex<doub
 bool Numerics::invertMatrix (const ublas::matrix<double>& input, ublas::matrix<double>& inverse) {
   using namespace boost::numeric::ublas;
   typedef permutation_matrix<std::size_t> pmatrix;
+
   // create a working copy of the input
   matrix<double> A(input);
   // create a permutation matrix for the LU-factorization
@@ -62,7 +63,7 @@ bool Numerics::invertMatrix (const ublas::matrix<double>& input, ublas::matrix<d
 
   // backsubstitute to get the inverse
   lu_substitute(A, pm, inverse);
-  testInvMat(input, inverse);
+  // testInvMat(input, inverse);
 
   return true;
 }

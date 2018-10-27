@@ -16,9 +16,9 @@
 
 using std::function;
 
-class Chisquared {
+class Chi2 {
  public:
-  Chisquared(Configuration config);
+  Chi2(Configuration config);
 
   double operator ()( const double *xx) const;
   double operator ()(
@@ -33,15 +33,16 @@ class Chisquared {
     const double &aDelta,
     const double &aGamma,
     const double &aAlpha,
-    const double &aBeta
+    const double &aBeta,
+    const double &order
   ) const;
 
-private:
-  double chi2(
+  static double chi2(
     const double &astau,
     const double &aGGinv,
     const double &rho,
     const double &c8,
+    const double &order,
     const double &deV,
     const double &gaV,
     const double &alV,
@@ -49,10 +50,28 @@ private:
     const double &deA,
     const double &gaA,
     const double &alA,
-    const double &beA
-  ) const;
+    const double &beA,
+    const double &sTau,
+    const double &mPiM,
+    const double &fPi,
+    const double &f1P,
+    const double &m1P,
+    const double &g1P,
+    const double &f2P,
+    const double &m2P,
+    const double &g2P,
+    const int &nc,
+    const int &nf,
+    const std::vector<double> &mq,
+    const double &vud,
+    const double &SEW,
+    const Condensates &condensates,
+    const std::vector<Input> &inputs,
+    const ThMomContribs &thMomContribs,
+    const ExpMoms &expMoms
+  );
 
-  vec calcThMoms(
+  static std::vector<double> calcThMoms(
     const double &astau,
     const double &aGGinv,
     const double &rhoVpA,
@@ -65,8 +84,25 @@ private:
     const double &deA,
     const double &gaA,
     const double &alA,
-    const double &beA
-  ) const;
+    const double &beA,
+    const double &sTau,
+    const double &mPiM,
+    const double &fPi,
+    const double &f1P,
+    const double &m1P,
+    const double &g1P,
+    const double &f2P,
+    const double &m2P,
+    const double &g2P,
+    const int &nc,
+    const int &nf,
+    const std::vector<double> &mq,
+    const double &vud,
+    const double &SEW,
+    const Condensates &condensates,
+    const std::vector<Input> &inputs,
+    const ThMomContribs &thMomContribs
+  );
 
   const Configuration config_;
   const ExpMoms expMom_;

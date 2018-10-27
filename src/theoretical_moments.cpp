@@ -1,11 +1,13 @@
 #include "./theoretical_moments.hpp"
 
 ThMoms::ThMoms(const Configuration &config)
-  : OPE(config), inputs_(config.inputs_)
+  : inputs_(config.inputs_)
 {
   thMomContribs_ = config.thMomContribs_;
   vud_ = config.vud_;
   SEW_ = config.SEW_;
+  nc_ = config.nc_;
+  nf_ = config.nf_;
   mq_ = config.mq_;
   condensates_ = config.condensates_;
 }
@@ -14,35 +16,11 @@ ThMoms::ThMoms(
   const int &nf,
   const std::vector<double> &mq,
   const Condensates &condensates,
-  const double &sTau,
-  const double &pionMinusMass,
-  const double &fPi,
-  const double &f1P,
-  const double &m1P,
-  const double &g1P,
-  const double &f2P,
-  const double &m2P,
-  const double &g2P,
   const std::vector<Input> &inputs,
   const ThMomContribs &thMomContribs,
   const double &vud,
   const double &SEW
-) : OPE
-    (
-      nc,
-      nf,
-      mq,
-      condensates,
-      sTau,
-      pionMinusMass,
-      fPi,
-      f1P,
-      m1P,
-      g1P,
-      f2P,
-      m2P,
-      g2P
-    ), inputs_(inputs)
+): inputs_(inputs)
 {
   thMomContribs_ = thMomContribs;
   vud_ = vud;

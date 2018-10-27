@@ -27,12 +27,6 @@ using std::abs;
 
 class Numerics {
  public:
-  Numerics() :
-      gaulegX(1201), gaulegW(1201) {
-    // init Gaussian quadratures from Numerical recepies
-    gauleg(-M_PI, M_PI, gaulegX, gaulegW, 1201);
-  }
-
   // find root of function
   complex<double> newtonRaphson(function<complex<double>(complex<double>)> f,
                                 function<complex<double>(complex<double>)> df,
@@ -187,8 +181,6 @@ class Numerics {
   const double epsrel_ = 0.; // relative error
   const double epsabs_ = 1e-10; // absolute error
   gsl_integration_glfixed_table * t_ = gsl_integration_glfixed_table_alloc(1100);
-  vec gaulegX;
-  vec gaulegW;
 };
 
 #endif

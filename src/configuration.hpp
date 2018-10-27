@@ -40,7 +40,7 @@ class Configuration {
     const double &vud,
     const double &dVud,
     const double &SEW,
-    const double &pionMinusMass_,
+    const double &mPiM,
     const double &fPi,
     const double &f1P,
     const double &m1P,
@@ -75,7 +75,7 @@ class Configuration {
 
   // masses
   double mTau_, sTau_;
-  double pionMinusMass_; // M_pi^-
+  double mPiM_; // M_pi^-
   std::vector<double> mq_;
   const double kTauMass = 1.77682; // PDF 2012
 

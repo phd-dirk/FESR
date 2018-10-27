@@ -1,6 +1,6 @@
 {
   "version": 0.7,
-  "scheme": "CI",
+  "scheme": "FO",
   "tolerance": 1e-6,
   "parameters": {
     "asTau": 0.3156,

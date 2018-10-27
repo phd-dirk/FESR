@@ -15,7 +15,7 @@ ExpMoms::ExpMoms(const string &filename, const Configuration &config)
   dSEW_ = config.dSEW_;
   fPi_ = config.fPi_;
   dFPi_ = config.dFPi_;
-  pionMinusMass_ = config.pionMinusMass_;
+  mPiM_ = config.mPiM_;
   momCount_ = config.momCount_;
 
   // cache experimental moments
@@ -40,7 +40,7 @@ ExpMoms::ExpMoms(
   const double &dSEW,
   const double &fPi,
   const double &dFPi,
-  const double &pionMinusMass,
+  const double &mPiM,
   const double &RVANormalization
 ) : data_(Data(filename, RVANormalization)) {
   inputs_ = inputs;
@@ -53,7 +53,7 @@ ExpMoms::ExpMoms(
   dSEW_ = dSEW;
   fPi_ = fPi;
   dFPi_ = dFPi;
-  pionMinusMass_ = pionMinusMass;
+  mPiM_ = mPiM;
 
   momCount_ = 0;
   for(const auto &input : inputs) {
@@ -126,8 +126,8 @@ double ExpMoms::pionPoleMoment(
 {
   double axialMoment = 0;
   double pseudoMoment = 0;
-  axialMoment += piFac()/s0*w.wR(pow(pionMinusMass_, 2)/s0).real();
-  pseudoMoment += axialMoment*(-2.*pow(pionMinusMass_, 2)/(sTau_ + 2.*pow(pionMinusMass_, 2)));
+  axialMoment += piFac()/s0*w.wR(pow(mPiM_, 2)/s0).real();
+  pseudoMoment += axialMoment*(-2.*pow(mPiM_, 2)/(sTau_ + 2.*pow(mPiM_, 2)));
   return axialMoment + pseudoMoment;
 }
 
@@ -194,18 +194,109 @@ void ExpMoms::initCovMat() {
 }
 
 void ExpMoms::initInvCovMat(mat covMat) {
-  // Remove correlations with R_tau,V+A in Aleph fit
-  for (int i = 1; i < momCount_; i++) {
-    covMat(0, i) = 0.;
-    covMat(i, 0) = 0.;
-  }
+  // // Remove correlations with R_tau,V+A in Aleph fit
+  // for (int i = 1; i < momCount_; i++) {
+  //   covMat(0, i) = 0.;
+  //   covMat(i, 0) = 0.;
+  // }
 
-  // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
-  covMat(0, 0) = pow(0.0072, 2);
+  // // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
+  // covMat(0, 0) = pow(0.0072, 2);
 
-   Numerics::invertMatrix(covMat, invCovMat_);
-  // Numerics::invMat(covMat, invCovMat_);
+  //  Numerics::invertMatrix(covMat, invCovMat_);
+  // // Numerics::invMat(covMat, invCovMat_);
+
+  invCovMat_(0, 0) = 19290.123456790123;
+  invCovMat_(0, 1) = 0.0;
+  invCovMat_(0, 2) = 0.0;
+  invCovMat_(0, 3) = 0.0;
+  invCovMat_(0, 4) = 0.0;
+  invCovMat_(0, 5) = 0.0;
+  invCovMat_(0, 6) = 0.0;
+  invCovMat_(0, 7) = 0.0;
+  invCovMat_(0, 8) = 0.0;
+
+  invCovMat_(1, 0) = 0.0;
+  invCovMat_(1, 1) = 4380565.4450900145;
+  invCovMat_(1, 2) = -19527009.072698355;
+  invCovMat_(1, 3) = 40984663.028208137;
+  invCovMat_(1, 4) = -84638945.086208180;
+  invCovMat_(1, 5) = 97316900.741565526;
+  invCovMat_(1, 6) = -49343953.720028751;
+  invCovMat_(1, 7) = 11674972.251288334;
+  invCovMat_(1, 8) = -847642.72515251662;
+
+  invCovMat_(2, 0) = 0.0;
+  invCovMat_(2, 1) = -19527009.072729781;
+  invCovMat_(2, 2) = 98150487.413654625;
+  invCovMat_(2, 3) = -231227676.50983095;
+  invCovMat_(2, 4) = 523320149.90033841;
+  invCovMat_(2, 5) = -619639670.88996792;
+  invCovMat_(2, 6) = 321400104.48728836;
+  invCovMat_(2, 7) = -79056190.238436818;
+  invCovMat_(2, 8) = 6598930.0692821946;
+
+  invCovMat_(3, 0) = 0.0;
+  invCovMat_(3, 1) = 40984663.024091452;
+  invCovMat_(3, 2) = -231227676.48426008;
+  invCovMat_(3, 3) = 616643833.28414011;
+  invCovMat_(3, 4) = -1583045922.3074424;
+  invCovMat_(3, 5) = 2001978657.2773747;
+  invCovMat_(3, 6) = -1125775522.6668854;
+  invCovMat_(3, 7) = 317010377.39433080;
+  invCovMat_(3, 8) = -36621042.135975793;
+
+  invCovMat_(4, 0) = 0.0;
+  invCovMat_(4, 1) = -84638945.013663828;
+  invCovMat_(4, 2) = 523320149.45882702;
+  invCovMat_(4, 3) = -1583045921.2283897;
+  invCovMat_(4, 4) = 4937255245.5470905;
+  invCovMat_(4, 5) = -7261416322.2394047;
+  invCovMat_(4, 6) = 5049585965.2160759;
+  invCovMat_(4, 7) = -1902780247.4704247;
+  invCovMat_(4, 8) = 322015652.31520826;
+
+  invCovMat_(5, 0) = 0.0;
+  invCovMat_(5, 1) = 97316900.522174478;
+  invCovMat_(5, 2) = -619639669.56130409;
+  invCovMat_(5, 3) = 2001978653.6812286;
+  invCovMat_(5, 4) = -7261416316.0957413;
+  invCovMat_(5, 5) = 12200521218.568886;
+  invCovMat_(5, 6) = -10108354297.680387;
+  invCovMat_(5, 7) = 4627749765.6307192;
+  invCovMat_(5, 8) = -938765886.65570676;
+
+  invCovMat_(6, 0) = 0.0;
+  invCovMat_(6, 1) = -49343953.430073619;
+  invCovMat_(6, 2) = 321400102.73960257;
+  invCovMat_(6, 3) = -1125775517.7485409;
+  invCovMat_(6, 4) = 5049585953.6595955;
+  invCovMat_(6, 5) = -10108354287.130436;
+  invCovMat_(6, 6) = 10220252556.225853;
+  invCovMat_(6, 7) = -5633885753.7398357;
+  invCovMat_(6, 8) = 1326788375.8412738;
+
+  invCovMat_(7, 0) = 0.0;
+  invCovMat_(7, 1) = 11674972.064385563;
+  invCovMat_(7, 2) = -79056189.117130280;
+  invCovMat_(7, 3) = 317010374.19440556;
+  invCovMat_(7, 4) = -1902780239.1231403;
+  invCovMat_(7, 5) = 4627749755.9647923;
+  invCovMat_(7, 6) = -5633885749.8849869;
+  invCovMat_(7, 7) = 3610024411.9811840;
+  invCovMat_(7, 8) = -951159600.84332108;
+
+  invCovMat_(8, 0) = 0.0;
+  invCovMat_(8, 1) = -847642.67718991451;
+  invCovMat_(8, 2) = 6598929.7827849686;
+  invCovMat_(8, 3) = -36621041.315511465;
+  invCovMat_(8, 4) = 322015650.09003186;
+  invCovMat_(8, 5) = -938765883.88217449;
+  invCovMat_(8, 6) = 1326788374.4404285;
+  invCovMat_(8, 7) = -951159600.57284117;
+  invCovMat_(8, 8) = 272107474.58081555;
 }
+
 
 double ExpMoms::piFac() const {
   return 24.*pow(M_PI*vud_*fPi_, 2)*SEW_;

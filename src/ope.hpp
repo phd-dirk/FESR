@@ -18,23 +18,6 @@ using boost::numeric::ublas::matrix;
 
 class OPE : Numerics {
 public:
-  OPE(const Configuration &config);
-  OPE(
-    const int &nc,
-    const int &nf,
-    const std::vector<double> &mq,
-    const Condensates &condensates,
-    const double &sTau,
-    const double &pionMinusMass,
-    const double &fPi,
-    const double &f1P,
-    const double &m1P,
-    const double &g1P,
-    const double &f2P,
-    const double &m2P,
-    const double &g2P
-  );
-
   static complex<double> D0(
     const complex<double> &s, const cmplx &mu2, const double &sTau,
     const double &astau, const matrix<double> &c, const double &order
@@ -66,14 +49,6 @@ public:
   static double D68CInt(
     const double &s0, const Weight &weight, const double &rho, const double &c8
   );
-
-  matrix<double> c_;
-  std::vector<double> beta_;
-  std::vector<double> mq_;
-  Condensates condensates_;
-  double sTau_;
-  double pionMinusMass_;
-  double fPi_, f1P_, m1P_, g1P_, f2P_, m2P_, g2P_;
-}; // end AdlerFunction
+};
 
 #endif

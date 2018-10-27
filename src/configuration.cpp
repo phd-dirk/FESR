@@ -94,7 +94,7 @@ Configuration::Configuration(string configFilePath)
   vud_ = jsonConfig["parameters"]["vud"];
   dVud_ = jsonConfig["parameters"]["dVud"];
   SEW_ = jsonConfig["parameters"]["SEW"];
-  pionMinusMass_ = jsonConfig["parameters"]["pionMinusMass"];
+  mPiM_ = jsonConfig["parameters"]["mPiM"];
   fPi_ = jsonConfig["parameters"]["fPi"];
   f1P_ = jsonConfig["parameters"]["f1P"];
   m1P_ = jsonConfig["parameters"]["m1P"];
@@ -131,7 +131,7 @@ Configuration::Configuration (
   const double &vud,
   const double &dVud,
   const double &SEW,
-  const double &pionMinusMass,
+  const double &mPiM,
   const double &fPi,
   const double &f1P,
   const double &m1P,
@@ -161,7 +161,6 @@ Configuration::Configuration (
 
   mTau_ = mTau;
   sTau_ = pow(mTau, 2);
-
   mq_ = mq;
 
   asTau_ = asTau;
@@ -171,7 +170,7 @@ Configuration::Configuration (
   vud_ = vud;
   dVud_ = dVud;
   SEW_ = SEW;
-  pionMinusMass_ = pionMinusMass;
+  mPiM_ = mPiM;
   fPi_ = fPi;
   f2P_ = f2P, m2P_ = m2P, g2P_ = g2P;
 
