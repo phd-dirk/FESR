@@ -113,11 +113,22 @@ double Chi2::chi2(
     momDiff[i] = expMoms()[i] - thMoms[i];
   }
 
+
+  // std::vector<double> chi2n(momCount);
+  double itr = 1;
   for(uint k = 0; k < momCount; k++) {
+    // chi = 0.0;
     for(uint l = 0; l < momCount; l++) {
       chi += momDiff[k] * expMoms.invCovMat_(k, l) * momDiff[l];
     }
+    // chi2n[k] = chi;
   }
+
+
+  // chi = 0.0;
+  // for(uint k = 0; k < momCount; k++) {
+  //   chi += chi2n[k];
+  // }
 
   return chi;
 }

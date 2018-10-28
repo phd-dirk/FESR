@@ -62,7 +62,7 @@ int main (int argc, char* argv[]) {
     // set tolerances
     // min->SetMaxFunctionCalls(10000000); // for Minuit2
     // min->SetMaxIteraions(10000000); // for GSL
-    // min->SetTolerance(1e-8);
+    // min->SetTolerance(1e-13);
     min->SetStrategy(2);
     min->SetPrintLevel(3); // activate logging
 

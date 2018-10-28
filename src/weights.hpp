@@ -113,6 +113,7 @@ class Weight {
   static cmplx wD01(cmplx x) {
     return pow(1.0 - x, 3)*(3.0 + 9.0*x + 8.0*pow(x, 2))/10.0;
   }
+  // weightId: 3
   static cmplx wR02(cmplx x) {
     return pow(1.0 - x, 2)*(1.0 + 2.0*x)*pow(x, 2);
   }
