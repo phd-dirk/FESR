@@ -48,49 +48,8 @@ int main (int argc, char* argv[]) {
   }
 
   try {
-    const Chi2 chi22(
-      3, 3, 5,
-      pow(1.77686, 2),
-      0.13957018,
-      92.21e-3,
-      0.14e-3,
-      2.2e-3, 1.3, 0.4, 0.19e-3, 1.8, 0.21,
-      { 2.8e-3, 5.0e-3, 97.0e-3 },
-      17.815,
-      0.023,
-      0.97420,
-      0.00021,
-      1.0198,
-      0.0006,
-      0.3156,
-      { -pow(0.272, 3), -pow(0.272, 3), 0.8*-pow(0.272, 3) },
-      {
-        {
-          Weight(1),
-          {
-            pow(1.77686, 2)
-          }
-        }
-      },
-      { "FO", true, true, true, false, true },
-      0.99743669
-    );
-
-    std::cout << std::setprecision(17);
-    std::cout << "chi2 " << chi22(
-      0.3179, 0.021, -0.15, 0.24,
-      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5
-    ) << std::endl;
-
-
     const Configuration config(configFilePath);
     const Chi2 chi2(config);
-    std::cout << "chi2 " << chi2(
-      0.3179, 0.021, -0.15, 0.24,
-      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5
-    ) << std::endl;
-    return 0;
-
 
     // MINUIT
     Minimizer* min = Factory::CreateMinimizer("Minuit2", "Migrad");
