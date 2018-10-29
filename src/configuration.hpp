@@ -40,8 +40,10 @@ class Configuration {
     const double &vud,
     const double &dVud,
     const double &SEW,
+    const double &dSEW,
     const double &mPiM,
     const double &fPi,
+    const double &dFPi,
     const double &f1P,
     const double &m1P,
     const double &g1P,
@@ -94,10 +96,10 @@ class Configuration {
 
   // Various
   double vud_, dVud_;
-  double SEW_, dSEW_ = 0.0006; // EW radiative corr.
+  double SEW_, dSEW_; // EW radiative corr.
   double be_, dBe_; // HFAG
   double fPi_;
-  const double dFPi_ = 0.14e-3;
+  double dFPi_;
   const double kDRTauVex = 0.0;
   const double deltaEW = 0.001;
 

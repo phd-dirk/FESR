@@ -203,8 +203,8 @@ void ExpMoms::initInvCovMat(mat covMat) {
   // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
   covMat(0, 0) = pow(0.0072, 2);
 
-  Numerics::invertMatrix(covMat, invCovMat_);
-  // Numerics::invMat(covMat, invCovMat_);
+  // Numerics::invertMatrix(covMat, invCovMat_);
+  Numerics::invMat(covMat, invCovMat_);
 
   // invCovMat_(0, 0) = 19290.123456790123;
   // invCovMat_(0, 1) = 0.0;

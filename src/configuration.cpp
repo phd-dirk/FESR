@@ -94,8 +94,10 @@ Configuration::Configuration(string configFilePath)
   vud_ = jsonConfig["parameters"]["vud"];
   dVud_ = jsonConfig["parameters"]["dVud"];
   SEW_ = jsonConfig["parameters"]["SEW"];
+  dSEW_ = jsonConfig["parameters"]["dSEW"];
   mPiM_ = jsonConfig["parameters"]["mPiM"];
   fPi_ = jsonConfig["parameters"]["fPi"];
+  dFPi_ = jsonConfig["parameters"]["dFPi"];
   f1P_ = jsonConfig["parameters"]["f1P"];
   m1P_ = jsonConfig["parameters"]["m1P"];
   g1P_ = jsonConfig["parameters"]["g1P"];
@@ -131,8 +133,10 @@ Configuration::Configuration (
   const double &vud,
   const double &dVud,
   const double &SEW,
+  const double &dSEW,
   const double &mPiM,
   const double &fPi,
+  const double &dFPi,
   const double &f1P,
   const double &m1P,
   const double &g1P,
@@ -170,8 +174,10 @@ Configuration::Configuration (
   vud_ = vud;
   dVud_ = dVud;
   SEW_ = SEW;
+  dSEW_ = dSEW;
   mPiM_ = mPiM;
   fPi_ = fPi;
+  dFPi_ = dFPi;
   f2P_ = f2P, m2P_ = m2P, g2P_ = g2P;
 
   beta_ = betaCoefficients(nc, nf);
