@@ -5,7 +5,11 @@ Chi2::Chi2(Configuration config)
   :config_(config),
    expMom_(
      ExpMoms("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)
-   ) {}
+   ) {
+  c_ = Configuration::adlerCoefficients(
+    config_.nf_, Configuration::betaCoefficients( config_.nc_, config_.nf_ )
+  );
+}
 
 double Chi2::operator() ( const double *xx) const {
   // init fit parameters
@@ -29,7 +33,7 @@ double Chi2::operator() ( const double *xx) const {
     config_.order_, config_.sTau_, config_.mPiM_, config_.fPi_,
     config_.f1P_, config_.m1P_, config_.g1P_,
     config_.f2P_, config_.m2P_, config_.g2P_,
-    config_.nc_, config_.nf_, config_.mq_, config_.vud_, config_.SEW_, config_.condensates_,
+    c_, config_.mq_, config_.vud_, config_.SEW_, config_.condensates_,
     config_.inputs_, config_.thMomContribs_, expMom_
   );
 }
@@ -56,7 +60,7 @@ double Chi2::operator ()(
     order, config_.sTau_, config_.mPiM_, config_.fPi_,
     config_.f1P_, config_.m1P_, config_.g1P_,
     config_.f2P_, config_.m2P_, config_.g2P_,
-    config_.nc_, config_.nf_, config_.mq_, config_.vud_, config_.SEW_, config_.condensates_,
+    c_, config_.mq_, config_.vud_, config_.SEW_, config_.condensates_,
     config_.inputs_, config_.thMomContribs_, expMom_
   );
 }
@@ -84,8 +88,7 @@ double Chi2::chi2(
   const double &f2P,
   const double &m2P,
   const double &g2P,
-  const int &nc,
-  const int &nf,
+  const matrix<double> &c,
   const std::vector<double> &mq,
   const double &vud,
   const double &SEW,
@@ -100,7 +103,7 @@ double Chi2::chi2(
     astau, aGGinv, rho, c8, order,
     deV, gaV, alV, beV, deA, gaA, alA, beA,
     sTau, mPiM, fPi,f1P, m1P, g1P, f2P, m2P, g2P,
-    nc, nf, mq, vud, SEW, condensates, inputs, thMomContribs
+    c, mq, vud, SEW, condensates, inputs, thMomContribs
   );
 
   double momCount = 0;
@@ -156,8 +159,7 @@ std::vector<double> Chi2::calcThMoms(
   const double &f2P,
   const double &m2P,
   const double &g2P,
-  const int &nc,
-  const int &nf,
+  const matrix<double> &c,
   const std::vector<double> &mq,
   const double &vud,
   const double &SEW,
@@ -172,7 +174,7 @@ std::vector<double> Chi2::calcThMoms(
 
   std::vector<double> thMoms(momCount);
   std::vector<std::future<double>> ftrs(momCount);
-  ThMoms th(nc, nf, mq, condensates, inputs, thMomContribs, vud, SEW);
+  ThMoms th;
 
   int i = 0;
   for(auto const& input: inputs) {
@@ -180,10 +182,11 @@ std::vector<double> Chi2::calcThMoms(
     Weight w = input.weight;
     for(auto const& s0: s0s) {
       ftrs[i] = std::async(
-        &ThMoms::operator(),
-        &th, s0, w, astau, aGGinv, rhoVpA, c8VpA, order, sTau,
+        &ThMoms::calc,
+        s0, w, astau, aGGinv, rhoVpA, c8VpA, order, sTau,
         deV, gaV, alV, beV, deA, gaA, alA, beA,
-        mPiM, fPi,f1P, m1P, g1P, f2P, m2P, g2P
+        mPiM, fPi,f1P, m1P, g1P, f2P, m2P, g2P, c, mq, condensates,
+        vud, SEW, thMomContribs
       );
       i++;
     }

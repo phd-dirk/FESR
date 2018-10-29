@@ -5,10 +5,6 @@
 #include <stdexcept>
 #include "./src/types.hpp"
 
-using std::vector;
-using std::cout;
-using std::endl;
-using std::complex;
 using std::runtime_error;
 
 #include "./src/configuration.hpp"
@@ -54,6 +50,14 @@ int main (int argc, char* argv[]) {
   try {
     const Configuration config(configFilePath);
     const Chi2 chi2(config);
+    std::cout << std::setprecision(17);
+    std::cout << "chi2 " << chi2(
+      0.3179, 0.021, -0.15, 0.24,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5
+    ) << std::endl;
+
+    return 0;
+
 
 
     // MINUIT

@@ -1,37 +1,16 @@
 #include "./theoretical_moments.hpp"
 
 ThMoms::ThMoms(const Configuration &config)
-  : inputs_(config.inputs_)
 {
   thMomContribs_ = config.thMomContribs_;
   vud_ = config.vud_;
   SEW_ = config.SEW_;
-  nc_ = config.nc_;
-  nf_ = config.nf_;
   mq_ = config.mq_;
   condensates_ = config.condensates_;
 }
-ThMoms::ThMoms(
-  const int &nc,
-  const int &nf,
-  const std::vector<double> &mq,
-  const Condensates &condensates,
-  const std::vector<Input> &inputs,
-  const ThMomContribs &thMomContribs,
-  const double &vud,
-  const double &SEW
-): inputs_(inputs)
-{
-  thMomContribs_ = thMomContribs;
-  vud_ = vud;
-  SEW_ = SEW;
-  nc_ = nc;
-  nf_ = nf;
-  mq_ = mq;
-  condensates_ = condensates;
-}
+ThMoms::ThMoms() {}
 
-double ThMoms::operator() (
+double ThMoms::calc(
   const double &s0, const Weight &w,
   const double &astau, const double &aGGinv, const double &rhoVpA,
   const double &c8VpA, const double &order, const double &sTau,
@@ -39,40 +18,44 @@ double ThMoms::operator() (
   const double &deA, const double &gaA, const double &alA, const double &beA,
   const double &mPiM, const double &fPi,
   const double &f1P, const double &m1P, const double &g1P,
-  const double &f2P, const double &m2P, const double &g2P
-) const {
+  const double &f2P, const double &m2P, const double &g2P,
+  const matrix<double> &c, const std::vector<double> &mq,
+  const Condensates &condensates, const double &vud, const double &SEW,
+  const ThMomContribs &thMomContribs
+) {
   double rTauTh = 0.;
-  matrix<double> c = Configuration::adlerCoefficients(
-    nf_, Configuration::betaCoefficients(nc_, nf_)
-  );
 
   // D0
-  if ( thMomContribs_.D0 ) {
+  if ( thMomContribs.D0 ) {
     // check if FOPT or CIPT
-    if ( thMomContribs_.scheme == "FO" ) {
+    if ( thMomContribs.scheme == "FO" ) {
       rTauTh += cIntVpAD0FO(s0, w, sTau, astau, c, order);
     }
-    if ( thMomContribs_.scheme == "CI") {
-      rTauTh += cIntVpAD0CI(s0, w, sTau, astau, c, order);
+    if ( thMomContribs.scheme == "CI") {
+      // rTauTh += cIntVpAD0CI(s0, w, sTau, astau, c, order);
     }
   }
+
   // D4
-  if ( thMomContribs_.D4 )
-    rTauTh += cIntVpAD4(s0, w, sTau, astau, aGGinv, mq_, condensates_);
+  if ( thMomContribs.D4 )
+    rTauTh += cIntVpAD4(s0, w, sTau, astau, aGGinv, mq, condensates);
+
   // D68
-  if ( thMomContribs_.D68 )
+  if ( thMomContribs.D68 )
     rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
+
   // DV
-  if ( thMomContribs_.DV )
-    rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
+  // if ( thMomContribs.DV )
+    // rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
+
   // PionPole
-  if ( thMomContribs_.PionPole )
+  if ( thMomContribs.PionPole )
     rTauTh += 3.*PSPheno::deltaP(
       s0, w, sTau, mPiM,
       fPi, f1P, m1P, g1P, f2P, m2P, g2P
     );
 
-  return pow(vud_, 2)*SEW_*rTauTh;
+  return pow(vud, 2)*SEW*rTauTh;
 }
 
 double ThMoms::cIntVpAD0FO(

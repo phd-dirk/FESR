@@ -107,6 +107,33 @@ TEST_F(ExperimentalMomentsTest, expMom) {
   EXPECT_NEAR(expMoms[2], 3.6634484709047848, 1.e-14);
   EXPECT_NEAR(expMoms[3], 0.55315051406537252, 1.e-14);
   EXPECT_NEAR(expMoms[4], 0.54867716084362927, 1.e-14);
+
+  // weight(3)
+  std::vector<Input> inputs2 = {{
+      Weight(3),
+      {
+        3.1572314596000002, 3.0, 2.800, 2.600, 2.400,
+        2.300, 2.200, 2.100, 2.000
+      }
+    }
+  };
+  ExpMoms expMom2(
+    "/Users/knowledge/Developer/PhD/FESR/aleph.json",
+    inputs2,
+    3.1572314596000002, // sTau
+    17.815, // be
+    0.023, // dBe
+    0.97420, // Vud
+    0.00021, // dVud
+    1.0198, // SEW
+    0.0006, // dSEW
+    92.21e-3, // fPi
+    0.14e-3, // dFPi
+    0.13957018, // pionMinusMass
+    0.99743669 // RVANormalization
+  );
+
+  EXPECT_NEAR(expMom2()[0], 0.44080705131582015, 1.e-14);
 }
 
 TEST_F(ExperimentalMomentsTest, piFac) {

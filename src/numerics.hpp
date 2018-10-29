@@ -76,7 +76,7 @@ class Numerics {
       },
       &f
     };
-    gsl_integration_qag(&F, from, to, 1e-10, 0.0, 1100, 6, w_, &result, &error);
+    gsl_integration_qag(&F, from, to, 1e-11, 0.0, 1100, 6, w_, &result, &error);
     // size_t fCalls = 1100;
     // gsl_integration_qng(&F, from, to, epsabs_, epsrel_, &result, &error, &fCalls);
     // cout << "error \t" << error << endl;

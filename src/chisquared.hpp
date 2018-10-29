@@ -60,8 +60,7 @@ class Chi2 {
     const double &f2P,
     const double &m2P,
     const double &g2P,
-    const int &nc,
-    const int &nf,
+    const matrix<double> &c,
     const std::vector<double> &mq,
     const double &vud,
     const double &SEW,
@@ -94,8 +93,7 @@ class Chi2 {
     const double &f2P,
     const double &m2P,
     const double &g2P,
-    const int &nc,
-    const int &nf,
+    const matrix<double> &c,
     const std::vector<double> &mq,
     const double &vud,
     const double &SEW,
@@ -106,6 +104,7 @@ class Chi2 {
 
   const Configuration config_;
   const ExpMoms expMom_;
+  matrix<double> c_;
 };
 
 #endif
