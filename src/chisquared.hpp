@@ -19,6 +19,27 @@ using std::function;
 class Chi2 {
  public:
   Chi2(Configuration config);
+  // Chi2(
+  //   const int &nc,
+  //   const int &nf,
+  //   const double &order,
+  //   const double &sTau,
+  //   const double &mPiM,
+  //   const double &fPi,
+  //   const double &f1P,
+  //   const double &m1P,
+  //   const double &g1P,
+  //   const double &f2P,
+  //   const double &m2P,
+  //   const double &g2P,
+  //   const matrix<double> &c,
+  //   const std::vector<double> &mq,
+  //   const double &vud,
+  //   const double &sew,
+  //   const Condensates &condensates,
+  //   const std::vector<Input> &inputs,
+  //   const ThMomContribs thMomContribs
+  // );
 
   double operator ()( const double *xx) const;
   double operator ()(
@@ -102,9 +123,14 @@ class Chi2 {
     const ThMomContribs &thMomContribs
   );
 
-  const Configuration config_;
   const ExpMoms expMom_;
   matrix<double> c_;
+  double order_, sTau_, mPiM_, fPi_, vud_, sew_,
+    f1P_, m1P_, g1P_, f2P_, m2P_, g2P_;
+  std::vector<double> mq_;
+  Condensates condensates_;
+  std::vector<Input> inputs_;
+  ThMomContribs thMomContribs_;
 };
 
 #endif

@@ -2,14 +2,51 @@
 
 // Public
 Chi2::Chi2(Configuration config)
-  :config_(config),
-   expMom_(
+  : expMom_(
      ExpMoms("/Users/knowledge/Developer/PhD/FESR/aleph.json", config)
    ) {
+  order_ = config.order_;
+  sTau_ = config.sTau_;
+  mPiM_ = config.mPiM_;
+  fPi_ = config.fPi_;
+  f1P_ = config.f1P_;
+  m1P_ = config.m1P_;
+  g1P_ = config.g1P_;
+  f2P_ = config.f2P_;
+  m2P_ = config.m2P_;
+  g2P_ = config.g2P_;
   c_ = Configuration::adlerCoefficients(
-    config_.nf_, Configuration::betaCoefficients( config_.nc_, config_.nf_ )
+    config.nf_, Configuration::betaCoefficients( config.nc_, config.nf_ )
   );
+  mq_ = config.mq_;
+  vud_ = config.vud_;
+  sew_ = config.SEW_;
+  condensates_ = config.condensates_;
+  inputs_ = config.inputs_;
+  thMomContribs_ = config.thMomContribs_;
 }
+
+// Chi2::Chi2(
+//   const int &nc,
+//   const int &nf,
+//   const double &order,
+//   const double &sTau,
+//   const double &mPiM,
+//   const double &fPi,
+//   const double &f1P,
+//   const double &m1P,
+//   const double &g1P,
+//   const double &f2P,
+//   const double &m2P,
+//   const double &g2P,
+//   const matrix<double> &c,
+//   const std::vector<double> &mq,
+//   const double &vud,
+//   const double &sew,
+//   const Condensates &condensates,
+//   const std::vector<Input> &inputs,
+//   const ThMomContribs thMomContribs
+// ) {}
 
 double Chi2::operator() ( const double *xx) const {
   // init fit parameters
@@ -30,11 +67,11 @@ double Chi2::operator() ( const double *xx) const {
     astau, aGGinv, rhoD6VpA, c8D8VpA,
     deV, gaV, alV, beV,
     deA, gaA, alA, beA,
-    config_.order_, config_.sTau_, config_.mPiM_, config_.fPi_,
-    config_.f1P_, config_.m1P_, config_.g1P_,
-    config_.f2P_, config_.m2P_, config_.g2P_,
-    c_, config_.mq_, config_.vud_, config_.SEW_, config_.condensates_,
-    config_.inputs_, config_.thMomContribs_, expMom_
+    order_, sTau_, mPiM_, fPi_,
+    f1P_, m1P_, g1P_,
+    f2P_, m2P_, g2P_,
+    c_, mq_, vud_, sew_, condensates_,
+    inputs_, thMomContribs_, expMom_
   );
 }
 
@@ -57,11 +94,11 @@ double Chi2::operator ()(
     astau, aGGinv, rho, c8,
     deV, gaV, alV, beV,
     deA, gaA, alA, alA,
-    order, config_.sTau_, config_.mPiM_, config_.fPi_,
-    config_.f1P_, config_.m1P_, config_.g1P_,
-    config_.f2P_, config_.m2P_, config_.g2P_,
-    c_, config_.mq_, config_.vud_, config_.SEW_, config_.condensates_,
-    config_.inputs_, config_.thMomContribs_, expMom_
+    order, sTau_, mPiM_, fPi_,
+    f1P_, m1P_, g1P_,
+    f2P_, m2P_, g2P_,
+    c_, mq_, vud_, sew_, condensates_,
+    inputs_, thMomContribs_, expMom_
   );
 }
 
