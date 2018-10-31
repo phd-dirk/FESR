@@ -39,6 +39,10 @@ using ublas::prod;
 
 #include "./src/utils.hpp"
 
+std::complex<double> test(std::complex<double> x) {
+  return x;
+}
+
 int main (int argc, char* argv[]) {
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   cout.precision(17);

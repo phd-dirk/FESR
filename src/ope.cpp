@@ -29,7 +29,7 @@ double OPE::D0CIntFO(
        cmplx mu2(s0, 0.);
        return weight.wD(s)*D0(s0*s, mu2, sTau, astau, c, order);
      };
-  return (3*M_PI*complexContourIntegral(f)).real();
+   return (3*M_PI*Numerics::gaussInt(f)).real();
 };
 
 double OPE::D0CIntCI(
@@ -41,7 +41,7 @@ double OPE::D0CIntCI(
     return weight.wD(x)*D0(s0*x, -x*s0, sTau, astau, c, order);
   };
 
-  return (3*M_PI*Numerics::gaussIntegration(f)).real();
+  return (3*M_PI*Numerics::gaussInt(f)).real();
 };
 
 complex<double> OPE::D4(
@@ -127,7 +127,7 @@ double OPE::D4CInt(
   };
 
   double norder = 2;
-  if ( abs(Numerics::complexContourIntegral(fTest).real()) < 2.e-14) {
+  if ( abs(Numerics::gaussInt(fTest).real()) < 2.e-14) {
     norder = 3;
   }
 
@@ -140,7 +140,7 @@ double OPE::D4CInt(
     );
   };
 
-  return (3*M_PI*Numerics::complexContourIntegral(f)).real();
+  return (3*M_PI*Numerics::gaussInt(f)).real();
 };
 
 complex<double> OPE::D68(
@@ -157,5 +157,5 @@ double OPE::D68CInt(
       return weight.wD(s)*D68(s0*s, rho, c8);
     };
 
-  return (3*M_PI*Numerics::complexContourIntegral(f)).real();
+  return (3*M_PI*Numerics::gaussInt(f)).real();
 };

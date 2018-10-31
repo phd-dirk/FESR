@@ -60,6 +60,7 @@ protected:
 };
 
 TEST_F(ThMomsTest, ThMom) {
+  // Weight 1, s0 = sTau
   EXPECT_NEAR(
     ThMoms::calc(
       pow(1.77686, 2), Weight(1), 0.3179, 0.021, -0.15, 0.24, 5,
@@ -81,7 +82,7 @@ TEST_F(ThMomsTest, ThMom) {
     3.4609600058109637, 1e-14
   );
 
-  // different weight
+  // Weight 3, s0 = sTau
   EXPECT_NEAR(
     ThMoms::calc(
       pow(1.77686, 2), Weight(3), 0.3179, 0.021, -0.15, 0.24, 5,
@@ -130,6 +131,7 @@ TEST_F(ThMomsTest, cIntVpAD4) {
     2.6540304192026673E-003, 1e-14
   );
 }
+
 // TEST_F(ThMomsTest, IntegralMoment) {
 //   // thMom(const int &i, const double &astau, const double &aGGinv,
 //   // const double &rhoVpA, const double &c8VpA, const double &order)

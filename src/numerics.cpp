@@ -1,5 +1,68 @@
 #include "./numerics.hpp"
 
+double Numerics::nonAdaptiveIntegrate(func f, double from, double to) {
+  double result, error;
+  gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1100);
+  gsl_function F;
+  F = {
+    [](double d, void* vf) -> double {
+      auto& f = *static_cast<std::function<double(double)>*>(vf);
+      return f(d);
+    },
+    &f
+  };
+  size_t fCalls;
+  gsl_integration_qng(&F, from, to, 1e-6, 0.0, &result, &error, &fCalls);
+  return result;
+}
+
+double Numerics::adaptiveIntegrate(func f, double from, double to) {
+  double result, error;
+  gsl_integration_workspace * w_ = gsl_integration_workspace_alloc(1100);
+  gsl_function F;
+  F = {
+    [](double d, void* vf) -> double {
+      auto& f = *static_cast<std::function<double(double)>*>(vf);
+      return f(d);
+    },
+    &f
+  };
+  gsl_integration_qag(&F, from, to, 1e-10, 0.0, 1100, 6, w_, &result, &error);
+  return result;
+}
+
+double Numerics::gaussLegendre(func f, double from, double to) {
+  double result, error;
+  gsl_integration_glfixed_table * t = gsl_integration_glfixed_table_alloc(1100);
+  gsl_function F;
+  F = {
+    [](double d, void* vf) -> double {
+      auto& f = *static_cast<std::function<double(double)>*>(vf);
+      return f(d);
+    },
+    &f
+  };
+  return gsl_integration_glfixed(&F, from, to, t);
+}
+
+std::complex<double> Numerics::integrateComplex(
+  function<complex<double>(double)> func, double from, double to
+) {
+  auto funcReal = [func](double t) {
+                    return func(t).real();
+                  };
+  auto funcImag = [func](double t) {
+                    return func(t).imag();
+                  };
+
+  double cintReal = gaussLegendre(funcReal, from, to);
+  double cintImag = gaussLegendre(funcImag, from, to);
+  // double cintReal = adaptiveIntegrate(funcReal, from, to);
+  // double cintImag = adaptiveIntegrate(funcImag, from, to);
+
+  return complex<double>(cintReal, cintImag);
+}
+
 void Numerics::gauleg(const double &x1, const double &x2, vec &x, vec &w, const int &n) {
   double z1, z, pp, p3, p2, p1;
   int m = (n + 1)/2;
@@ -28,7 +91,7 @@ void Numerics::gauleg(const double &x1, const double &x2, vec &x, vec &w, const 
   }
 }
 
-complex<double> Numerics::gaussIntegration(function<complex<double>(complex<double>)> func) {
+complex<double> Numerics::gaussInt(function<complex<double>(complex<double>)> func) {
   std::vector<double> gaulegX(1201);
   std::vector<double> gaulegW(1201);
 
