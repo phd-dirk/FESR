@@ -5,7 +5,7 @@
 #include "./numerics.hpp"
 #include "./weights.hpp"
 
-class DualityViolations : Numerics
+class DualityViolations
 {
  public:
   double DVMomentVpA(cDbl &s0, const Weight &w,

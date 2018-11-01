@@ -16,7 +16,7 @@
 
 using boost::numeric::ublas::matrix;
 
-class OPE : Numerics {
+class OPE {
 public:
   static complex<double> D0(
     const complex<double> &s, const cmplx &mu2, const double &sTau,
