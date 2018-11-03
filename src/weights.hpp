@@ -98,6 +98,7 @@ class Weight {
   static cmplx wD2(cmplx x) {
     return 1.0 - 2.0*x + 2.0*pow(x, 3)/3.0;
   }
+  // weightId: 1
   static WeightPolynomial wR00Poli() {
     return { 1, 0, -3, 2 };
   }

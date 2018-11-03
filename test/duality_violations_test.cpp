@@ -4,40 +4,22 @@
 
 #include <complex>
 
-// TEST_F(DualityViolationTest, DVMomentVpA) {
-//   DualityViolations dv;
-//   EXPECT_NEAR(
-//     dv.DVMomentVpA(
-//       3.15709, Weight(1),
-//       0.0, 1.0, 1.0, 1.0,
-//       0.0, 1.0, 1.0, 1.0
-//     )
-//     , -0.40033129402047263, 1e-15
-//   );
-// }
-
-// TEST_F(DualityViolationTest, cintDV) {
-//   DualityViolations dv;
-//   EXPECT_NEAR(dv.cintDVp_VA(1.0, Weight(1), 0.0, 1.0, 1.0, 1.0), -1.73494103008802, 1e-15);
-//   EXPECT_NEAR(dv.cintDVp_VA(3.15709, Weight(1), -log(3), 3.7, 4.2, 7.1), -0.00572861, 1e-15);
-// }
-
-TEST(DualityViolationTest, intDVp0) {
-  EXPECT_NEAR(DV::intP0(1.0, 0.0, 1.0, 1.0, 1.0), 0.0907099817825180, 1e-15);
-  EXPECT_NEAR(DV::intP0(3.15709, 0.0, 3.7, 4.2, 7.1), 5.68364e-7, 1e-13);
+TEST(DVTest, cIntVA) {
+  EXPECT_NEAR(DV::cIntVA(3.0, Weight(1), 1.1, 1.2, 1.3, 1.4), -4.3482045718910615E-002, 1e-15);
 }
 
-TEST(DualityViolationTest, intDVp1) {
-  EXPECT_NEAR(DV::intP1(1.0, 0.0, 1.0, 1.0, 1.0), 0.0141640489454048, 1e-15);
-  EXPECT_NEAR(DV::intP1(3.15709, -log(3), 3.7, 4.2, 7.1), 5.18599e-6, 1e-10);
+TEST(DVTest, intP0) {
+  EXPECT_NEAR(DV::intP0(3.0, 1.1, 1.2, 1.3, 1.4), -1.5364831049097595e-2, 1e-15);
 }
 
-TEST(DualityViolationTest, intDVp2) {
-  EXPECT_NEAR(DV::intP2(1.0, 0.0, 1.0, 1.0, 1.0), -0.306183731348453, 1e-15);
-  EXPECT_NEAR(DV::intP2(3.15709, -log(3), 3.7, 4.2, 7.1), 0.000015651, 1e-9);
+TEST(DVTest, intP1) {
+  EXPECT_NEAR(DV::intP1(3.0, 1.1, 1.2, 1.3, 1.4), -4.3816982693323563e-2, 1e-15);
 }
 
-TEST(DualityViolationTest, intDVp3) {
-  EXPECT_NEAR(DV::intP3(1.0, 0.0, 1.0, 1.0, 1.0), -1.37210110295795, 1e-14);
-  EXPECT_NEAR(DV::intP3(3.15709, 0.0, 3.7, 4.2, 7.1), 0.0000156031, 1e-11);
+TEST(DVTest, intP2) {
+  EXPECT_NEAR(DV::intP2(3.0, 1.1, 1.2, 1.3, 1.4), -8.4654144846656038e-2, 1e-15);
+}
+
+TEST(DVTest, intP3) {
+  EXPECT_NEAR(DV::intP3(3.0, 1.1, 1.2, 1.3, 1.4), -0.14103982460489065, 1e-15);
 }
