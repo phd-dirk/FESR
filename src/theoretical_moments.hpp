@@ -7,8 +7,7 @@
 #include "./condensates.hpp"
 #include "./pseudoscalar_pheno.hpp"
 
-class ThMoms:
-    public OPE, DualityViolations
+class ThMoms
 {
  public:
   ThMoms(const Configuration &config);

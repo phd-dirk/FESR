@@ -42,11 +42,11 @@ double ThMoms::calc(
 
   // D68
   if ( thMomContribs.D68 )
-    rTauTh += D68CInt(s0, w, rhoVpA, c8VpA);
+    rTauTh += OPE::D68CInt(s0, w, rhoVpA, c8VpA);
 
   // DV
-  // if ( thMomContribs.DV )
-    // rTauTh += DVMomentVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
+  if ( thMomContribs.DV )
+    rTauTh += DV::cIntVpA(s0, w, deV, gaV, alV, beV, deA, gaA, alA, beA);
 
   // PionPole
   if ( thMomContribs.PionPole )
@@ -62,14 +62,14 @@ double ThMoms::cIntVpAD0FO(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const matrix<double> &c, const int &order
 ) {
-  return 2.0*D0CIntFO(s0, weight, sTau, astau, c, order);
+  return 2.0*OPE::D0CIntFO(s0, weight, sTau, astau, c, order);
 }
 
 double ThMoms::cIntVpAD0CI(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const matrix<double> &c, const int &order
 ) const {
-  return 2.*D0CIntCI(s0, weight, sTau, astau, c, order);
+  return 2.*OPE::D0CIntCI(s0, weight, sTau, astau, c, order);
 }
 
 double ThMoms::cIntVpAD4(
@@ -77,8 +77,8 @@ double ThMoms::cIntVpAD4(
   const double &astau, const double &aGGinv,
   const std::vector<double> mq, Condensates condensates
 ) {
-  return  D4CInt(s0, weight, sTau, astau, aGGinv, 1, mq, condensates)
-    + D4CInt(s0, weight, sTau, astau, aGGinv, -1, mq, condensates);
+  return  OPE::D4CInt(s0, weight, sTau, astau, aGGinv, 1, mq, condensates)
+    + OPE::D4CInt(s0, weight, sTau, astau, aGGinv, -1, mq, condensates);
 }
 
 double ThMoms::del0(
@@ -100,17 +100,17 @@ double ThMoms::del6(
   const double &s0, const Weight &weight,
   const double &rhoVpA
 ) const {
-  return D68CInt(s0, weight, rhoVpA, 0.0)/3.;
+  return OPE::D68CInt(s0, weight, rhoVpA, 0.0)/3.;
 }
 double ThMoms::del8(
   const double &s0, const Weight &weight,
   const double &c8VpA
 ) const {
-  return D68CInt(s0, weight, 0.0, c8VpA)/3.;
+  return OPE::D68CInt(s0, weight, 0.0, c8VpA)/3.;
 }
 double ThMoms::del68(
   const double &s0, const Weight &weight,
   const double &rhoVpA, const double &c8VpA
 ) const {
-  return D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
+  return OPE::D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
 }

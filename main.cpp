@@ -52,24 +52,6 @@ int main (int argc, char* argv[]) {
   }
 
   try {
-    std::vector<double> gaulegX(1201);
-    std::vector<double> gaulegW(1201);
-
-    std::cout << "no" << std::endl;
-    Numerics::gauleg(-M_PI, M_PI, gaulegX, gaulegW, 1201);
-    std::cout << "jo" << std::endl;
-
-    int c = 0;
-    for(auto x: gaulegW) {
-      std::cout << x << ", \t";
-      if(c == 4) {
-        std::cout << std::endl;
-        c = 0;
-      }
-      c++;
-    }
-
-    return 0;
     const Configuration config(configFilePath);
     const Chi2 chi2(config);
 
