@@ -49,6 +49,20 @@ public:
   static double D68CInt(
     const double &s0, const Weight &weight, const double &rho, const double &c8
   );
+
+  static complex<double> D10(
+    const complex<double> &s, const double &c10
+  );
+  static double D10CInt(
+    const double &s0, const Weight &weight, const double &c10
+  );
+
+  static complex<double> D12(
+    const complex<double> &s, const double &c12
+  );
+  static double D12CInt(
+    const double &s0, const Weight &weight, const double &c12
+  );
 };
 
 #endif

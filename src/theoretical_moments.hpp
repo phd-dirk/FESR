@@ -16,7 +16,8 @@ class ThMoms
   static double calc(
     const double &s0, const Weight &w,
     const double &astau, const double &aGGinv, const double &rhoVpA,
-    const double &c8VpA, const double &order, const double &sTau,
+    const double &c8, const double &c10, const double &c12,
+    const double &order, const double &sTau,
     const double &deV, const double &gaV, const double &alV, const double &beV,
     const double &deA, const double &gaA, const double &alA, const double &beA,
     const double &mPiM, const double &fPi,

@@ -63,7 +63,7 @@ TEST_F(ThMomsTest, ThMom) {
   // Weight 1, s0 = sTau
   EXPECT_NEAR(
     ThMoms::calc(
-      pow(1.77686, 2), Weight(1), 0.3179, 0.021, -0.15, 0.24, 5,
+      pow(1.77686, 2), Weight(1), 0.3179, 0.021, -0.15, 0.24, 0.0, 0.0, 5,
       pow(1.77686, 2),
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
       0.13957018, 92.21e-3,
@@ -77,7 +77,7 @@ TEST_F(ThMomsTest, ThMom) {
       ),
       0.97420,
       1.0198,
-      { "FO", true, true, true, false, true }
+      { "FO", true, true, true, false, false, false, true }
     ),
     3.4609600058109637, 1e-14
   );
@@ -85,7 +85,7 @@ TEST_F(ThMomsTest, ThMom) {
   // Weight 3, s0 = sTau
   EXPECT_NEAR(
     ThMoms::calc(
-      pow(1.77686, 2), Weight(3), 0.3179, 0.021, -0.15, 0.24, 5,
+      pow(1.77686, 2), Weight(3), 0.3179, 0.021, -0.15, 0.24, 0.0, 0.0, 5,
       pow(1.77686, 2),
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
       0.13957018, 92.21e-3,
@@ -99,7 +99,7 @@ TEST_F(ThMomsTest, ThMom) {
       ),
       0.97420,
       1.0198,
-      { "FO", true, true, true, false, true }
+      { "FO", true, true, true, false, false, false, true }
     ),
     0.43598174876798695, 1e-14
   );

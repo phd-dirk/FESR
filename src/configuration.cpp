@@ -14,7 +14,8 @@ Configuration::Configuration(string configFilePath)
 
   thMomContribs_ = {
     jsonConfig["scheme"], jsonConfig["thMomContribs"]["D0"], jsonConfig["thMomContribs"]["D4"],
-    jsonConfig["thMomContribs"]["D68"], jsonConfig["thMomContribs"]["DV"], jsonConfig["thMomContribs"]["PionPole"]
+    jsonConfig["thMomContribs"]["D68"], jsonConfig["thMomContribs"]["D10"], jsonConfig["thMomContribs"]["D12"],
+    jsonConfig["thMomContribs"]["DV"], jsonConfig["thMomContribs"]["PionPole"]
   };
 
   astau = {

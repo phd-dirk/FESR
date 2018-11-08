@@ -19,6 +19,8 @@ struct ThMomContribs {
   bool D0;
   bool D4;
   bool D68;
+  bool D10;
+  bool D12;
   bool DV;
   bool PionPole;
 };

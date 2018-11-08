@@ -94,17 +94,19 @@ double Chi2::operator() ( const double *xx) const {
   double aGGinv = xx[1];
   double rhoD6VpA = xx[2];
   double c8D8VpA = xx[3];
-  double deV = xx[4];
-  double gaV = xx[5];
-  double alV = xx[6];
-  double beV = xx[7];
-  double deA = xx[8];
-  double gaA = xx[9];
-  double alA = xx[10];
-  double beA = xx[11];
+  double c10 = xx[5];
+  double c12 = xx[6];
+  double deV = xx[7];
+  double gaV = xx[8];
+  double alV = xx[9];
+  double beV = xx[10];
+  double deA = xx[11];
+  double gaA = xx[12];
+  double alA = xx[13];
+  double beA = xx[14];
 
   return chi2(
-    astau, aGGinv, rhoD6VpA, c8D8VpA,
+    astau, aGGinv, rhoD6VpA, c8D8VpA, c10, c12,
     deV, gaV, alV, beV,
     deA, gaA, alA, beA,
     order_, sTau_, mPiM_, fPi_,
@@ -120,6 +122,8 @@ double Chi2::operator ()(
   const double &aGGinv,
   const double &rho,
   const double &c8,
+  const double &c10,
+  const double &c12,
   const double &deV,
   const double &gaV,
   const double &alV,
@@ -131,7 +135,7 @@ double Chi2::operator ()(
   const double &order
 ) const {
   return chi2(
-    astau, aGGinv, rho, c8,
+    astau, aGGinv, rho, c8, c10, c12,
     deV, gaV, alV, beV,
     deA, gaA, alA, alA,
     order, sTau_, mPiM_, fPi_,
@@ -147,6 +151,8 @@ double Chi2::chi2(
   const double &aGGinv,
   const double &rho,
   const double &c8,
+  const double &c10,
+  const double &c12,
   const double &deV,
   const double &gaV,
   const double &alV,
@@ -177,7 +183,7 @@ double Chi2::chi2(
   double chi = 0;
 
   vec thMoms = Chi2::calcThMoms(
-    astau, aGGinv, rho, c8, order,
+    astau, aGGinv, rho, c8, c10, c12, order,
     deV, gaV, alV, beV, deA, gaA, alA, beA,
     sTau, mPiM, fPi,f1P, m1P, g1P, f2P, m2P, g2P,
     c, mq, vud, SEW, condensates, inputs, thMomContribs
@@ -217,7 +223,9 @@ std::vector<double> Chi2::calcThMoms(
   const double &astau,
   const double &aGGinv,
   const double &rhoVpA,
-  const double &c8VpA,
+  const double &c8,
+  const double &c10,
+  const double &c12,
   const double &order,
   const double &deV,
   const double &gaV,
@@ -260,7 +268,7 @@ std::vector<double> Chi2::calcThMoms(
     for(auto const& s0: s0s) {
       ftrs[i] = std::async(
         &ThMoms::calc,
-        s0, w, astau, aGGinv, rhoVpA, c8VpA, order, sTau,
+        s0, w, astau, aGGinv, rhoVpA, c8, c10, c12, order, sTau,
         deV, gaV, alV, beV, deA, gaA, alA, beA,
         mPiM, fPi,f1P, m1P, g1P, f2P, m2P, g2P, c, mq, condensates,
         vud, SEW, thMomContribs

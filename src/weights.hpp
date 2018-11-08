@@ -37,6 +37,8 @@ class Weight {
       case 11: return wD22(x);
       case 12: return wD23(x);
       case 13: return wD2(x);
+      case 14: return wDCube(x);
+      case 15: return wDQuartic(x);
       default:
         throw std::invalid_argument("weight wD(" + std::to_string(weightId_) + ") is not defined");
         return wD00(x);
@@ -59,6 +61,8 @@ class Weight {
       case 11: return wR22(x);
       case 12: return wR23(x);
       case 13: return wR2(x);
+      case 14: return wRCube(x);
+      case 15: return wRQuartic(x);
       default:
         throw std::invalid_argument("weight wR(" + std::to_string(weightId_) + ") is not defined");
         wR00(x);
@@ -79,7 +83,12 @@ class Weight {
   static cmplx wTau(cmplx x) {
     return wD00(x);
   }
-  // Polunomial weights
+
+  /////////////////////////
+  // Polynomial weights
+  /////////////////////////
+
+  // weightId: 0
   static WeightPolynomial wRUnitPoli() {
     return { 1, 0, 0, 0 };
   }
@@ -132,6 +141,7 @@ class Weight {
   static cmplx wR10(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x);
   }
+  // weightId:
   static cmplx wD10(cmplx x) {
     return pow(1.0 - x, 4)*(7.0 + 8.0*x)/10.0;
   }
@@ -176,6 +186,20 @@ class Weight {
   }
   static cmplx wD23(cmplx x) {
     return pow(1.0 - x, 5)*(17.0 + 85.0*x + 255.0*pow(x, 2) + 595.0*pow(x, 3) + 560.0*pow(x, 4))/1260.0;
+  }
+  // weightId: 14
+  static cmplx wRCube(cmplx x) {
+    return pow(1.0 - 2.0*x, 3)*(1.0 + 3.0*x);
+  }
+  static cmplx wDCube(cmplx x) {
+    return 2.0/5.0*pow(1.0 - x, 4)*(2.0 + 3.0*x);
+  }
+  // weightId: 15
+  static cmplx wRQuartic(cmplx x) {
+    return pow(1.0 - 2.0*x, 4)*(1.0 + 4.0*x);
+  }
+  static cmplx wDQuartic(cmplx x) {
+    return 2.0/3.0*pow(1.0 - x, 5)*(1.0 + 2.0*x);
   }
 
  private:

@@ -143,18 +143,52 @@ double OPE::D4CInt(
   return (3*M_PI*Numerics::gaussInt(f)).real();
 };
 
+// rhoVA = - 10^2 C_6V/A;  c8VA = 10^2 C_8V/A
 complex<double> OPE::D68(
   const complex<double> &s, const double &rho, const double &c8
 ) {
   return 0.03*rho/pow(s, 3) + 0.04*c8/pow(s, 4);
 }
-
 double OPE::D68CInt(
   const double &s0, const Weight &weight, const double &rho, const double &c8
 ) {
   cmplxFunc f =
     [&](cmplx s) -> cmplx {
       return weight.wD(s)*D68(s0*s, rho, c8);
+    };
+
+  return (3*M_PI*Numerics::gaussInt(f)).real();
+};
+
+// c10VA = -10^2 C_10VA
+complex<double> OPE::D10(
+  const complex<double> &s, const double &c10
+) {
+  return 0.05*c10/pow(s, 5);
+}
+double OPE::D10CInt(
+  const double &s0, const Weight &weight, const double &c10
+) {
+  cmplxFunc f =
+    [&](cmplx s) -> cmplx {
+      return weight.wD(s)*D10(s0*s, c10);
+    };
+
+  return (3*M_PI*Numerics::gaussInt(f)).real();
+};
+
+// c12VA = 10^2 C_12VA
+complex<double> OPE::D12(
+  const complex<double> &s, const double &c12
+) {
+  return 0.06*c12/pow(s, 5);
+}
+double OPE::D12CInt(
+  const double &s0, const Weight &weight, const double &c12
+) {
+  cmplxFunc f =
+    [&](cmplx s) -> cmplx {
+      return weight.wD(s)*D12(s0*s, c12);
     };
 
   return (3*M_PI*Numerics::gaussInt(f)).real();

@@ -52,13 +52,6 @@ int main (int argc, char* argv[]) {
   }
 
   try {
-    std::cout << -12*pow(M_PI, 2)*DV::intP0(3.0, 1.0, 1.0, 1.0, 1.0) << std::endl;
-    // std::cout <<
-    //   DV::cIntVpA(3.0, Weight(1), 3.56, 0.58, -1.92, 4.07, 1.68, 1.41, 5.16, 2.13)
-    //           << std::endl;
-
-    return 0;
-
     const Configuration config(configFilePath);
     const Chi2 chi2(config);
 

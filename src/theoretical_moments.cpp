@@ -13,7 +13,8 @@ ThMoms::ThMoms() {}
 double ThMoms::calc(
   const double &s0, const Weight &w,
   const double &astau, const double &aGGinv, const double &rhoVpA,
-  const double &c8VpA, const double &order, const double &sTau,
+  const double &c8, const double &c10, const double &c12,
+  const double &order, const double &sTau,
   const double &deV, const double &gaV, const double &alV, const double &beV,
   const double &deA, const double &gaA, const double &alA, const double &beA,
   const double &mPiM, const double &fPi,
@@ -42,7 +43,15 @@ double ThMoms::calc(
 
   // D68
   if ( thMomContribs.D68 )
-    rTauTh += OPE::D68CInt(s0, w, rhoVpA, c8VpA);
+    rTauTh += OPE::D68CInt(s0, w, rhoVpA, c8);
+
+  // D10
+  if ( thMomContribs.D10 )
+    rTauTh += OPE::D10CInt(s0, w, c10);
+
+  // D10
+  if ( thMomContribs.D12 )
+    rTauTh += OPE::D12CInt(s0, w, c12);
 
   // DV
   if ( thMomContribs.DV )
@@ -94,23 +103,23 @@ double ThMoms::del4(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const double &aGGinv
 ) const {
-  return cIntVpAD4(s0, weight, sTau, astau, aGGinv, mq_, condensates_)/3.;
+  return cIntVpAD4(s0, weight, sTau, astau, aGGinv, mq_, condensates_)/3.0;
 }
 double ThMoms::del6(
   const double &s0, const Weight &weight,
   const double &rhoVpA
 ) const {
-  return OPE::D68CInt(s0, weight, rhoVpA, 0.0)/3.;
+  return OPE::D68CInt(s0, weight, rhoVpA, 0.0)/3.0;
 }
 double ThMoms::del8(
   const double &s0, const Weight &weight,
   const double &c8VpA
 ) const {
-  return OPE::D68CInt(s0, weight, 0.0, c8VpA)/3.;
+  return OPE::D68CInt(s0, weight, 0.0, c8VpA)/3.0;
 }
 double ThMoms::del68(
   const double &s0, const Weight &weight,
   const double &rhoVpA, const double &c8VpA
 ) const {
-  return OPE::D68CInt(s0, weight, rhoVpA, c8VpA)/3.;
+  return OPE::D68CInt(s0, weight, rhoVpA, c8VpA)/3.0;
 }

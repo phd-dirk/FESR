@@ -8,7 +8,7 @@ TEST(Chisquared_Test, chi2) {
   const Chi2 chi2(config);
   EXPECT_NEAR(
     chi2(
-      0.3179, 0.021, -0.15, 0.24,
+      0.3179, 0.021, -0.15, 0.24, 0.0, 0.0,
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5
     ), 10.520253962854611, 1e-8
   );
@@ -37,13 +37,13 @@ TEST(Chisquared_Test, chi2) {
         }
       }
     },
-    { "FO", true, true, true, false, true },
+    { "FO", true, true, true, false, false, false, true },
     0.99743669
   );
 
   EXPECT_NEAR(
     chi2_2(
-      0.3179, 0.021, -0.15, 0.24,
+      0.3179, 0.021, -0.15, 0.24, 0.0, 0.0,
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5
     ), 2.2405957912637615, 1e-12
   );
