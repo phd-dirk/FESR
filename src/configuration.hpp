@@ -75,7 +75,7 @@ class Configuration {
 
  // OPE
   ThMomContribs thMomContribs_;
-  Variable astau, aGGInv, rhoVpA, c8VpA, deltaV, gammaV, alphaV, betaV, deltaA, gammaA, alphaA, betaA;
+  Variable astau, aGGInv, rhoVpA, c8VpA, c10, c12, deltaV, gammaV, alphaV, betaV, deltaA, gammaA, alphaA, betaA;
 
   // masses
   double mTau_, sTau_;

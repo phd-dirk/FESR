@@ -38,6 +38,16 @@ Configuration::Configuration(string configFilePath)
     jsonConfig["variables"]["c8VpA"]["value"],
     jsonConfig["variables"]["c8VpA"]["stepSize"]
   };
+  c10 = {
+    jsonConfig["variables"]["c10"]["fixed"],
+    jsonConfig["variables"]["c10"]["value"],
+    jsonConfig["variables"]["c10"]["stepSize"]
+  };
+  c12 = {
+    jsonConfig["variables"]["c12"]["fixed"],
+    jsonConfig["variables"]["c12"]["value"],
+    jsonConfig["variables"]["c12"]["stepSize"]
+  };
   deltaV = {
     jsonConfig["variables"]["deltaV"]["fixed"],
     jsonConfig["variables"]["deltaV"]["value"],
@@ -207,6 +217,10 @@ int Configuration::dof() const {
   if(!rhoVpA.isFixed)
     dof--;
   if(!c8VpA.isFixed)
+    dof--;
+  if(!c10.isFixed)
+    dof--;
+  if(!c12.isFixed)
     dof--;
 
   return dof;

@@ -5,4 +5,4 @@
 ((nil
   (projectile-project-run-cmd . "./build/FESR")
   (projectile-project-compilation-cmd . "make -C /Users/knowledge/Developer/PhD/FESR/build/ -j8 default_target")
-  (projectile-project-test-cmd . "./build/runUnitTests")))
+  (projectile-project-test-cmd . "./build/runUnitTests"))

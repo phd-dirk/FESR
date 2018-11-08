@@ -61,6 +61,16 @@
       "value": -0.026525,
       "stepSize": 0.3
     },
+    "c10": {
+      "fixed": false,
+      "value": 0.01,
+      "stepSize": 0.1
+    },
+    "c12": {
+      "fixed": false,
+      "value": 0.01,
+      "stepSize": 0.1
+    },
     "deltaV": {
       "fixed": true,
       "value": 3.56,
