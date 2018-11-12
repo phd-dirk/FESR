@@ -125,6 +125,12 @@ void writeToCSV(
     // O8
     addCSV(xs[3], csvFile);
     addCSV(errors[3], csvFile);
+    // O10
+    addCSV(xs[4], csvFile);
+    addCSV(errors[4], csvFile);
+    // O12
+    addCSV(xs[5], csvFile);
+    addCSV(errors[5], csvFile);
 
     // write FVAL
     addCSV(min->MinValue(), csvFile);
