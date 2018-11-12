@@ -94,16 +94,16 @@ double Chi2::operator() ( const double *xx) const {
   double aGGinv = xx[1];
   double rhoD6VpA = xx[2];
   double c8D8VpA = xx[3];
-  double c10 = xx[5];
-  double c12 = xx[6];
-  double deV = xx[7];
-  double gaV = xx[8];
-  double alV = xx[9];
-  double beV = xx[10];
-  double deA = xx[11];
-  double gaA = xx[12];
-  double alA = xx[13];
-  double beA = xx[14];
+  double c10 = xx[4];
+  double c12 = xx[5];
+  double deV = xx[6];
+  double gaV = xx[7];
+  double alV = xx[8];
+  double beV = xx[9];
+  double deA = xx[10];
+  double gaA = xx[11];
+  double alA = xx[12];
+  double beA = xx[13];
 
   return chi2(
     astau, aGGinv, rhoD6VpA, c8D8VpA, c10, c12,

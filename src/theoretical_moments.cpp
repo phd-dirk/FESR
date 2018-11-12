@@ -112,14 +112,23 @@ double ThMoms::del6(
   return OPE::D68CInt(s0, weight, rhoVpA, 0.0)/3.0;
 }
 double ThMoms::del8(
-  const double &s0, const Weight &weight,
-  const double &c8VpA
+  const double &s0, const Weight &weight, const double &c8
 ) const {
-  return OPE::D68CInt(s0, weight, 0.0, c8VpA)/3.0;
+  return OPE::D68CInt(s0, weight, 0.0, c8)/3.0;
 }
 double ThMoms::del68(
   const double &s0, const Weight &weight,
   const double &rhoVpA, const double &c8VpA
 ) const {
   return OPE::D68CInt(s0, weight, rhoVpA, c8VpA)/3.0;
+}
+double ThMoms::del10(
+  const double &s0, const Weight &weight, const double &c10
+) const {
+  return OPE::D10CInt(s0, weight, c10)/3.0;
+}
+double ThMoms::del12(
+  const double &s0, const Weight &weight, const double &c12
+) const {
+  return OPE::D10CInt(s0, weight, c12)/3.0;
 }

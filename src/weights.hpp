@@ -189,14 +189,14 @@ class Weight {
   }
   // weightId: 14
   static cmplx wRCube(cmplx x) {
-    return pow(1.0 - 2.0*x, 3)*(1.0 + 3.0*x);
+    return pow(1.0 - x, 3)*(1.0 + 3.0*x);
   }
   static cmplx wDCube(cmplx x) {
     return 2.0/5.0*pow(1.0 - x, 4)*(2.0 + 3.0*x);
   }
   // weightId: 15
   static cmplx wRQuartic(cmplx x) {
-    return pow(1.0 - 2.0*x, 4)*(1.0 + 4.0*x);
+    return pow(1.0 - x, 4)*(1.0 + 4.0*x);
   }
   static cmplx wDQuartic(cmplx x) {
     return 2.0/3.0*pow(1.0 - x, 5)*(1.0 + 2.0*x);

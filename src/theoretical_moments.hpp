@@ -55,12 +55,17 @@ class ThMoms
     const double &rhoVpA
   ) const;
   double del8(
-    const double &s0, const Weight &weight,
-    const double &c8VpA
+    const double &s0, const Weight &weight, const double &c8
   ) const;
   double del68(
     const double &s0, const Weight &weight,
     const double &rhoVpA, const double &c8VpA
+  ) const;
+  double del10(
+    const double &s0, const Weight &weight, const double &c10
+  ) const;
+  double del12(
+    const double &s0, const Weight &weight, const double &c12
   ) const;
 
  private:

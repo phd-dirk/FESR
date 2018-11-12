@@ -1,5 +1,5 @@
 {
-  "version": 0.7,
+  "version": 0.8,
   "scheme": "FO",
   "tolerance": 1e-6,
   "parameters": {
@@ -42,8 +42,8 @@
   },
   "variables": {
     "astau": {
-      "fixed": true,
-      "value": 0.31927,
+      "fixed": false,
+      "value": 0.32638559822791602,
       "stepSize": 0.002
     },
     "aGGInv": {
@@ -53,22 +53,22 @@
     },
     "rhoVpA": {
       "fixed": false,
-      "value":  -0.13,
-      "stepSize": 0.1
+      "value":  -0.31565100008318675,
+      "stepSize": 0.01
     },
     "c8VpA": {
       "fixed": false,
-      "value": -0.08,
-      "stepSize": 0.3
+      "value": -0.14136543837149698,
+      "stepSize": 0.1
     },
     "c10": {
-      "fixed": false,
-      "value": 0.01,
+      "fixed": true,
+      "value": 0.8756740718569338,
       "stepSize": 0.1
     },
     "c12": {
-      "fixed": false,
-      "value": 0.01,
+      "fixed": true,
+      "value": 0.020061955135371096,
       "stepSize": 0.1
     },
     "deltaV": {
@@ -117,8 +117,8 @@
     "D2": false,
     "D4": true,
     "D68": true,
-    "D10": true,
-    "D12": true,
+    "D10": false,
+    "D12": false,
     "DV": false,
     "PionPole": true
   }

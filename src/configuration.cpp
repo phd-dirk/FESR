@@ -38,6 +38,7 @@ Configuration::Configuration(string configFilePath)
     jsonConfig["variables"]["c8VpA"]["value"],
     jsonConfig["variables"]["c8VpA"]["stepSize"]
   };
+
   c10 = {
     jsonConfig["variables"]["c10"]["fixed"],
     jsonConfig["variables"]["c10"]["value"],
