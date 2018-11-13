@@ -1,0 +1,1 @@
+xmgrace -settype xydy aleph_vpa.dat -settype xydy aleph14_vpa.dat -settype xy rho.dat -par aleph_vpa.par -printfile aleph_vpa.eps

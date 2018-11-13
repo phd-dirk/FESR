@@ -1,0 +1,28 @@
+Last change: Matthias Jamin, 11.5.2010
+
+Some loose ends:
+================
+
+* Include possibility of choosing different sets of s_0's for
+  different weight functions in A and V+A analysis.
+
+* Investigate DV model which has the correct analytic properties.
+
+* Improve numerical routine for integration over duality violations.
+
+* Compute pion-pole contribution from B(tau -> pi nu_tau).
+
+* Implement dependence of running of alpha_s on perturbative order.
+
+* Should we generalise atauBJ dependence in condens.f90?
+  (In principle yes.)
+
+* Investigate dependence of Gauss integration on ngau.
+  (Improve Gauss integration by substitution?)
+
+* Speed up contour integration by performing all contributions at once.
+
+* Include OPE for scalar/pseudoscalar correlators.
+
+* Perform moment fit to e+e- spectral function
+

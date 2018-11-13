@@ -1,0 +1,18 @@
+Steps to run the code:
+
+* Put selected sets of s_0's for fits in "s0s_fit.f90" and for
+  output in "s0s_out.f90". The total number of s_0's has to be
+  specified explicitely at the beginning of these files.
+
+* Select weight functions for the fit in "weights_used.f90".
+  The total number of weights has to be specified explicitely
+  at the beginning of these files.
+
+* Select DV contribution to these weights in dualvio.f90.
+
+* Depending on whether only V or V&A are used for the fit switch
+  off/on V/A cross-correlations in "VAmomOpal.f90".
+
+* Modify starting parameters for fit and select parameters to
+  be fitted in "rtauVfit.f90" or "rtauVAfit.f90".
+
