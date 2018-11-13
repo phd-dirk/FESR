@@ -1,4 +1,0 @@
-* Questions
-** TODO How to choose the scale of alpha_s(mu) from \Pi(s)? Currently we use s0 instead of s? 
-** TODO What is the difference between AlphasExact and zarg() from Matthias
-   Why do I get equal result for ranges close to mu ~ 3. but different result for mu's away from 3.

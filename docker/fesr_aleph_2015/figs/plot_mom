@@ -1,1 +1,0 @@
-xmgrace -settype xydy mom.dat -par mom.par -printfile mom.eps

@@ -1,1 +1,0 @@
-xmgrace -settype xydy aleph_vv.dat -settype xydy aleph14_v.dat -settype xy rho.dat -par aleph_v.par -printfile aleph_v.eps

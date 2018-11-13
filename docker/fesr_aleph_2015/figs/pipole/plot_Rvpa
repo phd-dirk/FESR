@@ -1,1 +1,0 @@
-xmgrace -settype xydy Rvpa.dat -settype xydy Rvpa_nopi.dat -settype xydy pipole.dat -par Rvpa.par -printfile Rvpa.ps
