@@ -175,7 +175,7 @@ void writeToCSV(
       ThMoms::del12(
         config.sTau_, config.inputs_[0].weight, xs[5]
       )
-      , csvFile);
+      , csvFile, true);
 
     csvFile << endl;
     csvFile.close();
