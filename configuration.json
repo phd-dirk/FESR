@@ -42,8 +42,8 @@
   },
   "variables": {
     "astau": {
-      "fixed": false,
-      "value": 0.3234627490423061,
+      "fixed": true,
+      "value": 0.3179,
       "stepSize": 0.01
     },
     "aGGInv": {
@@ -53,21 +53,21 @@
     },
     "rhoVpA": {
       "fixed": false,
-      "value": -0.20681725650441671,
+      "value": -0.15,
       "stepSize": 0.01
     },
     "c8VpA": {
       "fixed": false,
-      "value": 0.057744389894893569,
+      "value": 0.24,
       "stepSize": 0.01
     },
     "c10": {
-      "fixed": false,
+      "fixed": true,
       "value": 1.10663844116007,
       "stepSize": 0.1
     },
     "c12": {
-      "fixed": false,
+      "fixed": true,
       "value": -0.59917168564708878,
       "stepSize": 0.1
     },
@@ -117,8 +117,8 @@
     "D2": false,
     "D4": true,
     "D68": true,
-    "D10": true,
-    "D12": true,
+    "D10": false,
+    "D12": false,
     "DV": false,
     "PionPole": true
   }
