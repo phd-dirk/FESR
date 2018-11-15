@@ -50,48 +50,48 @@ string correlationOutput(Minimizer* min) {
 
 string deltaOutput(Minimizer* min, const Configuration &config) {
   string out;
-  ThMoms thMom(config);
   const double *xs = min->X();
 
   out += "Deltas (FO): \n";
   out += "delta_V+A^(0) \t" +
-      std::to_string(
-          thMom.del0(
-              config.sTau_, config.inputs_[0].weight, config.sTau_, xs[0],
-              Configuration::adlerCoefficients(
-                3, Configuration::betaCoefficients(3, 3)
-              ),
-              config.order_
-          )
-      ) + "\n";
+    std::to_string(
+      ThMoms::del0(
+        config.sTau_, config.inputs_[0].weight, config.sTau_, xs[0],
+        Configuration::adlerCoefficients(
+          3, Configuration::betaCoefficients(3, 3)
+        ),
+        config.order_
+      )
+    ) + "\n";
   out += "delta_V+A^(4) \t" +
-      std::to_string(
-          thMom.del4(
-              config.sTau_, config.inputs_[0].weight, config.sTau_, xs[0], config.aGGInv.value
-          )
-      ) + "\n";
+    std::to_string(
+      ThMoms::del4(
+        config.sTau_, config.inputs_[0].weight, config.sTau_, xs[0], xs[1],
+        config.mq_, config.condensates_
+      )
+    ) + "\n";
   out += "delta_V+A^(6) \t" +
-      std::to_string(
-          thMom.del6(
-              config.sTau_, config.inputs_[0].weight, config.rhoVpA.value
-          )
-      ) + "\n";
+    std::to_string(
+      ThMoms::del6(
+        config.sTau_, config.inputs_[0].weight, xs[2]
+      )
+    ) + "\n";
   out += "delta_V+A^(8) \t" +
-      std::to_string(
-          thMom.del8(
-              config.sTau_, config.inputs_[0].weight, config.c8VpA.value
-          )
-      ) + "\n";
+    std::to_string(
+      ThMoms::del8(
+        config.sTau_, config.inputs_[0].weight, xs[3]
+      )
+    ) + "\n";
   out += "delta_V+A^(10) \t" +
     std::to_string(
-      thMom.del10(
-        config.sTau_, config.inputs_[0].weight, config.c10.value
+      ThMoms::del10(
+        config.sTau_, config.inputs_[0].weight, xs[4]
       )
     ) + "\n";
   out += "delta_V+A^(12) \t" +
     std::to_string(
-      thMom.del12(
-        config.sTau_, config.inputs_[0].weight, config.c12.value
+      ThMoms::del12(
+        config.sTau_, config.inputs_[0].weight, xs[5]
       )
     ) + "\n";
   out += "\n";
@@ -134,10 +134,48 @@ void writeToCSV(
 
     // write FVAL
     addCSV(min->MinValue(), csvFile);
+
     // dof
     addCSV(config.dof(), csvFile);
     addCSV(min->MinValue()/config.dof(), csvFile);
-    addCSV(min->Edm(), csvFile, true);
+    addCSV(min->Edm(), csvFile);
+
+    // deltas
+    addCSV( // del^(0)
+      ThMoms::del0(
+        config.sTau_, config.inputs_[0].weight, config.sTau_, xs[0],
+        Configuration::adlerCoefficients(
+          3, Configuration::betaCoefficients(3, 3)
+        ),
+        config.order_
+      )
+      , csvFile);
+    addCSV( // del^(4)
+      ThMoms::del4(
+        config.sTau_, config.inputs_[0].weight, config.sTau_, xs[0], xs[1],
+        config.mq_, config.condensates_
+      )
+      , csvFile);
+    addCSV( // del^(6)
+      ThMoms::del6(
+        config.sTau_, config.inputs_[0].weight, xs[2]
+      )
+      , csvFile);
+    addCSV( // del^(8)
+      ThMoms::del8(
+        config.sTau_, config.inputs_[0].weight, xs[3]
+      )
+      , csvFile);
+    addCSV( // del^(10)
+      ThMoms::del10(
+        config.sTau_, config.inputs_[0].weight, xs[4]
+      )
+      , csvFile);
+    addCSV( // del^(12)
+      ThMoms::del12(
+        config.sTau_, config.inputs_[0].weight, xs[5]
+      )
+      , csvFile);
 
     csvFile << endl;
     csvFile.close();

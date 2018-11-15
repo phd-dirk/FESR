@@ -42,31 +42,34 @@ class ThMoms
     const std::vector<double> mq, Condensates condensates
   );
 
-  double del0(
+  static double del0(
     const double &s0, const Weight &weight, const double &sTau,
     const double &astau, const matrix<double> &c, const int &order
-  ) const;
-  double del4(
+  );
+  static double del4(
     const double &s0, const Weight &weight, const double &sTau,
-    const double &astau, const double &aGGinv
-  ) const;
-  double del6(
-    const double &s0, const Weight &weight,
-    const double &rhoVpA
-  ) const;
-  double del8(
+    const double &astau, const double &aGGinv,
+    const std::vector<double> mq, Condensates condensates
+  );
+  static double del6(
+    const double &s0, const Weight &weight, const double &c6
+  );
+  static double del8(
     const double &s0, const Weight &weight, const double &c8
-  ) const;
-  double del68(
-    const double &s0, const Weight &weight,
-    const double &rhoVpA, const double &c8VpA
-  ) const;
-  double del10(
+  );
+  static double del10(
     const double &s0, const Weight &weight, const double &c10
-  ) const;
-  double del12(
+  );
+  static double del12(
     const double &s0, const Weight &weight, const double &c12
-  ) const;
+  );
+
+  static void logDeltas(
+    const double &s0, const Weight &weight, const double &sTau,
+    const double &astau, const double &aGGInv, const matrix<double> &c,
+    const std::vector<double> &mq, const Condensates &condensates, const int &order,
+    const double &c6, const double &c8, const double &c10, const double &c12
+  );
 
  private:
   ThMomContribs thMomContribs_;
