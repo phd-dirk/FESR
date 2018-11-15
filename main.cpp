@@ -9,6 +9,7 @@ using std::runtime_error;
 
 #include "./src/configuration.hpp"
 // Theoretical Moments
+#include "./src/theoretical_moments.hpp"
 #include "./src/ope.hpp"
 #include "./src/alpha_s.hpp"
 #include "./src/numerics.hpp"
@@ -150,6 +151,30 @@ int main (int argc, char* argv[]) {
     std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
 
     writeOutput(configFilePath, min, config);
+
+    const double *xs = min->X();
+    std::cout << "alpha: \t" << xs[0] << std::endl;
+    std::cout << "aGGInv: \t" << xs[1] << std::endl;
+    std::cout << "c6: \t" << xs[2] << std::endl;
+    std::cout << "c8: \t" << xs[3] << std::endl;
+    std::cout << "c10: \t" << xs[4] << std::endl;
+    std::cout << "c12: \t" << xs[5] << std::endl;
+
+    ThMoms::logDeltas(
+      config.inputs_[0].s0s[0],
+      config.inputs_[0].weight,
+      config.sTau_,
+      xs[0],
+      xs[1],
+      Configuration::adlerCoefficients(
+        config.nf_, Configuration::betaCoefficients( config.nc_, config.nf_ )
+      ),
+      config.mq_,
+      config.condensates_,
+      config.order_,
+      xs[2], xs[3], xs[4], xs[5]
+    );
+
     return 0;
   }
   catch (const std::exception& e) {

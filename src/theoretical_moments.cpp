@@ -93,7 +93,7 @@ double ThMoms::cIntVpAD4(
 double ThMoms::del0(
   const double &s0, const Weight &weight, const double &sTau,
   const double &astau, const matrix<double> &c, const int &order
-) const {
+) {
   return (
     cIntVpAD0FO(s0, weight, sTau, astau, c, order)
     - cIntVpAD0FO(s0, weight, sTau, astau, c, 0)
@@ -101,34 +101,44 @@ double ThMoms::del0(
 }
 double ThMoms::del4(
   const double &s0, const Weight &weight, const double &sTau,
-  const double &astau, const double &aGGinv
-) const {
-  return cIntVpAD4(s0, weight, sTau, astau, aGGinv, mq_, condensates_)/3.0;
+  const double &astau, const double &aGGInv,
+  const std::vector<double> mq, Condensates condensates
+) {
+  return cIntVpAD4(s0, weight, sTau, astau, aGGInv, mq, condensates)/3.0;
 }
 double ThMoms::del6(
-  const double &s0, const Weight &weight,
-  const double &rhoVpA
-) const {
-  return OPE::D68CInt(s0, weight, rhoVpA, 0.0)/3.0;
+  const double &s0, const Weight &weight, const double &c6
+) {
+  return OPE::D68CInt(s0, weight, c6, 0.0)/3.0;
 }
 double ThMoms::del8(
   const double &s0, const Weight &weight, const double &c8
-) const {
+) {
   return OPE::D68CInt(s0, weight, 0.0, c8)/3.0;
-}
-double ThMoms::del68(
-  const double &s0, const Weight &weight,
-  const double &rhoVpA, const double &c8VpA
-) const {
-  return OPE::D68CInt(s0, weight, rhoVpA, c8VpA)/3.0;
 }
 double ThMoms::del10(
   const double &s0, const Weight &weight, const double &c10
-) const {
+) {
   return OPE::D10CInt(s0, weight, c10)/3.0;
 }
 double ThMoms::del12(
   const double &s0, const Weight &weight, const double &c12
-) const {
+) {
   return OPE::D10CInt(s0, weight, c12)/3.0;
+}
+
+void ThMoms::logDeltas(
+  const double &s0, const Weight &weight, const double &sTau,
+  const double &astau, const double &aGGInv, const matrix<double> &c,
+  const std::vector<double> &mq, const Condensates &condensates, const int &order,
+  const double &c6, const double &c8, const double &c10, const double &c12
+) {
+  std::cout << "Delta contributions: " << std::endl;
+  std::cout << "del^(0) \t" << ThMoms::del0(s0, weight, sTau, astau, c, order) << std::endl;
+  std::cout << "del^(4) \t" << ThMoms::del4(s0, weight, sTau, astau, aGGInv, mq, condensates) << std::endl;
+  std::cout << "del^(6) \t" << ThMoms::del6(s0, weight, c6) << std::endl;
+  std::cout << "del^(8) \t" << ThMoms::del8(s0, weight, c8) << std::endl;
+  std::cout << "del^(10) \t" << ThMoms::del10(s0, weight, c10) << std::endl;
+  std::cout << "del^(12) \t" << ThMoms::del12(s0, weight, c12) << std::endl;
+  std::cout << std::endl;
 }

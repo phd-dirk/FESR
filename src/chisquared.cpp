@@ -92,8 +92,8 @@ double Chi2::operator() ( const double *xx) const {
   // init fit parameters
   double astau = xx[0];
   double aGGinv = xx[1];
-  double rhoD6VpA = xx[2];
-  double c8D8VpA = xx[3];
+  double c6 = xx[2];
+  double c8 = xx[3];
   double c10 = xx[4];
   double c12 = xx[5];
   double deV = xx[6];
@@ -106,7 +106,7 @@ double Chi2::operator() ( const double *xx) const {
   double beA = xx[13];
 
   return chi2(
-    astau, aGGinv, rhoD6VpA, c8D8VpA, c10, c12,
+    astau, aGGinv, c6, c8, c10, c12,
     deV, gaV, alV, beV,
     deA, gaA, alA, beA,
     order_, sTau_, mPiM_, fPi_,

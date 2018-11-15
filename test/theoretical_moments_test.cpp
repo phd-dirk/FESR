@@ -222,12 +222,12 @@ TEST_F(ThMomsTest, Delta0) {
 // }
 
 TEST_F(ThMomsTest, Delta68) {
-  const double rho = -0.1893979224795759;
+  const double c6 = -0.1893979224795759;
   const double c8 = 0.16314594513667133;
   // Test delta_V+A^(8)
-  EXPECT_NEAR(thMom_->del68(sTau_, Weight(1), 0., c8), -1.2966374009228992e-3, 1e-14);
+  EXPECT_NEAR(thMom_->del8(sTau_, Weight(1), c8), -1.2966374009228992e-3, 1e-14);
   // Test delta_V+A^(6)
-  EXPECT_NEAR(thMom_->del68(sTau_, Weight(1), rho, 0.), -7.1284580508113966e-3, 1e-14);
+  EXPECT_NEAR(thMom_->del6(sTau_, Weight(1), c6), -7.1284580508113966e-3, 1e-14);
 }
 // TEST_F(ThMomsTest, DeltaP) {
 //   EXPECT_NEAR(thMom_->deltaP(sTau_, Weight(1)), -2.63897241291510083e-3, 1e-14);
