@@ -1,6 +1,6 @@
 #!/bin/bash
 DATE=`date '+%Y-%m-%d_%H:%M:%S'`
-OUTPUT_FILE="$1fits.csv"
+OUTPUT_FILE="$1/fits.csv"
 
 
 echo $OUTPUT_FILE

@@ -8,7 +8,7 @@ void addCSV(double value, ofstream &outputFile, bool last = false) {
   }
 }
 
-string variablesOutput(Minimizer* min) {
+string variablesOutput(const ROOT::Math::Minimizer* min) {
   const double *xs = min->X();
   const double *errors = min->Errors();
   string out = "";
@@ -34,7 +34,7 @@ string variablesOutput(Minimizer* min) {
   return out;
 }
 
-string correlationOutput(Minimizer* min) {
+string correlationOutput(const ROOT::Math::Minimizer* min) {
   string out;
   out += "Correlation Matrix: \n";
   for(uint i = 0; i < min->NDim(); i++) {
@@ -48,7 +48,10 @@ string correlationOutput(Minimizer* min) {
   return out;
 }
 
-string deltaOutput(Minimizer* min, const Configuration &config) {
+string deltaOutput(
+  const ROOT::Math::Minimizer* min,
+  const Configuration &config
+) {
   string out;
   const double *xs = min->X();
 
@@ -100,7 +103,7 @@ string deltaOutput(Minimizer* min, const Configuration &config) {
 
 void writeToCSV(
     string &csvFilePath,
-    Minimizer* min,
+    const ROOT::Math::Minimizer* min,
     const Configuration config
 ) {
   ofstream csvFile;
@@ -184,7 +187,7 @@ void writeToCSV(
 
 void writeToOutputFile(
     const string &configFilePath,
-    Minimizer* min,
+    const ROOT::Math::Minimizer* min,
     const Configuration &config
 ) {
   // std::size_t pos = configFilePath.find_last_of("/\\");
@@ -230,7 +233,7 @@ void writeToOutputFile(
 
 void writeOutput (
     const string configFilePath,
-    Minimizer* min,
+    const ROOT::Math::Minimizer* min,
     const Configuration config
 ) {
   std::size_t pos = configFilePath.find_last_of("/\\");
