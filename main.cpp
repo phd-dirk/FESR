@@ -5,23 +5,34 @@
 #include "./src/minuit.hpp"
 #include "./src/utils.hpp"
 
+#include "./src/chisquared.hpp"
+#include <vector>
+
 int main (int argc, char* argv[]) {
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   std::cout.precision(17);
 
   try {
-    // FESR
     string configFilePath = "./configuration.json";
     if (argc == 2) {
       configFilePath = argv[1];
     }
     const Configuration config(configFilePath);
 
-    const ROOT::Math::Minimizer* min = Minuit::FESR(config);
-    writeOutput(configFilePath, min, config);
+    // SpecEnd
+    Chi2 chi2(config);
+    std::vector<double> xx = { 1.0 };
+    chi2.chi2SpecEnd(xx);
 
-    std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
-    std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
+
+    // FESR
+
+    // const ROOT::Math::Minimizer* min = Minuit::FESR(config);
+    // writeOutput(configFilePath, min, config);
+
+    // std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
+    // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
+
     return 0;
   }
   catch (const std::exception& e) {

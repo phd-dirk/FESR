@@ -283,3 +283,37 @@ std::vector<double> Chi2::calcThMoms(
 
   return thMoms;
 }
+
+double Chi2::chi2SpecEnd(std::vector<double> xx) {
+  double rho = xx[0];
+  double rho_first = 0.0;
+  double rho_second = 0.0;
+
+  double stau = pow(1.77686, 2);
+  double sew = 1.0198;
+  double vud = 0.97420;
+  double be = 17.815;
+
+  const Data data = Data("/Users/knowledge/Developer/PhD/FESR/aleph.json", 0.99743669);
+  const int dataSize = data.sbins.size();
+  const int num_of_bins = 4;
+
+  std::vector<double> x(data.sbins.size());
+  // loop over num_of_bins last bins ( excluding the very last bin )
+  for(int i=dataSize-num_of_bins-1; i<dataSize-1; i++) {
+    x[i] = data.sfm2s[i]/data.dsbins[i];
+  }
+
+  auto wTau = [&](auto s)
+  {
+    return pow(1.0 - s/stau, 2)*(1 + 2*s/stau);
+  };
+
+  auto func = [&](auto s, auto rho)
+  {
+    return be*12*pow(M_PI, 2)/stau*pow(vud, 2)*sew*wTau(s)*rho;
+  };
+
+  std::cout << func(1, rho) << std::endl;
+  return func(1, rho);
+}

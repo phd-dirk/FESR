@@ -7,6 +7,7 @@
 #include "./theoretical_moments.hpp"
 #include "./weights.hpp"
 #include "./utils.hpp"
+#include "./data.hpp"
 #include <nlohmann/json.hpp>
 #include <functional>
 #include <iostream>
@@ -134,6 +135,8 @@ class Chi2 {
     const std::vector<Input> &inputs,
     const ThMomContribs &thMomContribs
   );
+
+  double chi2SpecEnd(std::vector<double> xx);
 
   const ExpMoms expMom_;
   matrix<double> c_;
