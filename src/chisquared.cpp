@@ -284,7 +284,7 @@ std::vector<double> Chi2::calcThMoms(
   return thMoms;
 }
 
-double Chi2::chi2SpecEnd(std::vector<double> xx) {
+double Chi2::chi2_spec_end(const double *xx) const {
   double rho = xx[0];
   double rho_first = 0.0;
   double rho_second = 0.0;
@@ -296,13 +296,23 @@ double Chi2::chi2SpecEnd(std::vector<double> xx) {
 
   const Data data = Data("/Users/knowledge/Developer/PhD/FESR/aleph.json", 0.99743669);
   const int dataSize = data.sbins.size();
-  const int num_of_bins = 4;
+  const int num_bins = 4;
 
-  std::vector<double> x(data.sbins.size());
-  // loop over num_of_bins last bins ( excluding the very last bin )
-  for(int i=dataSize-num_of_bins-1; i<dataSize-1; i++) {
-    x[i] = data.sfm2s[i]/data.dsbins[i];
+  boost::numeric::ublas::matrix<double> corMat(num_bins, num_bins);
+  for(int i=0; i<num_bins; i++) {
+    for(int j=0; j<num_bins; j++) {
+      corMat(i, j) = data.corerrs(i+dataSize-num_bins-1, j+dataSize-num_bins-1);
+    }
   }
+  boost::numeric::ublas::matrix<double> covMat(num_bins, num_bins);
+  for(int i=0; i<num_bins; i++) {
+    for(int j=0; j<num_bins; j++) {
+      covMat(i, j) = corMat(i, j)*data.derrs[i+dataSize-num_bins-1]*data.derrs[j+dataSize-num_bins-1]/100.0;
+    }
+  }
+
+
+  std::cout << "cov \t" << covMat << std::endl;
 
   auto wTau = [&](auto s)
   {
@@ -314,6 +324,24 @@ double Chi2::chi2SpecEnd(std::vector<double> xx) {
     return be*12*pow(M_PI, 2)/stau*pow(vud, 2)*sew*wTau(s)*rho;
   };
 
-  std::cout << func(1, rho) << std::endl;
-  return func(1, rho);
+  double chi = 0.0;
+  for(int i =0; i<data.sbins.size(); i++) {
+    std::cout << data.corerrs(0, i)/100.00 << std::endl;
+    chi += data.corerrs(0, i)/100.0;
+  }
+  std::cout << " chi " << chi << std::endl;
+
+  // loop over num_of_bins last bins ( excluding the very last bin )
+  // for(int i=dataSize-num_of_bins-1; i<dataSize-1; i++) {
+  //   double xi = data.sfm2s[i]/data.dsbins[i];
+  //   for(int j=dataSize-num_of_bins-1; j<dataSize-1; i++) {
+  //     double xj = data.sfm2s[j]/data.dsbins[j];
+
+  //     std::cout << i << "\t" << j << std::endl;
+
+  //     chi += (xi - func(xi, rho))*(xj - func(xj, rho));
+  //   }
+  // }
+
+  return chi;
 }

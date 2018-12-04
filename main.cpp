@@ -20,13 +20,10 @@ int main (int argc, char* argv[]) {
     const Configuration config(configFilePath);
 
     // SpecEnd
-    Chi2 chi2(config);
-    std::vector<double> xx = { 1.0 };
-    chi2.chi2SpecEnd(xx);
+    const ROOT::Math::Minimizer* min = Minuit::spec_end(config);
 
 
     // FESR
-
     // const ROOT::Math::Minimizer* min = Minuit::FESR(config);
     // writeOutput(configFilePath, min, config);
 

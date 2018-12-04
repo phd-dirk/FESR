@@ -14,6 +14,7 @@
 #include <thread>
 #include <future>
 #include <chrono>
+#include <boost/numeric/ublas/matrix.hpp>
 
 using std::function;
 
@@ -136,7 +137,7 @@ class Chi2 {
     const ThMomContribs &thMomContribs
   );
 
-  double chi2SpecEnd(std::vector<double> xx);
+  double chi2_spec_end(const double *xx) const;
 
   const ExpMoms expMom_;
   matrix<double> c_;
