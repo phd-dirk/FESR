@@ -79,6 +79,13 @@ make
 ./runUnitTests
 ```
 
+## SpecEnd fits
+To fit the n points from the end of the spectral fucntion we have to:
+- comment out the Minuit::spec_end function in the main file
+- pass n as num_bins to it
+- free / fix the parameters in src/minuit.hpp
+The last bin ( 80 ) is omitted.
+
 ## Developer
 ### C++ autocomplete 
 Generate **.clang_complete** file in the build folder.

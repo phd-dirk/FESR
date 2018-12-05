@@ -20,7 +20,8 @@ int main (int argc, char* argv[]) {
     const Configuration config(configFilePath);
 
     // SpecEnd
-    const ROOT::Math::Minimizer* min = Minuit::spec_end(config);
+    const int num_bins = 6;
+    const ROOT::Math::Minimizer* min = Minuit::spec_end(config, num_bins);
 
     // FESR
     // const ROOT::Math::Minimizer* min = Minuit::FESR(config);

@@ -125,7 +125,7 @@ class Minuit {
     return min;
   }
 
-  static ROOT::Math::Minimizer* spec_end(const Configuration &config) {
+  static ROOT::Math::Minimizer* spec_end(const Configuration &config, const int num_bins) {
     // MINUIT
     ROOT::Math::Minimizer* min = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
     min->SetStrategy(2);
@@ -135,20 +135,24 @@ class Minuit {
     const Chi2 chi2(config);
     auto func = [&](const double *xx)
     {
-      return chi2.chi2_spec_end(xx);
+      return chi2.chi2_spec_end(xx, num_bins);
     };
 
     ROOT::Math::Functor chi2F(func, 12);
     min->SetFunction(chi2F);
 
     min->SetVariable(0, "rho", 0, 0.1);
-    // min->SetFixedVariable(0, "astau", config.astau.value);
+    // min->SetVariable(1, "rhoFirst", 0, 0.1);
+    min->SetFixedVariable(1, "rhoFirst", 0.0);
+    min->SetVariable(2, "rhoSecond", 0, 0.1);
+    // min->SetFixedVariable(2, "rhoSecond", 0.0);
 
     // minimize!
     min->Minimize();
 
     const double *xs = min->X();
-    std::cout << "rho: \t" << xs[0] << std::endl;
+    std::cout << "reduced chi-squared: \t" << min->MinValue()/(num_bins - min->NFree())
+              << std::endl;
 
     return min;
   }

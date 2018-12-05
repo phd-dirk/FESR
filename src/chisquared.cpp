@@ -284,10 +284,10 @@ std::vector<double> Chi2::calcThMoms(
   return thMoms;
 }
 
-double Chi2::chi2_spec_end(const double *xx) const {
+double Chi2::chi2_spec_end(const double *xx, const int num_bins) const {
   double rho = xx[0];
-  double rho_first = 0.0;
-  double rho_second = 0.0;
+  double rho_first = xx[1];
+  double rho_second = xx[2];
 
   double stau = pow(1.77686, 2);
   double sew = 1.0198;
@@ -296,7 +296,6 @@ double Chi2::chi2_spec_end(const double *xx) const {
 
   const Data data = Data("/Users/knowledge/Developer/PhD/FESR/aleph.json", 0.99743669);
   const int dataSize = data.sbins.size();
-  const int num_bins = 4;
 
   boost::numeric::ublas::matrix<double> corMat(num_bins, num_bins);
   for(int i=0; i<num_bins; i++) {
@@ -319,9 +318,13 @@ double Chi2::chi2_spec_end(const double *xx) const {
     return pow(1.0 - s/stau, 2)*(1 + 2*s/stau);
   };
 
-  auto func = [&](auto s, auto rho)
+  auto func = [&](double s, double rho, double rhoFirst, double rhoSecond)
   {
-    return 2*wTau(s)/stau*3*pow(vud, 2)*sew*be*rho;
+    return 2*wTau(s)/stau*3*pow(vud, 2)*sew*be*(
+      rho
+      + rhoFirst*(s - stau)
+      + rhoSecond*1.0/2.0*pow(s - stau, 2)
+    );
   };
 
   boost::numeric::ublas::matrix<double> invCovMat(num_bins, num_bins);
@@ -334,7 +337,8 @@ double Chi2::chi2_spec_end(const double *xx) const {
       double yi = data.sfm2s[i+dataSize-num_bins-1]/data.dsbins[i+dataSize-num_bins-1];
       double xj = data.sbins[j+dataSize-num_bins-1];
       double yj = data.sfm2s[j+dataSize-num_bins-1]/data.dsbins[j+dataSize-num_bins-1];
-      chi += (yi - func(xi, rho))*invCovMat(i, j)*(yj - func(xj, rho));
+      chi += (yi - func(xi, rho, rho_first, rho_second))
+        *invCovMat(i, j)*(yj - func(xj, rho, rho_first, rho_second));
     }
   }
 

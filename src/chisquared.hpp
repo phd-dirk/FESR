@@ -137,7 +137,7 @@ class Chi2 {
     const ThMomContribs &thMomContribs
   );
 
-  double chi2_spec_end(const double *xx) const;
+  double chi2_spec_end(const double *xx, const int num_bins) const;
 
   const ExpMoms expMom_;
   matrix<double> c_;
