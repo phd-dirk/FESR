@@ -307,12 +307,12 @@ double Chi2::chi2_spec_end(const double *xx) const {
   boost::numeric::ublas::matrix<double> covMat(num_bins, num_bins);
   for(int i=0; i<num_bins; i++) {
     for(int j=0; j<num_bins; j++) {
-      covMat(i, j) = corMat(i, j)*data.derrs[i+dataSize-num_bins-1]*data.derrs[j+dataSize-num_bins-1]/100.0;
+      covMat(i, j) = corMat(i, j)
+        *data.derrs[i+dataSize-num_bins-1]/data.dsbins[i+dataSize-num_bins-1]
+        *data.derrs[j+dataSize-num_bins-1]/data.dsbins[j+dataSize-num_bins-1]/100.0;
     }
   }
-
-
-  std::cout << "cov \t" << covMat << std::endl;
+  // std::cout << covMat << std::endl;
 
   auto wTau = [&](auto s)
   {
@@ -321,27 +321,22 @@ double Chi2::chi2_spec_end(const double *xx) const {
 
   auto func = [&](auto s, auto rho)
   {
-    return be*12*pow(M_PI, 2)/stau*pow(vud, 2)*sew*wTau(s)*rho;
+    return 2*wTau(s)/stau*3*pow(vud, 2)*sew*be*rho;
   };
 
+  boost::numeric::ublas::matrix<double> invCovMat(num_bins, num_bins);
+  Numerics::invertMatrix(covMat, invCovMat);
+
   double chi = 0.0;
-  for(int i =0; i<data.sbins.size(); i++) {
-    std::cout << data.corerrs(0, i)/100.00 << std::endl;
-    chi += data.corerrs(0, i)/100.0;
+  for(int i=0; i<num_bins; i++) {
+    for(int j=0; j<num_bins; j++) {
+      double xi = data.sbins[i+dataSize-num_bins-1];
+      double yi = data.sfm2s[i+dataSize-num_bins-1]/data.dsbins[i+dataSize-num_bins-1];
+      double xj = data.sbins[j+dataSize-num_bins-1];
+      double yj = data.sfm2s[j+dataSize-num_bins-1]/data.dsbins[j+dataSize-num_bins-1];
+      chi += (yi - func(xi, rho))*invCovMat(i, j)*(yj - func(xj, rho));
+    }
   }
-  std::cout << " chi " << chi << std::endl;
-
-  // loop over num_of_bins last bins ( excluding the very last bin )
-  // for(int i=dataSize-num_of_bins-1; i<dataSize-1; i++) {
-  //   double xi = data.sfm2s[i]/data.dsbins[i];
-  //   for(int j=dataSize-num_of_bins-1; j<dataSize-1; i++) {
-  //     double xj = data.sfm2s[j]/data.dsbins[j];
-
-  //     std::cout << i << "\t" << j << std::endl;
-
-  //     chi += (xi - func(xi, rho))*(xj - func(xj, rho));
-  //   }
-  // }
 
   return chi;
 }

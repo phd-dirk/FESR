@@ -22,7 +22,6 @@ int main (int argc, char* argv[]) {
     // SpecEnd
     const ROOT::Math::Minimizer* min = Minuit::spec_end(config);
 
-
     // FESR
     // const ROOT::Math::Minimizer* min = Minuit::FESR(config);
     // writeOutput(configFilePath, min, config);
