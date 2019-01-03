@@ -19,16 +19,18 @@ int main (int argc, char* argv[]) {
     }
     const Configuration config(configFilePath);
 
+
     // SpecEnd
-    const int num_bins = 6;
-    const ROOT::Math::Minimizer* min = Minuit::spec_end(config, num_bins);
+    // const int num_bins = 6;
+    // const ROOT::Math::Minimizer* min = Minuit::spec_end(config, num_bins);
 
     // FESR
-    // const ROOT::Math::Minimizer* min = Minuit::FESR(config);
-    // writeOutput(configFilePath, min, config);
+    const ROOT::Math::Minimizer* min = Minuit::FESR(config);
+    writeOutput(configFilePath, min, config);
 
-    // std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
-    // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
+
+    std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
+    std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()*1e-6  <<std::endl;
 
     return 0;
   }

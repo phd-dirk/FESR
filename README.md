@@ -96,6 +96,11 @@ make
 cp .clang_complete ../.clang_complete
 ```
 
+### Minuit
+Status codes:
+- 0: OK!
+- 1: Hesse matrix forced pos. def.
+
 ## Dependencies 
 * [json](https://github.com/nlohmann/json)
 * [gtest](https://github.com/google/googletest)
