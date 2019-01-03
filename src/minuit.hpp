@@ -99,6 +99,14 @@ class Minuit {
     // minimize!
     min->Minimize();
 
+    // if not converged try up to five additional times
+    uint i = 1;
+    if(i <= 10 && min->Status() != 0) {
+      std::cout << "MINUIT FAILED. RETRY!" << std::endl;
+      min->Minimize();
+      i++;
+    }
+
     const double *xs = min->X();
     std::cout << "alpha: \t" << xs[0] << std::endl;
     std::cout << "aGGInv: \t" << xs[1] << std::endl;
