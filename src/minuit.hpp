@@ -101,7 +101,8 @@ class Minuit {
 
     // if not converged try up to five additional times
     uint i = 1;
-    if(i <= 10 && min->Status() != 0) {
+    uint maxRepetitions = 15;
+    if(i <= maxRepetitions && min->Status() != 0) {
       std::cout << "MINUIT FAILED. RETRY!" << std::endl;
       min->Minimize();
       i++;

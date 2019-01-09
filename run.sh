@@ -9,6 +9,6 @@ echo "status,alpha,alphaErr,aGGInv,aGGInvErr,c6,c6Err,c8,c8Err,c10,c10Err,c12,c1
 for i in $( ls $1 ); do
     if [[ $i == *.json ]]; then
         echo $i
-        ./build/FESR "$1/$i"
+        nice ./build/FESR "$1/$i"
     fi
 done

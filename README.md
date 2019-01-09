@@ -100,6 +100,7 @@ cp .clang_complete ../.clang_complete
 Status codes:
 - 0: OK!
 - 1: Hesse matrix forced pos. def.
+- 4: Reached call limit
 
 ## Dependencies 
 * [json](https://github.com/nlohmann/json)
