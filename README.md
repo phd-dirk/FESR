@@ -100,6 +100,7 @@ cp .clang_complete ../.clang_complete
 Status codes:
 - 0: OK!
 - 1: Hesse matrix forced pos. def.
+- 3: did not converge ( Edm is above max )
 - 4: Reached call limit
 
 ## Dependencies 
