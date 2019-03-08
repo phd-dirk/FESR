@@ -39,6 +39,8 @@ class Weight {
       case 13: return wD2(x);
       case 14: return wDCube(x);
       case 15: return wDQuartic(x);
+      case 16: return wDMonoX3(x);
+      case 17: return wDMonoX4(x);
       default:
         throw std::invalid_argument("weight wD(" + std::to_string(weightId_) + ") is not defined");
         return wD00(x);
@@ -63,6 +65,8 @@ class Weight {
       case 13: return wR2(x);
       case 14: return wRCube(x);
       case 15: return wRQuartic(x);
+      case 16: return wRMonoX3(x);
+      case 17: return wRMonoX4(x);
       default:
         throw std::invalid_argument("weight wR(" + std::to_string(weightId_) + ") is not defined");
         wR00(x);
@@ -203,6 +207,20 @@ class Weight {
   }
   static cmplx wDQuartic(cmplx x) {
     return 2.0/3.0*pow(1.0 - x, 5)*(1.0 + 2.0*x);
+  }
+  // weightId: 16, 1-x^3
+  static cmplx wRMonoX3(cmplx x) {
+    return 1 - pow(x, 3);
+  }
+  static cmplx wDMonoX3(cmplx x) {
+    return 1.0/2.0*(3.0 - 4.0*x + pow(x, 4));
+  }
+  // weightId: 17, 1-x^4
+  static cmplx wRMonoX4(cmplx x) {
+    return 1 - pow(x, 4);
+  }
+  static cmplx wRMonoX4(cmplx x) {
+    return 2.0/5.0*(4.0 - 5.0*x + pow(x, 5))
   }
 
  private:
