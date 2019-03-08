@@ -21,7 +21,7 @@ protected:
       { Weight(1), { 3.0, 2.0, 1.0 } },
       { Weight(6), { 2.8, 1.8 } },
     };
-    ThMomContribs thMomContribs = { "FO", true, true, true, false, true };
+    ThMomContribs thMomContribs = { "FO", true, true, true, true, false, true };
 
     thMom_ = new ThMoms(
       Configuration(
@@ -77,7 +77,7 @@ TEST_F(ThMomsTest, ThMom) {
       ),
       0.97420,
       1.0198,
-      { "FO", true, true, true, false, false, false, true }
+      { "FO", true, true, true, true, false, false, false, true }
     ),
     3.4609600058109637, 1e-14
   );
@@ -99,7 +99,7 @@ TEST_F(ThMomsTest, ThMom) {
       ),
       0.97420,
       1.0198,
-      { "FO", true, true, true, false, false, false, true }
+      { "FO", true, true, true, true, false, false, false, true }
     ),
     0.43598174876798695, 1e-14
   );

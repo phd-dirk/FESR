@@ -143,18 +143,35 @@ double OPE::D4CInt(
   return (3*M_PI*Numerics::gaussInt(f)).real();
 };
 
-// rhoVA = - 10^2 C_6V/A;  c8VA = 10^2 C_8V/A
-complex<double> OPE::D68(
-  const complex<double> &s, const double &rho, const double &c8
+// rhoVA = - 10^2 C_6V/A;
+complex<double> OPE::D6(
+  const complex<double> &s, const double &c6
 ) {
-  return 0.03*rho/pow(s, 3) + 0.04*c8/pow(s, 4);
+  return 0.03*c6/pow(s, 3);
 }
-double OPE::D68CInt(
-  const double &s0, const Weight &weight, const double &rho, const double &c8
+double OPE::D6CInt(
+  const double &s0, const Weight &weight, const double &c6
 ) {
   cmplxFunc f =
     [&](cmplx s) -> cmplx {
-      return weight.wD(s)*D68(s0*s, rho, c8);
+      return weight.wD(s)*D6(s0*s, c6);
+    };
+
+  return (3*M_PI*Numerics::gaussInt(f)).real();
+};
+
+// c8VA = 10^2 C_8V/A
+complex<double> OPE::D8(
+  const complex<double> &s, const double &c8
+) {
+  return 0.04*c8/pow(s, 4);
+}
+double OPE::D8CInt(
+  const double &s0, const Weight &weight, const double &c8
+) {
+  cmplxFunc f =
+    [&](cmplx s) -> cmplx {
+      return weight.wD(s)*D8(s0*s, c8);
     };
 
   return (3*M_PI*Numerics::gaussInt(f)).real();

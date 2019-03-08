@@ -12,7 +12,7 @@ ThMoms::ThMoms() {}
 
 double ThMoms::calc(
   const double &s0, const Weight &w,
-  const double &astau, const double &aGGinv, const double &rhoVpA,
+  const double &astau, const double &aGGinv, const double &c6,
   const double &c8, const double &c10, const double &c12,
   const double &order, const double &sTau,
   const double &deV, const double &gaV, const double &alV, const double &beV,
@@ -41,9 +41,13 @@ double ThMoms::calc(
   if ( thMomContribs.D4 )
     rTauTh += cIntVpAD4(s0, w, sTau, astau, aGGinv, mq, condensates);
 
-  // D68
-  if ( thMomContribs.D68 )
-    rTauTh += OPE::D68CInt(s0, w, rhoVpA, c8);
+  // D6
+  if ( thMomContribs.D6 )
+    rTauTh += OPE::D6CInt(s0, w, c6);
+
+  // D8
+  if ( thMomContribs.D8 )
+    rTauTh += OPE::D8CInt(s0, w, c8);
 
   // D10
   if ( thMomContribs.D10 )
@@ -109,12 +113,12 @@ double ThMoms::del4(
 double ThMoms::del6(
   const double &s0, const Weight &weight, const double &c6
 ) {
-  return OPE::D68CInt(s0, weight, c6, 0.0)/3.0;
+  return OPE::D6CInt(s0, weight, c6)/3.0;
 }
 double ThMoms::del8(
   const double &s0, const Weight &weight, const double &c8
 ) {
-  return OPE::D68CInt(s0, weight, 0.0, c8)/3.0;
+  return OPE::D8CInt(s0, weight, c8)/3.0;
 }
 double ThMoms::del10(
   const double &s0, const Weight &weight, const double &c10

@@ -18,7 +18,8 @@ struct ThMomContribs {
   string scheme;
   bool D0;
   bool D4;
-  bool D68;
+  bool D6;
+  bool D8;
   bool D10;
   bool D12;
   bool DV;

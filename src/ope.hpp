@@ -43,11 +43,17 @@ public:
     const double &astau, const double &aGGinv, const int &r,
     const std::vector<double> &mq, const Condensates &condensates
   );
-  static complex<double> D68(
-    const complex<double> &s, const double &rho, const double &c8
+  static complex<double> D6(
+    const complex<double> &s, const double &c6
   );
-  static double D68CInt(
-    const double &s0, const Weight &weight, const double &rho, const double &c8
+  static double D6CInt(
+    const double &s0, const Weight &weight, const double &c6
+  );
+  static complex<double> D8(
+    const complex<double> &s, const double &c8
+  );
+  static double D8CInt(
+    const double &s0, const Weight &weight, const double &c8
   );
 
   static complex<double> D10(

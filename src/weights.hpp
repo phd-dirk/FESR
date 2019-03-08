@@ -141,22 +141,25 @@ class Weight {
   static cmplx wR10(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x);
   }
-  // weightId:
+  // weightId: 5
   static cmplx wD10(cmplx x) {
     return pow(1.0 - x, 4)*(7.0 + 8.0*x)/10.0;
   }
+  // weightId: 6
   static cmplx wR11(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x)*x;
   }
   static cmplx wD11(cmplx x) {
     return pow(1.0 - x, 4)*pow(1.0 + 2.0*x, 2)/6.0;
   }
+  // weightId: 7
   static cmplx wR12(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x)*pow(x, 2);
   }
   static cmplx wD12(cmplx x) {
     return pow(1.0 - x, 4)*(13.0 + 52.0*x + 130.0*pow(x, 2) + 120.0*pow(x, 3))/210.0;
   }
+  // weightId: 8
   static cmplx wR13(cmplx x) {
     return pow(1.0 - x, 3)*(1.0 + 2.0*x)*pow(x, 3);
   }

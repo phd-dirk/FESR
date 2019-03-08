@@ -1,5 +1,5 @@
 {
-  "version": 0.7,
+  "version": 0.9,
   "scheme": "FO",
   "tolerance": 1e-6,
   "parameters": {
@@ -116,7 +116,8 @@
     "D0": true,
     "D2": false,
     "D4": true,
-    "D68": true,
+    "D6": true,
+    "D8": true,
     "D10": false,
     "D12": false,
     "DV": false,

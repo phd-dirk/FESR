@@ -37,7 +37,7 @@ TEST(Chisquared_Test, chi2) {
         }
       }
     },
-    { "FO", true, true, true, false, false, false, true },
+    { "FO", true, true, true, true, false, false, false, true },
     0.99743669
   );
 
