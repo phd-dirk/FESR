@@ -194,14 +194,16 @@ void ExpMoms::initCovMat() {
 }
 
 void ExpMoms::initInvCovMat(mat covMat) {
+  //only for kinematic weight
+
   // Remove correlations with R_tau,V+A in Aleph fit
-  for (int i = 1; i < momCount_; i++) {
-    covMat(0, i) = 0.;
-    covMat(i, 0) = 0.;
-  }
+  // for (int i = 1; i < momCount_; i++) {
+  //   covMat(0, i) = 0.;
+  //   covMat(i, 0) = 0.;
+  // }
 
   // employ uncertainity of R_VA = 3.4718(72) (HFLAV 2017)
-  covMat(0, 0) = pow(0.0072, 2);
+  // covMat(0, 0) = pow(0.0072, 2);
 
   // Numerics::invertMatrix(covMat, invCovMat_);
   Numerics::invMat(covMat, invCovMat_);
