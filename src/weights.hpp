@@ -229,19 +229,21 @@ class Weight {
 
   // weightId: 18, (1-x)^2
   static cmplx wROpt20(cmplx x) {
-    return pow(1-x, 2);
+    return pow(1.0 - x, 2);
   }
   static cmplx wDOpt20(cmplx x) {
-    return -2.0/3.0*pow(x-1, 3);
+    return -2.0/3.0*pow(x-1.0, 3);
   }
 
   // weightId: 19, (1-x)^3
-  static cmplx wROpt20(cmplx x) {
-    return pow(, 2);
+  static cmplx wROpt30(cmplx x) {
+    return pow(1.0 - x, 3);
   }
-  static cmplx wDOpt20(cmplx x) {
-    return 1.0/2.0*pow(x-1, 4);
+  static cmplx wDOpt30(cmplx x) {
+    return 1.0/2.0*pow(x - 1.0, 4);
   }
+
+  // weightId: 20, (1-x)^4
 
  private:
   int weightId_;
